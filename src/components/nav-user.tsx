@@ -57,49 +57,11 @@ export function NavUser() {
             </SidebarMenuButton>
           </DropdownMenuTrigger>
           <DropdownMenuContent
-            className="w-(--radix-dropdown-menu-trigger-width) min-w-56 rounded-lg"
-            side={isMobile ? "bottom" : "right"}
+            className="w-(--radix-dropdown-menu-trigger-width) text-red-500 shadow-none min-w-56 rounded-lg"
+            side={isMobile ? "bottom" : "top"}
             align="end"
-            sideOffset={4}
+            sideOffset={10}
           >
-            {/* <DropdownMenuLabel className="p-0 font-normal">
-              <div className="flex items-center gap-2 px-1 py-1.5 text-left text-sm">
-                <Avatar className="h-8 w-8 rounded-lg">
-                  <AvatarImage
-                    src={`https://avatar.tobi.sh/${userData?.full_name.slice(
-                      0,
-                      2
-                    )}.svg?text=${userData?.full_name.slice(0, 2)}&size=512`}
-                    alt={userData?.full_name}
-                  />
-                  <AvatarFallback className="rounded-lg">CN</AvatarFallback>
-                </Avatar>
-                <div className="grid flex-1 text-left text-sm leading-tight">
-                  <span className="truncate font-medium">
-                    {userData?.full_name}
-                  </span>
-                  <span className="text-muted-foreground truncate text-xs">
-                    {userData?.email}
-                  </span>
-                </div>
-              </div>
-            </DropdownMenuLabel>
-            <DropdownMenuSeparator /> */}
-            {/* <DropdownMenuGroup>
-              <DropdownMenuItem>
-                <IconUserCircle />
-                Settings
-              </DropdownMenuItem>
-              <DropdownMenuItem>
-                <IconCreditCard />
-                Billing
-              </DropdownMenuItem> */}
-            {/* <DropdownMenuItem>
-                <IconNotification />
-                Notifications
-              </DropdownMenuItem> */}
-            {/* </DropdownMenuGroup> */}
-            {/* <DropdownMenuSeparator /> */}
             <DropdownMenuItem
               onClick={async () => {
                 await api
@@ -113,7 +75,7 @@ export function NavUser() {
                   });
               }}
             >
-              <IconLogout />
+              <IconLogout className=" text-red-500" />
               Log out
             </DropdownMenuItem>
           </DropdownMenuContent>

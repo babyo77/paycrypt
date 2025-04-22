@@ -15,14 +15,11 @@ export async function getSession() {
   }
 
   try {
-    const { data: session, error } = await api.get<UserData>(
-      "/merchant/session",
-      {
-        headers: {
-          Authorization: `Bearer ${tesseraCookie?.value}`,
-        },
-      }
-    );
+    const { data: session, error } = await api.get<UserData>("/merchant", {
+      headers: {
+        Authorization: `Bearer ${tesseraCookie?.value}`,
+      },
+    });
 
     if (error) {
       console.error("sex error", error);

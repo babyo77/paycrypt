@@ -19,26 +19,25 @@ import {
   CollapsibleContent,
   CollapsibleTrigger,
 } from "@/components/ui/collapsible";
+import { ChevronDown, ChevronRight } from "lucide-react";
 
 export default function LinksPage() {
   const [formData, setFormData] = useState({
     title: "",
-    amount: "",
+    amount: 0,
     description: "",
-    minAmount: "",
-    maxAmount: "",
-    expiryDays: "30",
-    redirectUrl: "",
-    currency: "USD",
+    redirect_url: "",
     link_type: "",
-    collect_name: false,
-    collect_email: false,
-    collect_phone: false,
-    collect_billing_details: false,
-    collect_shipping_details: false,
-    allow_custom_fields: false,
-    allow_promotional_code: false,
-    call_to_action_label: "Donate",
+    currency: "USD",
+    collect_name: true,
+    collect_email: true,
+    collect_phone: true,
+    collect_billing_details: true,
+    collect_shipping_details: true,
+    allow_custom_fields: true,
+    allow_promotional_code: true,
+    call_to_action_label: "Pay",
+    webhook: "",
     // tags: "",
     // showConfirmationPage: true,
     // successMessage: "",
@@ -50,6 +49,9 @@ export default function LinksPage() {
 
   const [isLoading, setIsLoading] = useState(false);
   const [copying, setCopying] = useState(false);
+
+  const [customerInfoOpen, setCustomerInfoOpen] = useState(false);
+  const [advancedOptionsOpen, setAdvancedOptionsOpen] = useState(false);
 
   const handleInputChange = (
     e: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>
@@ -241,17 +243,17 @@ export default function LinksPage() {
                       </div>
 
                       <div className="flex flex-col space-y-1.5">
-                        <Label htmlFor="redirectUrl">
+                        <Label htmlFor="redirect_url">
                           Redirect URL{" "}
                           <span className="bg-muted px-2 py-1 text-xs rounded">
                             Optional
                           </span>
                         </Label>
                         <Input
-                          id="redirectUrl"
-                          name="redirectUrl"
+                          id="redirect_url"
+                          name="redirect_url"
                           placeholder="e.g. https://example.com"
-                          value={formData.redirectUrl}
+                          value={formData.redirect_url}
                           onChange={handleInputChange}
                           type="url"
                           className="focus-visible:ring-primary/30"
@@ -263,7 +265,11 @@ export default function LinksPage() {
                     </div>
 
                     {/* Customer Information Collection */}
-                    <Collapsible className="rounded-lg border border-border/60 overflow-hidden">
+                    <Collapsible
+                      className="rounded-lg border border-border/60 overflow-hidden"
+                      open={customerInfoOpen}
+                      onOpenChange={setCustomerInfoOpen}
+                    >
                       <CollapsibleTrigger className="flex w-full items-center justify-between p-4 bg-muted/30 hover:bg-muted/50 transition">
                         <div className="flex flex-col items-start">
                           <span className="text-base font-medium">
@@ -274,20 +280,11 @@ export default function LinksPage() {
                             customers
                           </span>
                         </div>
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          width="24"
-                          height="24"
-                          viewBox="0 0 24 24"
-                          fill="none"
-                          stroke="currentColor"
-                          strokeWidth="2"
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          className="h-5 w-5"
-                        >
-                          <polyline points="9 18 15 12 9 6" />
-                        </svg>
+                        {customerInfoOpen ? (
+                          <ChevronDown className="h-5 w-5" />
+                        ) : (
+                          <ChevronRight className="h-5 w-5" />
+                        )}
                       </CollapsibleTrigger>
                       <CollapsibleContent>
                         <div className="p-4 grid grid-cols-1 md:grid-cols-2 gap-3">
@@ -410,36 +407,16 @@ export default function LinksPage() {
                               </div>
                             </Label>
                           </div>
-
-                          <div className="flex items-center space-x-2 p-3 rounded-md hover:bg-muted/30">
-                            <Checkbox
-                              id="allow_custom_fields"
-                              checked={formData.allow_custom_fields}
-                              onCheckedChange={(checked) =>
-                                handleCheckboxChange(
-                                  "allow_custom_fields",
-                                  checked as boolean
-                                )
-                              }
-                            />
-                            <Label
-                              htmlFor="allow_custom_fields"
-                              className="font-medium cursor-pointer flex-1"
-                            >
-                              <div>
-                                <span>Add custom fields</span>
-                                <p className="text-xs text-muted-foreground">
-                                  Create additional custom fields
-                                </p>
-                              </div>
-                            </Label>
-                          </div>
                         </div>
                       </CollapsibleContent>
                     </Collapsible>
 
                     {/* Advanced Options */}
-                    <Collapsible className="rounded-lg border border-border/60 overflow-hidden">
+                    <Collapsible
+                      className="rounded-lg border border-border/60 overflow-hidden"
+                      open={advancedOptionsOpen}
+                      onOpenChange={setAdvancedOptionsOpen}
+                    >
                       <CollapsibleTrigger className="flex w-full items-center justify-between p-4 bg-muted/30 hover:bg-muted/50 transition">
                         <div className="flex flex-col items-start">
                           <span className="text-base font-medium">
@@ -449,32 +426,23 @@ export default function LinksPage() {
                             Additional settings for your payment link
                           </span>
                         </div>
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          width="24"
-                          height="24"
-                          viewBox="0 0 24 24"
-                          fill="none"
-                          stroke="currentColor"
-                          strokeWidth="2"
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          className="h-5 w-5"
-                        >
-                          <polyline points="9 18 15 12 9 6" />
-                        </svg>
+                        {advancedOptionsOpen ? (
+                          <ChevronDown className="h-5 w-5" />
+                        ) : (
+                          <ChevronRight className="h-5 w-5" />
+                        )}
                       </CollapsibleTrigger>
                       <CollapsibleContent>
                         <div className="p-5 grid grid-cols-1 md:grid-cols-2 gap-5">
                           <div className="flex flex-col space-y-3">
-                            {/* <div className="flex flex-col space-y-1.5">
-                              <Label htmlFor="tags">Tags</Label>
+                            <div className="flex flex-col space-y-1.5">
+                              <Label htmlFor="webhook">Webhook URL </Label>
                               <div className="flex items-center">
                                 <Input
-                                  id="tags"
-                                  name="tags"
-                                  placeholder="Add tags"
-                                  value={formData.tags}
+                                  id="webhook"
+                                  name="webhook"
+                                  placeholder="https://your-website.com/webhook"
+                                  value={formData.webhook}
                                   onChange={handleInputChange}
                                   className="w-full"
                                 />
@@ -483,9 +451,9 @@ export default function LinksPage() {
                                 </span>
                               </div>
                               <p className="text-xs text-muted-foreground">
-                                Organize payment links with tags
+                                URL to receive payment notifications
                               </p>
-                            </div> */}
+                            </div>
 
                             <div className="flex items-center space-x-2 p-3 rounded-md hover:bg-muted/30 mt-2">
                               <Checkbox

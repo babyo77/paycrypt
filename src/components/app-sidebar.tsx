@@ -8,8 +8,8 @@ import {
   IconActivity,
   IconLinkPlus,
   IconCreditCard,
+  IconCode,
 } from "@tabler/icons-react";
-
 import { NavMain } from "@/components/nav-main";
 import { NavUser } from "@/components/nav-user";
 import {
@@ -21,9 +21,8 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
-import { WalletIcon, Settings2 } from "lucide-react";
+import { Settings2 } from "lucide-react";
 import Link from "next/link";
-import { NavSecondary } from "./nav-secondary";
 
 const data = {
   navMain: [
@@ -56,27 +55,33 @@ const data = {
       ],
     },
     {
+      title: "Developer",
+      url: "/developer",
+      icon: IconCode,
+      items: [
+        {
+          title: "API keys",
+          url: "/api-keys",
+        },
+        {
+          title: "Webhooks",
+          url: "/webhooks",
+        },
+        {
+          title: "SDK",
+          url: "/sdk",
+        },
+        {
+          title: "Documentation",
+          url: "/documentation",
+        },
+      ],
+    },
+    {
       title: "Integrations",
       url: "/integrations",
       icon: IconBrandAirbnb,
     },
-    // {
-    //   title: "Wallet",
-    //   url: "/wallet",
-    //   icon: WalletIcon,
-    // },
-    // {
-    //   title: "Billing",
-    //   url: "/billing",
-    //   icon: IconCreditCard,
-    // },
-    // {
-    //   title: "KYC & Verification",
-    //   url: "/kyc",
-    //   icon: IconShield,
-    // },
-  ],
-  navSecondary: [
     {
       title: "Settings",
       url: "/settings",
@@ -112,8 +117,6 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       </SidebarHeader>
       <SidebarContent>
         <NavMain items={data.navMain} />
-
-        <NavSecondary items={data.navSecondary} className="mt-auto" />
       </SidebarContent>
       <SidebarFooter>
         <NavUser />

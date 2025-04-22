@@ -1,104 +1,160 @@
 "use client";
-import React, { useState } from "react";
+import React from "react";
 import { useUser } from "@/app/provider/user-provider";
 import { useRouter } from "next/navigation";
 import { format } from "date-fns";
 import {
   User,
+  Building2,
+  Paintbrush,
+  CreditCard,
+  Receipt,
+  DollarSign,
+  Percent,
+  Users,
   Key,
-  Wallet,
-  Bell,
-  ChevronRight,
-  ShieldCheck,
+  Webhook,
+  Book,
+  HelpCircle,
+  Code,
 } from "lucide-react";
+import { cn } from "@/lib/utils";
+import { Tabs, TabsContent } from "@/components/ui/tabs";
 
 export default function SettingsPage() {
   const { userData } = useUser();
   const router = useRouter();
 
-  const apiKeyExpiryDate = userData?.api_key_expiry
-    ? format(new Date(userData.api_key_expiry), "MMMM d, yyyy")
-    : "Not available";
-
-  const settingsCards = [
+  const settingsSections = [
     {
-      id: "profile",
-      title: "Profile Information",
-      description: "Manage your personal information and account settings",
-      icon: <User className="h-6 w-6 text-blue-500" />,
-      path: "/settings/profile",
-      detail: userData?.full_name || "Not set",
+      title: "General",
+      items: [
+        {
+          id: "account",
+          title: "Account",
+          description: "Basic info like user details and login details",
+          icon: <User className="h-5 w-5 text-blue-500" />,
+          path: "/settings/account",
+          disabled: false,
+        },
+      ],
     },
     {
-      id: "apikey",
-      title: "API Key",
-      description: "View and manage your API keys",
-      icon: <Key className="h-6 w-6 text-purple-500" />,
-      path: "/settings/api-keys",
-      detail: `Expires: ${apiKeyExpiryDate}`,
+      title: "Payments",
+      items: [
+        {
+          id: "invoices",
+          title: "Invoices",
+          description: "Manage due dates, memos, footers, etc",
+          icon: <Receipt className="h-6 w-6 text-blue-500" />,
+          path: "/settings/invoices",
+          disabled: true,
+        },
+        {
+          id: "promocodes",
+          title: "Promocodes",
+          description: "Manage promocodes based on your requirements",
+          icon: <Percent className="h-6 w-6 text-blue-500" />,
+          path: "/settings/promocodes",
+          disabled: true,
+        },
+      ],
     },
     {
-      id: "wallet",
-      title: "Wallet Addresses",
-      description: "Manage your connected blockchain wallets",
-      icon: <Wallet className="h-6 w-6 text-green-500" />,
-      path: "/settings/wallets",
-      detail: userData?.sol_address ? "Connected" : "Not connected",
-    },
-    {
-      id: "webhook",
-      title: "Webhook Settings",
-      description: "Configure webhooks for notifications",
-      icon: <Bell className="h-6 w-6 text-orange-500" />,
-      path: "/settings/webhooks",
-      detail: userData?.webhook_url ? "Configured" : "Not configured",
-    },
-    {
-      id: "security",
-      title: "Security Settings",
-      description: "Manage security preferences and access controls",
-      icon: <ShieldCheck className="h-6 w-6 text-red-500" />,
-      path: "/settings/security",
-      detail: "Standard",
+      title: "Developer",
+      items: [
+        {
+          id: "api-keys",
+          title: "API Keys",
+          description: "Manage your API keys",
+          icon: <Key className="h-6 w-6 text-blue-500" />,
+          path: "/settings/api-keys",
+          disabled: false,
+        },
+        {
+          id: "webhooks",
+          title: "Webhooks",
+          description: "Manage your webhooks",
+          icon: <Webhook className="h-6 w-6 text-blue-500" />,
+          path: "/settings/webhooks",
+          disabled: false,
+        },
+        {
+          id: "sdk",
+          title: "SDK",
+          description: "Get the SDK",
+          icon: <Code className="h-6 w-6 text-blue-500" />,
+          path: "/settings/sdk",
+          disabled: true,
+        },
+        {
+          id: "documentation",
+          title: "Documentation",
+          description: "Documentation for the API",
+          icon: <Book className="h-6 w-6 text-blue-500" />,
+          path: "/settings/documentation",
+          disabled: false,
+        },
+      ],
     },
   ];
 
-  const navigateToSetting = (path: string) => {
-    router.push(path);
+  const navigateToSetting = (path: string, disabled: boolean) => {
+    if (!disabled) {
+      router.push(path);
+    }
   };
 
   return (
-    <div className="flex flex-1 flex-col bg-gradient-to-b from-white to-gray-50">
-      <div className="flex flex-1 flex-col w-full pb-12 px-8 pt-6">
-        <h1 className="text-3xl font-bold text-gray-900 mb-2">Settings</h1>
-        <p className="text-gray-500 mb-8">
-          Manage your account settings and preferences
-        </p>
-
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {settingsCards.map((card) => (
-            <div
-              key={card.id}
-              onClick={() => navigateToSetting(card.path)}
-              className="group bg-white border border-gray-200 hover:border-primary/30 rounded-xl shadow-sm hover:shadow-md transition-all duration-200 overflow-hidden cursor-pointer"
+    <div className="flex flex-1 flex-col">
+      <div className="@container/main flex flex-1 flex-col gap-2">
+        <div className="flex flex-col gap-4 py-4 md:gap-6 md:py-6">
+          <Tabs
+            defaultValue="outline"
+            className="w-full flex-col justify-start gap-6"
+          >
+            <TabsContent
+              value="outline"
+              className="relative flex flex-col gap-4 overflow-auto px-4 lg:px-6"
             >
-              <div className="p-6">
-                <div className="flex items-start justify-between mb-4">
-                  <div className="p-3 bg-gray-50 group-hover:bg-blue-50 rounded-lg transition-colors">
-                    {card.icon}
+              {settingsSections.map((section, index) => (
+                <div key={section.title} className={index > 0 ? "mt-6" : ""}>
+                  <h2 className="text-base font-medium text-foreground mb-2">
+                    {section.title}
+                  </h2>
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
+                    {section.items.map((item) => (
+                      <div
+                        key={item.id}
+                        onClick={() =>
+                          navigateToSetting(item.path, item.disabled)
+                        }
+                        className={cn(
+                          "group flex items-center p-3 bg-card border border-border",
+                          "rounded-lg shadow-xs transition-all duration-200",
+                          !item.disabled &&
+                            "cursor-pointer hover:border-primary/30 hover:bg-muted/20",
+                          item.disabled && "opacity-50 cursor-not-allowed"
+                        )}
+                      >
+                        <div className="flex-shrink-0 p-1.5 rounded-md bg-muted">
+                          {item.icon}
+                        </div>
+                        <div className="ml-3 flex-1">
+                          <h3 className="font-medium text-card-foreground text-sm">
+                            {item.title}
+                          </h3>
+                          <p className="text-xs text-muted-foreground mt-0.5 line-clamp-2">
+                            {item.description}
+                          </p>
+                        </div>
+                      </div>
+                    ))}
                   </div>
-                  <ChevronRight className="h-5 w-5 text-gray-400 group-hover:text-primary group-hover:translate-x-1 transition-all" />
                 </div>
-                <h3 className="font-semibold text-lg text-gray-900 mb-1">
-                  {card.title}
-                </h3>
-                <p className="text-gray-500 text-sm mb-3">{card.description}</p>
-                <div className="text-sm text-gray-600 font-medium mt-auto pt-2 border-t border-gray-100">
-                  {card.detail}
-                </div>
-              </div>
-            </div>
-          ))}
+              ))}
+            </TabsContent>
+          </Tabs>
         </div>
       </div>
     </div>

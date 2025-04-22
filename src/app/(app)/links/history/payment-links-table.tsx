@@ -298,7 +298,9 @@ export function PaymentLinksDataTable({
         cell: ({ row }: any) => {
           const handleDelete = async () => {
             try {
-              const response = await api.delete(`/links/${row.original.id}`);
+              const response = await api.delete(
+                `/payment-links/${row.original.id}`
+              );
 
               if (response.status === 200) {
                 toast.success("Payment link deleted successfully");
@@ -387,7 +389,7 @@ export function PaymentLinksDataTable({
         const response = await api.get<{
           payment_links: z.infer<typeof schema>[];
           status: string;
-        }>("/links/my-links", {
+        }>("/payment-links", {
           showErrorToast: false,
         });
         if (response.status === 200 && response.data) {
