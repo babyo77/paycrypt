@@ -27,7 +27,7 @@ export interface PaymentLinkResponse {
 
 async function page({ params }: PageProps) {
   const { id } = await params;
-  const link = await api.get<PaymentLinkResponse>(`/links/${id}`);
+  const link = await api.get<PaymentLinkResponse>(`/payment-links/${id}`);
 
   if (link.error || !link.data) {
     return (

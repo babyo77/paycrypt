@@ -389,7 +389,7 @@ export function PaymentLinksDataTable({
         const response = await api.get<{
           payment_links: z.infer<typeof schema>[];
           status: string;
-        }>("/payment-links", {
+        }>("/payment-links/", {
           showErrorToast: false,
         });
         if (response.status === 200 && response.data) {
