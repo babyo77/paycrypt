@@ -15,7 +15,7 @@ export async function getSession() {
   }
 
   try {
-    const { data: session, error } = await api.get<UserData>("/merchant", {
+    const { data: session, error } = await api.get<UserData>("/merchant/", {
       headers: {
         Authorization: `Bearer ${tesseraCookie?.value}`,
       },
