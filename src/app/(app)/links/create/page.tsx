@@ -85,7 +85,7 @@ export default function LinksPage() {
       // Format data for API request
 
       // Make API call to create payment link
-      const response = await api.post("/links/create", formData);
+      const response = await api.post("/links/", formData);
 
       // Handle successful response
       if (response.success) {
