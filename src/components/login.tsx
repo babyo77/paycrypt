@@ -117,7 +117,8 @@ export default function LoginPage() {
           <div className="grid grid-cols-1 mt-4 gap-3">
             <Button
               onClick={() => {
-                window.location.href = "https://api.paycrypt.tech/auth/google";
+                window.location.href =
+                  "https://api.paycrypt.tech/api/v1/auth/google/";
               }}
               type="button"
               variant="outline"
