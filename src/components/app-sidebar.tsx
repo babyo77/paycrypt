@@ -61,15 +61,15 @@ const data = {
       items: [
         {
           title: "API keys",
-          url: "/api-keys",
+          url: "/settings/api-keys",
         },
         {
           title: "Webhooks",
-          url: "/webhooks",
+          url: "/settings/webhooks",
         },
         {
           title: "SDK",
-          url: "/sdk",
+          url: "/settings/sdk",
         },
         {
           title: "Documentation",
