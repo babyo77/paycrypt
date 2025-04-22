@@ -81,17 +81,9 @@ export default function LinksPage() {
 
     try {
       // Format data for API request
-      const payload = {
-        title: formData.title,
-        amount: parseFloat(formData.amount),
-        description: formData.description,
-        redirect_url: formData.redirectUrl,
-        payment_type: formData.payment_type,
-        expiry: 10, // Convert days to hours: 7 days = 168 hours
-      };
 
       // Make API call to create payment link
-      const response = await api.post("/links/create", payload);
+      const response = await api.post("/links/create", formData);
 
       // Handle successful response
       if (response.success) {
