@@ -30,15 +30,15 @@ export default function LinksPage() {
     expiryDays: "30",
     redirectUrl: "",
     currency: "USD",
-    payment_type: "",
-    collectName: false,
-    collectEmail: false,
-    collectPhone: false,
-    collectBillingDetails: false,
-    collectShippingDetails: false,
-    allowCustomFields: false,
-    allowPromotionalCode: false,
-    callToActionLabel: "Donate",
+    link_type: "",
+    collect_name: false,
+    collect_email: false,
+    collect_phone: false,
+    collect_billing_details: false,
+    collect_shipping_details: false,
+    allow_custom_fields: false,
+    allow_promotional_code: false,
+    call_to_action_label: "Donate",
     // tags: "",
     // showConfirmationPage: true,
     // successMessage: "",
@@ -200,9 +200,9 @@ export default function LinksPage() {
                             Expiration
                           </Label>
                           <Select
-                            value={formData.payment_type}
+                            value={formData.link_type}
                             onValueChange={(value) =>
-                              handleSelectChange("payment_type", value)
+                              handleSelectChange("link_type", value)
                             }
                           >
                             <SelectTrigger className="w-full">
@@ -293,17 +293,17 @@ export default function LinksPage() {
                         <div className="p-4 grid grid-cols-1 md:grid-cols-2 gap-3">
                           <div className="flex items-center space-x-2 p-3 rounded-md hover:bg-muted/30">
                             <Checkbox
-                              id="collectName"
-                              checked={formData.collectName}
+                              id="collect_name"
+                              checked={formData.collect_name}
                               onCheckedChange={(checked) =>
                                 handleCheckboxChange(
-                                  "collectName",
+                                  "collect_name",
                                   checked as boolean
                                 )
                               }
                             />
                             <Label
-                              htmlFor="collectName"
+                              htmlFor="collect_name"
                               className="font-medium cursor-pointer flex-1"
                             >
                               <div>
@@ -317,17 +317,17 @@ export default function LinksPage() {
 
                           <div className="flex items-center space-x-2 p-3 rounded-md hover:bg-muted/30">
                             <Checkbox
-                              id="collectEmail"
-                              checked={formData.collectEmail}
+                              id="collect_email"
+                              checked={formData.collect_email}
                               onCheckedChange={(checked) =>
                                 handleCheckboxChange(
-                                  "collectEmail",
+                                  "collect_email",
                                   checked as boolean
                                 )
                               }
                             />
                             <Label
-                              htmlFor="collectEmail"
+                              htmlFor="collect_email"
                               className="font-medium cursor-pointer flex-1"
                             >
                               <div>
@@ -341,17 +341,17 @@ export default function LinksPage() {
 
                           <div className="flex items-center space-x-2 p-3 rounded-md hover:bg-muted/30">
                             <Checkbox
-                              id="collectPhone"
-                              checked={formData.collectPhone}
+                              id="collect_phone"
+                              checked={formData.collect_phone}
                               onCheckedChange={(checked) =>
                                 handleCheckboxChange(
-                                  "collectPhone",
+                                  "collect_phone",
                                   checked as boolean
                                 )
                               }
                             />
                             <Label
-                              htmlFor="collectPhone"
+                              htmlFor="collect_phone"
                               className="font-medium cursor-pointer flex-1"
                             >
                               <div>
@@ -365,17 +365,17 @@ export default function LinksPage() {
 
                           <div className="flex items-center space-x-2 p-3 rounded-md hover:bg-muted/30">
                             <Checkbox
-                              id="collectBillingDetails"
-                              checked={formData.collectBillingDetails}
+                              id="collect_billing_details"
+                              checked={formData.collect_billing_details}
                               onCheckedChange={(checked) =>
                                 handleCheckboxChange(
-                                  "collectBillingDetails",
+                                  "collect_billing_details",
                                   checked as boolean
                                 )
                               }
                             />
                             <Label
-                              htmlFor="collectBillingDetails"
+                              htmlFor="collect_billing_details"
                               className="font-medium cursor-pointer flex-1"
                             >
                               <div>
@@ -389,17 +389,17 @@ export default function LinksPage() {
 
                           <div className="flex items-center space-x-2 p-3 rounded-md hover:bg-muted/30">
                             <Checkbox
-                              id="collectShippingDetails"
-                              checked={formData.collectShippingDetails}
+                              id="collect_shipping_details"
+                              checked={formData.collect_shipping_details}
                               onCheckedChange={(checked) =>
                                 handleCheckboxChange(
-                                  "collectShippingDetails",
+                                  "collect_shipping_details",
                                   checked as boolean
                                 )
                               }
                             />
                             <Label
-                              htmlFor="collectShippingDetails"
+                              htmlFor="collect_shipping_details"
                               className="font-medium cursor-pointer flex-1"
                             >
                               <div>
@@ -413,17 +413,17 @@ export default function LinksPage() {
 
                           <div className="flex items-center space-x-2 p-3 rounded-md hover:bg-muted/30">
                             <Checkbox
-                              id="allowCustomFields"
-                              checked={formData.allowCustomFields}
+                              id="allow_custom_fields"
+                              checked={formData.allow_custom_fields}
                               onCheckedChange={(checked) =>
                                 handleCheckboxChange(
-                                  "allowCustomFields",
+                                  "allow_custom_fields",
                                   checked as boolean
                                 )
                               }
                             />
                             <Label
-                              htmlFor="allowCustomFields"
+                              htmlFor="allow_custom_fields"
                               className="font-medium cursor-pointer flex-1"
                             >
                               <div>
@@ -489,17 +489,17 @@ export default function LinksPage() {
 
                             <div className="flex items-center space-x-2 p-3 rounded-md hover:bg-muted/30 mt-2">
                               <Checkbox
-                                id="allowPromotionalCode"
-                                checked={formData.allowPromotionalCode}
+                                id="allow_promotional_code"
+                                checked={formData.allow_promotional_code}
                                 onCheckedChange={(checked) =>
                                   handleCheckboxChange(
-                                    "allowPromotionalCode",
+                                    "allow_promotional_code",
                                     checked as boolean
                                   )
                                 }
                               />
                               <Label
-                                htmlFor="allowPromotionalCode"
+                                htmlFor="allow_promotional_code"
                                 className="font-medium cursor-pointer flex-1"
                               >
                                 <div>
@@ -518,9 +518,12 @@ export default function LinksPage() {
                                 Label for call to action
                               </Label>
                               <Select
-                                value={formData.callToActionLabel}
+                                value={formData.call_to_action_label}
                                 onValueChange={(value) =>
-                                  handleSelectChange("callToActionLabel", value)
+                                  handleSelectChange(
+                                    "call_to_action_label",
+                                    value
+                                  )
                                 }
                               >
                                 <SelectTrigger className="w-full">
