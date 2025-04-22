@@ -185,7 +185,7 @@ export default function ApiKeysPage() {
         </p>
         <div className="mt-6">
           <Button size="sm" onClick={() => setIsDialogOpen(true)}>
-            <PlusIcon className="h-4 w-4" /> Generate API Key
+            <PlusIcon className="h-4 w-4" /> Generate key
           </Button>
         </div>
       </div>
@@ -199,16 +199,17 @@ export default function ApiKeysPage() {
           <div className="px-4 md:px-6">
             <div className="flex justify-between items-center mb-6">
               <div>
-                <h1 className="text-2xl font-semibold">API Keys</h1>
+                <h1 className="text-2xl font-semibold">
+                  Personal access tokens
+                </h1>
                 <p className="text-sm text-gray-500 mt-1">
-                  Manage API keys to authenticate your applications with our
-                  API.
+                  Tokens you have generated to access Paycrypt API.
                 </p>
               </div>
               <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
                 <DialogTrigger asChild>
                   <Button size="sm">
-                    <PlusIcon className="h-4 w-4" /> Generate API Key
+                    <PlusIcon className="h-4 w-4" /> Generate key
                   </Button>
                 </DialogTrigger>
                 <DialogContent className="sm:max-w-md">
