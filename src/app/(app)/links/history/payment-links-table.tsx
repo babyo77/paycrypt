@@ -304,7 +304,7 @@ export function PaymentLinksDataTable({
           const handleDelete = async () => {
             try {
               const response = await api.delete(
-                `/payment-links/${row.original.id}/`
+                `/payment-links/${row.original.id}`
               );
 
               if (response.status === 200) {
