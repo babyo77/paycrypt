@@ -6,16 +6,10 @@ import {
   CardHeader,
   CardTitle,
   CardDescription,
-  CardContent,
   CardFooter,
 } from "@/components/ui/card";
 import Link from "next/link";
-import { Metadata } from "next";
 import { SectionCards } from "@/components/section-cards";
-
-export const metadata: Metadata = {
-  title: "Dashboard",
-};
 
 export default function Dashboard() {
   return (

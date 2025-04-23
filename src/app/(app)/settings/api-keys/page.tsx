@@ -79,16 +79,10 @@ export default function ApiKeysPage() {
 
       if (response.status === 200) {
         const data = response.data as ApiKeysResponse;
-        if (data.status === "success") {
-          setApiKeys(data.api_keys);
-        } else {
-          throw new Error("Failed to fetch API keys");
-        }
-      } else {
-        throw new Error("Failed to fetch API keys");
+
+        setApiKeys(data.api_keys);
       }
     } catch (error) {
-      toast.error("Failed to fetch API keys");
       console.error(error);
     } finally {
       setIsLoading(false);
@@ -119,11 +113,8 @@ export default function ApiKeysPage() {
 
         setNewKeyName("");
         fetchApiKeys(); // Refresh the list
-      } else {
-        throw new Error("Failed to create API key");
       }
     } catch (error) {
-      toast.error("Failed to create API key");
       console.error(error);
     } finally {
       setIsCreatingKey(false);
@@ -137,11 +128,8 @@ export default function ApiKeysPage() {
       if (response.status === 200) {
         toast.success("API key deleted successfully");
         fetchApiKeys(); // Refresh the list
-      } else {
-        throw new Error("Failed to delete API key");
       }
     } catch (error) {
-      toast.error("Failed to delete API key");
       console.error(error);
     }
   };
@@ -158,7 +146,7 @@ export default function ApiKeysPage() {
     // Reset the copied state after 2 seconds
     setTimeout(() => {
       setCopiedKey(null);
-    }, 2000);
+    }, 1300);
   };
 
   const toggleKeyReveal = (keyId: string) => {
@@ -302,7 +290,9 @@ export default function ApiKeysPage() {
             </div>
 
             {isLoading ? (
-              <div className="text-center py-8">Loading API keys...</div>
+              <div className="text-center py-8 leading-tight font-medium text-muted-foreground">
+                Loading API keys...
+              </div>
             ) : apiKeys?.length === 0 || !apiKeys ? (
               <EmptyState />
             ) : (

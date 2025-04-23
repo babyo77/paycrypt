@@ -1,269 +1,280 @@
-// "use client";
-// import { use, useEffect, useState } from "react";
-// import { api } from "@/lib/utils";
-// import { z } from "zod";
-// import { Badge } from "@/components/ui/badge";
-// import {
-//   Table,
-//   TableBody,
-//   TableCell,
-//   TableHead,
-//   TableHeader,
-//   TableRow,
-// } from "@/components/ui/table";
-// import { format, parseISO } from "date-fns";
-// import { Button } from "@/components/ui/button";
-// import { useRouter } from "next/navigation";
+"use client";
+import { api } from "@/lib/utils";
+import { useParams } from "next/navigation";
+import React, { useEffect, useState } from "react";
+import { format, parseISO, isValid } from "date-fns";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+import { Badge } from "@/components/ui/badge";
+import { Tabs, TabsContent } from "@/components/ui/tabs";
+import {
+  IconCircleCheckFilled,
+  IconCircleXFilled,
+  IconLoader,
+} from "@tabler/icons-react";
 
-// type PageProps = {
-//   params: { link: string };
-//   searchParams?: { [key: string]: string | string[] | undefined };
-// };
-
-// // Transaction schema
-// const transactionSchema = z.object({
-//   id: z.string(),
-//   origin: z.string(),
-//   merchant_id: z.string(),
-//   currency: z.string(),
-//   amount: z.number(),
-//   amount_usd: z.number(),
-//   tx_hash: z.string().nullable(),
-//   address: z.string(),
-//   sender_address: z.string().optional(),
-//   sender_email: z.string().optional(),
-//   status: z.string(),
-//   network: z.string(),
-//   mode: z.string(),
-//   payment_link_id: z.string(),
-//   confirmed_at: z.string().nullable(),
-//   created_at: z.string(),
-//   expires_at: z.string(),
-// });
-
-// // Link schema to type the API response
-// const linkSchema = z.object({
-//   id: z.string(),
-//   merchant_id: z.string(),
-//   title: z.string(),
-//   amount: z.number(),
-//   description: z.string(),
-//   redirect_url: z.string().optional(),
-//   is_active: z.boolean(),
-//   link_type: z.string(),
-//   transactions: z.array(transactionSchema).nullable(),
-//   created_at: z.string().optional(),
-//   updated_at: z.string().optional(),
-// });
-
-// // API response schema
-// const apiResponseSchema = z.object({
-//   payment_link: linkSchema,
-//   status: z.string(),
-// });
-
-// type LinkType = z.infer<typeof linkSchema>;
-// type TransactionType = z.infer<typeof transactionSchema>;
-
-// export default function LinkHistoryPage({ params }: PageProps) {
-//   const router = useRouter();
-//   const { link: linkId } = use(params);
-//   const [linkData, setLinkData] = useState<LinkType | null>(null);
-//   const [loading, setLoading] = useState(true);
-//   const [error, setError] = useState<string | null>(null);
-
-//   useEffect(() => {
-//     const fetchLinkDetails = async () => {
-//       try {
-//         setLoading(true);
-//         const response = await api.get(`/links/${linkId}`);
-
-//         if (response.status === 200 && response.data) {
-//           // Parse the data using the schema to ensure type safety
-//           const parsedData = apiResponseSchema.safeParse(response.data);
-
-//           if (parsedData.success) {
-//             setLinkData(parsedData.data.payment_link);
-//           } else {
-//             console.error("Invalid data format:", parsedData.error);
-//             setError("Invalid data format received from server");
-//           }
-//         }
-//       } catch (err) {
-//         console.error("Failed to fetch link details:", err);
-//         setError("Failed to load link details");
-//       } finally {
-//         setLoading(false);
-//       }
-//     };
-
-//     fetchLinkDetails();
-//   }, [linkId]);
-
-//   if (loading)
-//     return (
-//       <div className="flex items-center justify-center h-screen bg-background">
-//         <div className="text-center p-6 max-w-md mx-auto">
-//           <div className="text-xl font-medium mb-4">
-//             Loading link details...
-//           </div>
-//           <div className="animate-pulse h-2 bg-muted rounded w-3/4 mx-auto"></div>
-//         </div>
-//       </div>
-//     );
-
-//   if (error)
-//     return (
-//       <div className="flex items-center justify-center h-screen bg-background">
-//         <div className="text-center p-6 max-w-md mx-auto">
-//           <div className="text-xl font-medium mb-4 text-red-500">{error}</div>
-//           <p className="text-muted-foreground mb-6">
-//             There was a problem retrieving the link details.
-//           </p>
-//           <Button onClick={() => router.back()} className="min-w-[120px]">
-//             Go Back
-//           </Button>
-//         </div>
-//       </div>
-//     );
-
-//   if (!linkData)
-//     return (
-//       <div className="flex items-center justify-center h-screen bg-background">
-//         <div className="text-center p-6 max-w-md mx-auto">
-//           <div className="text-xl font-medium mb-4">No link data found</div>
-//           <p className="text-muted-foreground mb-6">
-//             The link you're looking for doesn't exist or has been deleted.
-//           </p>
-//           <Button
-//             onClick={() => router.push("/links/history")}
-//             className="min-w-[120px]"
-//           >
-//             Back to Links
-//           </Button>
-//         </div>
-//       </div>
-//     );
-
-//   return (
-//     <div className="p-6">
-//       <h1 className="text-2xl font-bold mb-4">{linkData.title}</h1>
-
-//       {/* Link Details on top, full width */}
-//       <div className="mb-6 p-4 border rounded-lg">
-//         <h2 className="text-lg font-semibold mb-2">Link Details</h2>
-//         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-//           <div>
-//             <p>
-//               <span className="font-medium">Amount:</span> $
-//               {linkData.amount.toFixed(2)}
-//             </p>
-//             <p>
-//               <span className="font-medium">Status:</span>{" "}
-//               <Badge variant={linkData.is_active ? "default" : "outline"}>
-//                 {linkData.is_active ? "Active" : "Inactive"}
-//               </Badge>
-//             </p>
-//           </div>
-//           <div>
-//             <p>
-//               <span className="font-medium">Type:</span>{" "}
-//               <Badge variant="secondary">{linkData.link_type}</Badge>
-//             </p>
-//             <p>
-//               <span className="font-medium">Created:</span>{" "}
-//               {format(parseISO(linkData.created_at || ""), "PPpp")}
-//             </p>
-//           </div>
-//           <div className="md:col-span-2 lg:col-span-1">
-//             <p>
-//               <span className="font-medium">Description:</span>{" "}
-//               {linkData.description}
-//             </p>
-//             {linkData.redirect_url && (
-//               <p>
-//                 <span className="font-medium">Redirect URL:</span>{" "}
-//                 {linkData.redirect_url}
-//               </p>
-//             )}
-//           </div>
-//         </div>
-//       </div>
-
-//       {/* Transactions table below, full width */}
-//       <div className="w-full">
-//         <h2 className="text-lg font-semibold mb-2">Transactions</h2>
-//         {linkData.transactions && linkData.transactions.length > 0 ? (
-//           <div className="border rounded-lg overflow-auto">
-//             <Table>
-//               <TableHeader>
-//                 <TableRow>
-//                   <TableHead className="w-[80px]">ID</TableHead>
-//                   <TableHead className="w-[100px]">Status</TableHead>
-//                   <TableHead className="w-[120px]">Amount</TableHead>
-//                   <TableHead className="w-[120px]">Network</TableHead>
-//                   <TableHead className="w-[150px]">Sender</TableHead>
-//                   <TableHead className="w-[180px]">Created</TableHead>
-//                   <TableHead className="w-[180px]">Expires</TableHead>
-//                 </TableRow>
-//               </TableHeader>
-//               <TableBody>
-//                 {linkData.transactions.map((transaction) => (
-//                   <TableRow key={transaction.id}>
-//                     <TableCell className="font-mono">
-//                       {transaction.id.slice(0, 8)}
-//                     </TableCell>
-//                     <TableCell>
-//                       <Badge
-//                         variant={
-//                           transaction.status === "COMPLETED"
-//                             ? "default"
-//                             : transaction.status === "PENDING"
-//                             ? "outline"
-//                             : "destructive"
-//                         }
-//                       >
-//                         {transaction.status}
-//                       </Badge>
-//                     </TableCell>
-//                     <TableCell>
-//                       {transaction.amount} {transaction.currency}
-//                       <div className="text-xs text-muted-foreground">
-//                         ${transaction.amount_usd}
-//                       </div>
-//                     </TableCell>
-//                     <TableCell>
-//                       {transaction.network}
-//                       <div className="text-xs text-muted-foreground">
-//                         {transaction.mode}
-//                       </div>
-//                     </TableCell>
-//                     <TableCell>{transaction.sender_email || "N/A"}</TableCell>
-//                     <TableCell>
-//                       {format(parseISO(transaction.created_at), "PPp")}
-//                     </TableCell>
-//                     <TableCell>
-//                       {format(parseISO(transaction.expires_at), "PPp")}
-//                     </TableCell>
-//                   </TableRow>
-//                 ))}
-//               </TableBody>
-//             </Table>
-//           </div>
-//         ) : (
-//           <div className="border rounded-lg p-4 text-center text-muted-foreground">
-//             No transactions found for this link
-//           </div>
-//         )}
-//       </div>
-//     </div>
-//   );
-// }
-
-import React from "react";
-
-function page() {
-  return <div>page</div>;
+interface Transaction {
+  id: string;
+  origin: string;
+  merchant_id: string;
+  currency: string;
+  amount: number;
+  amount_usd: number;
+  tx_hash: string;
+  address: string;
+  sender_address: string;
+  sender_email: string;
+  status: string;
+  network: string;
+  mode: string;
+  payment_link_id: string;
+  confirmed_at: string | null;
+  created_at: string;
+  expires_at: string;
 }
 
-export default page;
+interface PaymentLink {
+  id: string;
+  merchant_id: string;
+  title: string;
+  amount: number;
+  link_type: string;
+  description: string;
+  redirect_url: string;
+  currency: string | null;
+  collect_name: boolean | null;
+  collect_email: boolean | null;
+  collect_phone: boolean | null;
+  collect_billing_details: boolean | null;
+  collect_shipping_details: boolean | null;
+  allow_custom_fields: boolean | null;
+  allow_promotional_code: boolean | null;
+  call_to_action_label: string | null;
+  webhook: string | null;
+  transactions: Transaction[];
+  is_active: boolean;
+  created_at: string;
+  updated_at: string;
+}
+
+interface ApiResponse {
+  api_key: string;
+  payment_link: PaymentLink;
+  status: string;
+}
+
+function formatDate(dateString: string | null) {
+  if (!dateString) return "N/A";
+  try {
+    const date = parseISO(dateString);
+    if (!isValid(date)) return "N/A";
+    return format(date, "MMM d, yyyy h:mm:ss a");
+  } catch (error) {
+    return "N/A";
+  }
+}
+
+function getStatusBadgeVariant(status: string) {
+  switch (status.toUpperCase()) {
+    case "COMPLETED":
+      return {
+        color: "bg-green-100 text-green-800",
+        icon: <IconCircleCheckFilled className="mr-1 h-4 w-4 fill-green-500" />,
+      };
+    case "PENDING":
+      return {
+        color: "bg-orange-100 text-orange-800",
+        icon: <IconLoader className="mr-1 h-4 w-4 text-orange-500" />,
+      };
+    case "EXPIRED":
+      return {
+        color: "bg-red-100 text-red-800",
+        icon: <IconCircleXFilled className="mr-1 h-4 w-4 fill-red-500" />,
+      };
+    default:
+      return {
+        color: "bg-gray-100 text-gray-800",
+        icon: <IconLoader className="mr-1 h-4 w-4" />,
+      };
+  }
+}
+
+function PaymentLinkHistoryPage() {
+  const params = useParams<{ link: string }>();
+  const [data, setData] = useState<ApiResponse | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  const fetchHistory = async () => {
+    try {
+      setLoading(true);
+      const response = await api.get<ApiResponse>(
+        `/payment-links/${params.link}`
+      );
+      if (response.status === 200 && response.data) {
+        setData(response.data);
+      }
+    } catch (err) {
+      setError("Failed to fetch payment link data");
+      console.error(err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchHistory();
+  }, [params.link]);
+
+  if (loading)
+    return (
+      <div className="flex flex-col items-center justify-center h-full">
+        Loading...
+      </div>
+    );
+  if (error)
+    return (
+      <div className="text-center py-8 leading-tight font-medium text-muted-foreground">
+        Error: {error}
+      </div>
+    );
+  if (!data)
+    return (
+      <div className="text-center py-8 leading-tight font-medium text-muted-foreground">
+        No data available
+      </div>
+    );
+
+  const { payment_link } = data;
+
+  return (
+    <div className="flex flex-1 flex-col">
+      <div className="@container/main flex flex-1 flex-col gap-2">
+        <div className="flex flex-col gap-4 py-4 md:gap-6 md:py-6">
+          <Tabs
+            defaultValue="outline"
+            className="w-full flex-col justify-start gap-6"
+          >
+            <TabsContent
+              value="outline"
+              className="relative flex flex-col gap-4 overflow-auto px-4 lg:px-6"
+            >
+              <div>
+                <h1 className="text-2xl font-bold">{payment_link.title}</h1>
+                <p className="text-muted-foreground text-sm">
+                  {payment_link.description}
+                </p>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-4">
+                <div className="border rounded-lg p-4">
+                  <div className="text-sm text-muted-foreground">Amount</div>
+                  <div className="text-lg font-medium">
+                    ${payment_link.amount.toFixed(2)}
+                  </div>
+                </div>
+
+                <div className="border rounded-lg p-4">
+                  <div className="text-sm text-muted-foreground">Link Type</div>
+                  <div className="text-lg font-medium">
+                    {payment_link.link_type}
+                  </div>
+                </div>
+
+                <div className="border rounded-lg p-4">
+                  <div className="text-sm text-muted-foreground">
+                    Created At
+                  </div>
+                  <div className="text-lg font-medium">
+                    {formatDate(payment_link.created_at)}
+                  </div>
+                </div>
+              </div>
+
+              <div>
+                <h2 className="text-xl font-semibold mb-4">Transactions</h2>
+
+                {payment_link.transactions &&
+                payment_link.transactions.length > 0 ? (
+                  <div className="overflow-hidden rounded-lg border">
+                    <Table>
+                      <TableHeader className="bg-muted sticky top-0 z-10">
+                        <TableRow>
+                          <TableHead>Transaction ID</TableHead>
+                          <TableHead>Amount</TableHead>
+                          <TableHead>Currency</TableHead>
+                          <TableHead>Status</TableHead>
+                          <TableHead>Sender Email</TableHead>
+                          <TableHead>Created At</TableHead>
+                          <TableHead>Expires At</TableHead>
+                        </TableRow>
+                      </TableHeader>
+                      <TableBody>
+                        {payment_link.transactions.map((transaction) => {
+                          const statusStyle = getStatusBadgeVariant(
+                            transaction.status
+                          );
+                          return (
+                            <TableRow key={transaction.id}>
+                              <TableCell className="font-medium">
+                                {transaction.id.slice(0, 8)}...
+                                {transaction.id.slice(-6)}
+                              </TableCell>
+                              <TableCell>
+                                ${transaction.amount_usd.toFixed(2)} (
+                                {parseFloat(transaction.amount.toFixed(4))}{" "}
+                                {transaction.currency})
+                              </TableCell>
+                              <TableCell>
+                                <Badge
+                                  variant="outline"
+                                  className="text-muted-foreground px-1.5"
+                                >
+                                  {transaction.currency}
+                                </Badge>
+                              </TableCell>
+                              <TableCell>
+                                <Badge
+                                  variant="outline"
+                                  className={`flex items-center px-2 py-1 ${statusStyle.color}`}
+                                >
+                                  {statusStyle.icon}
+                                  {transaction.status}
+                                </Badge>
+                              </TableCell>
+                              <TableCell>
+                                {transaction.sender_email || "N/A"}
+                              </TableCell>
+                              <TableCell>
+                                {formatDate(transaction.created_at)}
+                              </TableCell>
+                              <TableCell>
+                                {formatDate(transaction.expires_at)}
+                              </TableCell>
+                            </TableRow>
+                          );
+                        })}
+                      </TableBody>
+                    </Table>
+                  </div>
+                ) : (
+                  <div className="text-center p-6 border rounded-lg">
+                    No transactions found for this payment link
+                  </div>
+                )}
+              </div>
+            </TabsContent>
+          </Tabs>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+export default PaymentLinkHistoryPage;

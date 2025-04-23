@@ -12,9 +12,9 @@ export const api = new ApiClient({
   credentials: "include",
 
   parseErrorResponse(response) {
-    console.error("Error from API", response.error);
+    console.error("Error from API", response);
     return {
-      message: response.error,
+      message: response.message,
     };
   },
 });

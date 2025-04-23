@@ -21,7 +21,7 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
-import { Settings2 } from "lucide-react";
+import { Receipt, Settings2 } from "lucide-react";
 import Link from "next/link";
 
 const data = {
@@ -67,15 +67,20 @@ const data = {
           title: "Webhooks",
           url: "/settings/webhooks",
         },
-        {
-          title: "SDK",
-          url: "/settings/sdk",
-        },
+        // {
+        //   title: "SDK",
+        //   url: "/settings/sdk",
+        // },
         {
           title: "Documentation",
-          url: "/documentation",
+          url: "/docs",
         },
       ],
+    },
+    {
+      title: "Payout",
+      url: "/payout",
+      icon: Receipt,
     },
     {
       title: "Integrations",

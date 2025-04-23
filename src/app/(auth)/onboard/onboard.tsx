@@ -2,16 +2,7 @@
 
 import React, { useState } from "react";
 import { motion, AnimatePresence } from "motion/react";
-import {
-  ArrowRight,
-  Copy,
-  Check,
-  ChevronRight,
-  Wallet,
-  Key,
-  User,
-  Shield,
-} from "lucide-react";
+import { Copy, Check, ChevronRight, Wallet, Key, User } from "lucide-react";
 import { Logo } from "@/components/logo";
 import { useRouter } from "next/navigation";
 import { api } from "@/lib/utils";

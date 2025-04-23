@@ -6,11 +6,11 @@ export default function Playground() {
   const router = useRouter();
 
   const handleViewDemo = () => {
-    router.push("/x/idkwhy");
+    router.push("");
   };
 
   const handleSponsor = () => {
-    window.open("/s/idkwhy", "_blank");
+    window.open("", "_blank");
   };
 
   return (

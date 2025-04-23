@@ -2,27 +2,11 @@
 import React from "react";
 import { useUser } from "@/app/provider/user-provider";
 import { useRouter } from "next/navigation";
-import { format } from "date-fns";
-import {
-  User,
-  Building2,
-  Paintbrush,
-  CreditCard,
-  Receipt,
-  DollarSign,
-  Percent,
-  Users,
-  Key,
-  Webhook,
-  Book,
-  HelpCircle,
-  Code,
-} from "lucide-react";
+import { User, Receipt, Percent, Key, Webhook, Book, Code } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Tabs, TabsContent } from "@/components/ui/tabs";
 
 export default function SettingsPage() {
-  const { userData } = useUser();
   const router = useRouter();
 
   const settingsSections = [
@@ -92,7 +76,7 @@ export default function SettingsPage() {
           title: "Documentation",
           description: "Documentation for the API",
           icon: <Book className="h-6 w-6 text-blue-500" />,
-          path: "/settings/documentation",
+          path: "/docs",
           disabled: false,
         },
       ],

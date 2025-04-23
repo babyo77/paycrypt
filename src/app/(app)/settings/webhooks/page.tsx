@@ -69,11 +69,8 @@ export default function WebhooksPage() {
         } else {
           throw new Error("Failed to fetch webhooks");
         }
-      } else {
-        throw new Error("Failed to fetch webhooks");
       }
     } catch (error) {
-      toast.error("Failed to fetch webhooks");
       console.error(error);
     } finally {
       setIsLoading(false);
@@ -90,8 +87,8 @@ export default function WebhooksPage() {
     setIsCreatingWebhook(true);
     try {
       const response = await api.post("/webhooks/", {
-        link: newWebhookUrl.trim(),
-        description: newWebhookDescription.trim(),
+        url: newWebhookUrl.trim(),
+        desc: newWebhookDescription.trim(),
       });
 
       if (response.status === 200) {
@@ -100,11 +97,8 @@ export default function WebhooksPage() {
         setNewWebhookDescription("");
         fetchWebhooks(); // Refresh the list
         setIsDialogOpen(false);
-      } else {
-        throw new Error("Failed to create webhook");
       }
     } catch (error) {
-      toast.error("Failed to create webhook");
       console.error(error);
     } finally {
       setIsCreatingWebhook(false);
@@ -239,7 +233,9 @@ export default function WebhooksPage() {
             </div>
 
             {isLoading ? (
-              <div className="text-center py-8">Loading webhooks...</div>
+              <div className="text-center py-8 leading-tight font-medium text-muted-foreground">
+                Loading webhooks...
+              </div>
             ) : webhooks?.length === 0 || !webhooks ? (
               <EmptyState />
             ) : (
@@ -258,15 +254,7 @@ export default function WebhooksPage() {
                     {webhooks?.map((webhook) => (
                       <TableRow key={webhook.id}>
                         <TableCell className="font-medium w-[400px] max-w-[400px]">
-                          <div
-                            className="text-sm"
-                            style={{
-                              wordBreak: "break-all",
-                              overflowWrap: "break-word",
-                            }}
-                          >
-                            {webhook.link}
-                          </div>
+                          <div className="text-sm truncate">{webhook.link}</div>
                         </TableCell>
                         <TableCell>
                           <span className="text-sm">
@@ -298,9 +286,10 @@ export default function WebhooksPage() {
                             </DropdownMenuTrigger>
                             <DropdownMenuContent align="end">
                               <DropdownMenuItem
-                                onClick={() =>
-                                  navigator.clipboard.writeText(webhook.link)
-                                }
+                                onClick={() => {
+                                  navigator.clipboard.writeText(webhook.link);
+                                  toast.success("Copied to clipboard");
+                                }}
                                 className="text-sm py-1.5"
                               >
                                 <CopyIcon className="h-3 w-3" />
