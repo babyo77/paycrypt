@@ -85,7 +85,7 @@ export default function HeroSection() {
   };
   return (
     <>
-      <div
+      {/* <div
         className={`text-black bg-white/40 backdrop-blur-2xl py-3 px-4 flex items-center justify-center space-x-2 fixed top-0 left-0 right-0 z-50 ${
           isScrolled ? "opacity-0" : "opacity-100"
         }`}
@@ -95,7 +95,7 @@ export default function HeroSection() {
           Layer 2 integration is underway — Arbitrum, Optimism & Base coming
           soon.
         </p>
-      </div>
+      </div> */}
       <HeroHeader />
       <main className="overflow-hidden">
         <div
@@ -107,7 +107,7 @@ export default function HeroSection() {
           <div className="h-320 -translate-y-87.5 absolute left-0 top-0 w-60 -rotate-45 bg-[radial-gradient(50%_50%_at_50%_50%,hsla(0,0%,85%,.04)_0,hsla(0,0%,45%,.02)_80%,transparent_100%)]" />
         </div>
         <section>
-          <div className="relative pt-24 md:pt-36 bg-[url('https://i.pinimg.com/736x/81/7d/e8/817de8054c35605fe424edd2b0420f8a.jpg')] bg-cover bg-bottom">
+          <div className="relative pt-24 md:pt-36">
             <div className="absolute inset-0 -z-20">
               <Image
                 src="https://res.cloudinary.com/dg4jhba5c/image/upload/v1741605538/night-background_ni3vqb.jpg"
@@ -142,8 +142,7 @@ export default function HeroSection() {
                 </Link>
 
                 <p className="mt-8 text-balance text-6xl md:text-6xl lg:mt-16 xl:text-[5rem]">
-                  Sell more with
-                  Crypto
+                  Sell more with Crypto
                 </p>
                 <p className="mx-auto mt-8 max-w-2xl text-balance text-lg">
                   Accept crypto payments globally and expand your business
@@ -186,7 +185,6 @@ export default function HeroSection() {
                           <Button
                             aria-label="submit"
                             size="sm"
-                        
                             type="submit"
                             disabled={isLoading}
                           >

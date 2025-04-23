@@ -16,7 +16,7 @@ import {
 
 export default function Features() {
   return (
-    <section id="solutions" className="dark:bg-muted/25 py-16 md:py-32">
+    <section id="solutions" className="dark:bg-muted/25 py-14">
       <div className="mx-auto max-w-6xl px-14">
         <div className="mx-auto grid gap-2 sm:grid-cols-5">
           <Card className="group overflow-hidden shadow-zinc-950/5 sm:col-span-3 sm:rounded-none sm:rounded-tl-xl">
