@@ -45,7 +45,6 @@ export default function LinksPage() {
 
   const [linkCreated, setLinkCreated] = useState(false);
   const [paymentLink, setPaymentLink] = useState("");
-  const [allowCustomAmount, setAllowCustomAmount] = useState(false);
 
   const [isLoading, setIsLoading] = useState(false);
   const [copying, setCopying] = useState(false);
@@ -57,10 +56,19 @@ export default function LinksPage() {
     e: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>
   ) => {
     const { name, value } = e.target;
-    setFormData((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
+
+    // Convert amount to a number if the field is "amount"
+    if (name === "amount") {
+      setFormData((prev) => ({
+        ...prev,
+        [name]: value === "" ? 0 : parseFloat(value),
+      }));
+    } else {
+      setFormData((prev) => ({
+        ...prev,
+        [name]: value,
+      }));
+    }
   };
 
   const handleSelectChange = (name: string, value: string) => {
@@ -90,9 +98,9 @@ export default function LinksPage() {
       // Handle successful response
       if (response.success) {
         // Add type assertion for the response data
-        const linkData = response.data as { url?: string; ID?: string };
+        const linkData = response.data as { url?: string; id?: string };
         const linkUrl =
-          linkData.url || `${window.location.origin}/pay/${linkData.ID}`;
+          linkData.url || `https://pay.cryptopay.com/pay/${linkData.id}`;
 
         setPaymentLink(linkUrl);
         setLinkCreated(true);
