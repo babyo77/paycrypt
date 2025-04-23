@@ -97,9 +97,9 @@ export default function Dashboard() {
               </Card>
 
               {/* Create Invoice Card */}
-              <Card className="bg-white border-border/60">
+              <Card className="bg-white border-border/60 opacity-50">
                 <CardHeader className="pb-2 space-y-2">
-                  <div className="h-10 w-10 bg-purple-50 rounded-lg flex items-center justify-center">
+                  <div className="h-10 w-10 bg-primary/10 rounded-lg flex items-center justify-center">
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
                       width="20"
@@ -110,7 +110,7 @@ export default function Dashboard() {
                       strokeWidth="2"
                       strokeLinecap="round"
                       strokeLinejoin="round"
-                      className="text-purple-600"
+                      className="text-primary"
                     >
                       <rect
                         x="3"
@@ -182,9 +182,9 @@ export default function Dashboard() {
               </Card>
 
               {/* Integrate Payments Card */}
-              <Card className="bg-white border-border/60">
+              <Card className="bg-white border-border/60 opacity-50">
                 <CardHeader className="pb-2 space-y-2">
-                  <div className="h-10 w-10 bg-green-50 rounded-lg flex items-center justify-center">
+                  <div className="h-10 w-10 bg-primary/10 rounded-lg flex items-center justify-center">
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
                       width="20"
@@ -195,7 +195,7 @@ export default function Dashboard() {
                       strokeWidth="2"
                       strokeLinecap="round"
                       strokeLinejoin="round"
-                      className="text-green-600"
+                      className="text-primary"
                     >
                       <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"></path>
                       <rect

@@ -126,7 +126,7 @@ export function SectionCards() {
 
   return (
     <div className="grid grid-cols-1 gap-4 px-4 lg:px-6 @xl/main:grid-cols-2 @5xl/main:grid-cols-4">
-      <Card className="@container/card bg-gradient-to-t from-emerald-50/50 to-card dark:from-emerald-950/20 dark:to-card">
+      <Card className="@container/card ">
         <CardHeader>
           <CardDescription>Weekly Revenue</CardDescription>
           <CardTitle className="text-2xl font-semibold tabular-nums @[250px]/card:text-3xl">
@@ -149,7 +149,7 @@ export function SectionCards() {
           </div>
         </CardFooter>
       </Card>
-      <Card className="@container/card bg-gradient-to-t from-sky-50/50 to-card dark:from-sky-950/20 dark:to-card">
+      <Card className="@container/card dark:to-card">
         <CardHeader>
           <CardDescription>Weekly Orders</CardDescription>
           <CardTitle className="text-2xl font-semibold tabular-nums @[250px]/card:text-3xl">
@@ -174,7 +174,7 @@ export function SectionCards() {
           </div>
         </CardFooter>
       </Card>
-      <Card className="@container/card bg-gradient-to-t from-slate-50/50 to-card dark:from-slate-900/40 dark:to-card">
+      <Card className="@container/card ">
         <CardHeader>
           <CardDescription>Weekly Transactions</CardDescription>
           <CardTitle className="text-2xl font-semibold tabular-nums @[250px]/card:text-3xl">
@@ -199,7 +199,7 @@ export function SectionCards() {
           </div>
         </CardFooter>
       </Card>
-      <Card className="@container/card bg-gradient-to-t from-indigo-50/50 to-card dark:from-indigo-950/20 dark:to-card">
+      <Card className="@container/card ">
         <CardHeader>
           <CardDescription>Success Rate</CardDescription>
           <CardTitle className="text-2xl font-semibold tabular-nums @[250px]/card:text-3xl">

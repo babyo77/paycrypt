@@ -18,15 +18,7 @@ import {
   ChartTooltip,
   ChartTooltipContent,
 } from "@/components/ui/chart";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
-import { schema } from "./data-table";
+
 import { api } from "@/lib/utils";
 import { useEffect } from "react";
 
@@ -47,7 +39,7 @@ interface ApiResponse {
 const chartConfig = {
   orders: {
     label: "Orders",
-    color: "var(--green-9)",
+    color: "var(--blue-9)",
   },
 } satisfies ChartConfig;
 
@@ -199,8 +191,8 @@ export function ChartAreaInteractive() {
             <AreaChart data={filteredData}>
               <defs>
                 <linearGradient id="fillOrders" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="5%" stopColor="#22c55e" stopOpacity={1.0} />
-                  <stop offset="95%" stopColor="#22c55e" stopOpacity={0.1} />
+                  <stop offset="5%" stopColor="#3b82f6" stopOpacity={1.0} />
+                  <stop offset="95%" stopColor="#3b82f6" stopOpacity={0.1} />
                 </linearGradient>
               </defs>
               <CartesianGrid vertical={false} />
@@ -239,7 +231,7 @@ export function ChartAreaInteractive() {
                 dataKey="orders"
                 type="monotone"
                 fill="url(#fillOrders)"
-                stroke="#22c55e"
+                stroke="#3b82f6"
                 stackId="a"
                 baseValue={0}
                 connectNulls
