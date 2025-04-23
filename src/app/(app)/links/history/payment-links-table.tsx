@@ -462,7 +462,7 @@ export function PaymentLinksDataTable({
           </DropdownMenu>
           <Link prefetch href="/links/create">
             <Button>
-              <IconPlus className="mr-2 h-4 w-4" />
+              <IconPlus className="h-4 w-4" />
               Create Link
             </Button>
           </Link>
