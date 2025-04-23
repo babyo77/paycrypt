@@ -223,7 +223,12 @@ export function PaymentLinksDataTable({
               <Button
                 variant="outline"
                 size="sm"
-                onClick={() => window.open(`/pay/${row.original.id}`, "_blank")}
+                onClick={() =>
+                  window.open(
+                    `https://pay.paycrypt.tech/link/${row.original.id}`,
+                    "_blank"
+                  )
+                }
               >
                 Open URL
               </Button>
