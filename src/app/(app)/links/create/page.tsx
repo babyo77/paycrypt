@@ -724,7 +724,26 @@ export default function LinksPage() {
                       <Button
                         variant="outline"
                         className="flex-1"
-                        onClick={() => setLinkCreated(false)}
+                        onClick={() => {
+                          setLinkCreated(false);
+                          setFormData({
+                            title: "",
+                            amount: 0,
+                            description: "",
+                            redirect_url: "",
+                            link_type: "PERMANENT",
+                            currency: "USD",
+                            collect_name: false,
+                            collect_email: false,
+                            collect_phone: false,
+                            collect_billing_details: false,
+                            collect_shipping_details: false,
+                            allow_custom_fields: false,
+                            allow_promotional_code: false,
+                            call_to_action_label: "Pay",
+                            webhook: "",
+                          });
+                        }}
                       >
                         Create Another
                       </Button>
