@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 import { motion, AnimatePresence } from "motion/react";
-import { Copy, Check, ChevronRight, Wallet, Key, User } from "lucide-react";
+import { Copy, Check, ChevronRight, Wallet, User } from "lucide-react";
 import { Logo } from "@/components/logo";
 import { useRouter } from "next/navigation";
 import { api } from "@/lib/utils";
@@ -19,10 +19,10 @@ function OnboardPage({ merchantData }: { merchantData: any }) {
   // Merchant data
 
   const handleContinue = async () => {
-    if (step < 3) {
+    if (step < 2) {
       setStep(step + 1);
     } else {
-      await api.patch("/merchant/update", {
+      await api.patch("/merchant/", {
         is_active: true,
       });
       router.push("/dashboard");
@@ -47,12 +47,11 @@ function OnboardPage({ merchantData }: { merchantData: any }) {
   // Define step icons
   const stepIcons = [
     <User key="user" className="w-5 h-5 text-primary" />,
-    <Key key="key" className="w-5 h-5 text-primary" />,
     <Wallet key="wallet" className="w-5 h-5 text-primary" />,
   ];
 
   // Define step titles
-  const stepTitles = ["Account Created", "API Access", "Wallet Addresses"];
+  const stepTitles = ["Account Created", "Wallet Addresses"];
 
   return (
     <motion.main
@@ -99,7 +98,7 @@ function OnboardPage({ merchantData }: { merchantData: any }) {
                     })
                   )}
                 </motion.div>
-                {idx < 2 && (
+                {idx < 1 && (
                   <motion.div
                     animate={{
                       opacity: idx + 1 < step ? 0.9 : 0.3,
@@ -194,52 +193,6 @@ function OnboardPage({ merchantData }: { merchantData: any }) {
                   transition={{ delay: 0.1, duration: 0.3 }}
                 >
                   <p className="text-sm text-muted-foreground mb-4 leading-tight tracking-tight font-medium">
-                    Use this API key to integrate payments with your systems
-                  </p>
-
-                  <div className="space-y-4">
-                    <div>
-                      <div className="text-sm text-muted-foreground mb-1 leading-tight tracking-tight font-medium">
-                        API Key
-                      </div>
-                      <div className="flex items-center justify-between gap-3 p-3 bg-background/50 rounded-md text-sm font-mono tracking-tighter border border-border">
-                        <span className="truncate leading-tight">
-                          {merchantData.api_key}
-                        </span>
-                        <button
-                          onClick={() =>
-                            handleCopy("apiKey", merchantData.api_key)
-                          }
-                          className="p-1 hover:bg-muted rounded-md"
-                        >
-                          {copied.apiKey ? (
-                            <Check className="w-4 h-4 text-green-500" />
-                          ) : (
-                            <Copy className="w-4 h-4" />
-                          )}
-                        </button>
-                      </div>
-                    </div>
-
-                    <motion.div
-                      initial={{ opacity: 0, y: 5 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      transition={{ delay: 0.2, duration: 0.3 }}
-                      className="text-sm text-muted-foreground p-3 bg-yellow-50/80 rounded-md leading-tight tracking-tight font-medium border border-yellow-200"
-                    >
-                      Keep this key secure and never share it publicly
-                    </motion.div>
-                  </div>
-                </motion.div>
-              )}
-
-              {step === 3 && (
-                <motion.div
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  transition={{ delay: 0.1, duration: 0.3 }}
-                >
-                  <p className="text-sm text-muted-foreground mb-4 leading-tight tracking-tight font-medium">
                     Your crypto payment addresses
                   </p>
 
@@ -297,7 +250,7 @@ function OnboardPage({ merchantData }: { merchantData: any }) {
             onClick={handleContinue}
             className="w-full py-3 px-5 rounded-md bg-primary text-primary-foreground text-sm font-medium transition-colors flex items-center justify-center gap-2 tracking-tight leading-tight border border-primary"
           >
-            {step < 3 ? "Next" : "Go to Dashboard"}
+            {step < 2 ? "Next" : "Go to Dashboard"}
             <ChevronRight className="w-5 h-5" />
           </motion.button>
         </div>
