@@ -141,16 +141,16 @@ export default function HeroSection() {
                   </div>
                 </Link>
 
-                <p className="mt-8 text-balance font-medium text-6xl md:text-6xl lg:mt-16 xl:text-[5rem]">
-                  Sell more with Crypto
+                <p className="mt-8 text-balance font-medium text-5xl md:text-6xl lg:mt-16 xl:text-[5rem]">
+                  New way to accept payments
                 </p>
-                <p className="mx-auto mt-8 max-w-2xl  tracking-normal text-balance text-lg">
-                  Accept crypto payments globally and expand your business
-                  reach. Fast, secure, and borderless transactions for modern
-                  commerce.
+                <p className="mt-8 mx-auto max-w-3xl text-center tracking-normal text-sm md:text-lg">
+                  Accept crypto and other payment methods globally and expand
+                  your business reach. Fast, secure, and borderless transactions
+                  for modern commerce.
                 </p>
 
-                <div className="mt-12 flex flex-col items-center justify-center gap-2 md:flex-row">
+                <div className="mt-12 flex items-center justify-center gap-2">
                   <Link href="/demo">
                     <Button>View Demo</Button>
                   </Link>
@@ -161,7 +161,7 @@ export default function HeroSection() {
               </div>
             </div>
 
-            <div className="relative max-md:mr-0 pb-7 -mr-56 mt-8 overflow-hidden px-2 sm:mr-0 sm:mt-12 md:mt-20">
+            <div className="relative max-md:mr-0 pb-7 -mr-56 mt-8 overflow-hidden px-4 sm:mr-0 sm:mt-12 md:mt-20">
               <div
                 aria-hidden
                 className=" to-background absolute inset-0 z-10 from-transparent from-35%"

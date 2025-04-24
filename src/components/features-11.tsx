@@ -16,8 +16,18 @@ import {
 
 export default function Features() {
   return (
-    <section id="solutions" className="dark:bg-muted/25 py-14">
-      <div className="mx-auto max-w-6xl px-14">
+    <section id="solutions" className="dark:bg-muted/25 space-y-6 py-14">
+      <div className="mx-auto max-w-5xl w-full md:px-0 px-4 text-start space-y-1">
+        <h4 className="text-3xl font-semibold text-blue-700 tracking-tighter sm:text-4xl md:text-5xl">
+          Solutions
+        </h4>
+        <p className="text-muted-foreground text-sm font-medium">
+          Paycrypt offers a range of solutions to help you accept payments and
+          manage your business.
+        </p>
+      </div>
+
+      <div className="mx-auto max-w-6xl px-4 md:px-14">
         <div className="mx-auto grid gap-2 sm:grid-cols-5">
           <Card className="group overflow-hidden shadow-zinc-950/5 sm:col-span-3 sm:rounded-none sm:rounded-tl-xl">
             <CardHeader>

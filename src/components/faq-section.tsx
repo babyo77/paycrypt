@@ -11,7 +11,7 @@ const faqs = [
   {
     question: "What is Paycrypt?",
     answer:
-      "Paycrypt is a global crypto payment platform that enables businesses to accept cryptocurrency payments with instant settlements, zero technical complexity, and worldwide accessibility.",
+      "Paycrypt is a global payment platform that enables businesses to accept payments with instant settlements, zero technical complexity, and worldwide accessibility.",
   },
   {
     question: "Which cryptocurrencies do you support?",
@@ -42,10 +42,10 @@ const faqs = [
 
 export default function FAQSection() {
   return (
-    <section id="faqs" className="mt-12">
+    <section id="faqs" className="mt-12 px-4">
       <div className="mx-auto max-w-5xl w-full text-start space-y-1">
         <h4 className="text-3xl font-semibold text-blue-700 tracking-tighter sm:text-4xl md:text-5xl">
-          Frequently Asked Questions
+          FAQs
         </h4>
         <p className="text-muted-foreground  text-sm font-medium">
           We've answered some of the most common questions below.

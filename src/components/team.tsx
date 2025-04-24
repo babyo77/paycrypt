@@ -30,14 +30,14 @@ const members = [
 export default function TeamSection() {
   return (
     <section id="team">
-      <div className="mb-8 max-w-5xl mx-auto space-y-2">
+      <div className="mb-8 px-4 md:px-0 max-w-5xl mx-auto space-y-2">
         <h2 className="text-3xl font-semibold text-blue-700 tracking-tighter sm:text-4xl md:text-5xl">
-          Our team
+          Team
         </h2>
         <p className="text-muted-foreground text-sm font-medium">
           PayCrypt is a team of forward-thinking innovators passionate about
-          reshaping the future of finance through secure and seamless crypto
-          payment solutions.
+          reshaping the future of finance through secure and seamless payment
+          solutions.
         </p>
 
         <div>
