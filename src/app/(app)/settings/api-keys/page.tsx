@@ -117,6 +117,7 @@ export default function ApiKeysPage() {
     } catch (error) {
       console.error(error);
     } finally {
+      setIsDialogOpen(false);
       setIsCreatingKey(false);
     }
   };
@@ -203,7 +204,7 @@ export default function ApiKeysPage() {
                 <DialogContent className="sm:max-w-md">
                   <DialogHeader>
                     <DialogTitle className="text-lg font-semibold leading-tight">
-                      Generate API Key
+                      Generate Key
                     </DialogTitle>
                   </DialogHeader>
                   <div>
@@ -277,9 +278,7 @@ export default function ApiKeysPage() {
                             disabled={isCreatingKey}
                             size="sm"
                           >
-                            {isCreatingKey
-                              ? "Generating..."
-                              : "Generate API Key"}
+                            {isCreatingKey ? "Generating..." : "Generate Key"}
                           </Button>
                         </div>
                       </div>

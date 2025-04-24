@@ -94,7 +94,7 @@ export const HeroHeader = () => {
                   </Link>
                 </Button>
                 <Button asChild size="sm">
-                  <Link href="/account">
+                  <Link href="https://app.paycrypt.tech/account">
                     <span>Try V0</span>
                   </Link>
                 </Button>
