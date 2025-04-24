@@ -25,7 +25,9 @@ export const metadata: Metadata = {
     description:
       "Accept crypto payments globally with low fees and enhanced security",
     type: "website",
-    images: ["https://logo-images.b-cdn.net/graident.png"],
+    images: [
+      "https://us-east-1.tixte.net/uploads/tanmay111-files.tixte.co/gradii-1600x900.webp",
+    ],
   },
   twitter: {
     card: "summary_large_image",
@@ -35,7 +37,9 @@ export const metadata: Metadata = {
     },
     description:
       "Accept crypto payments globally with low fees and enhanced security",
-    images: ["https://logo-images.b-cdn.net/graident.png"],
+    images: [
+      "https://us-east-1.tixte.net/uploads/tanmay111-files.tixte.co/gradii-1600x900.webp",
+    ],
   },
   icons: {
     icon: "https://logo-images.b-cdn.net/icon.png",

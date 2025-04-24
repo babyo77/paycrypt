@@ -217,12 +217,12 @@ export default function HeroSection() {
               controls
               autoPlay
               loop
-              poster="https://logo-images.b-cdn.net/graident.png"
+              poster="https://us-east-1.tixte.net/uploads/tanmay111-files.tixte.co/gradii-1600x900.webp"
               preload="metadata"
-              src="https://logo-images.b-cdn.net/paycrypt-1743981455177.mp4"
+              src="https://us-east-1.tixte.net/uploads/tanmay111-files.tixte.co/paycrypt-demo-25-apr-1745519925395.mp4"
             >
               <source
-                src="https://logo-images.b-cdn.net/paycrypt-1743981455177.mp4"
+                src="https://us-east-1.tixte.net/uploads/tanmay111-files.tixte.co/paycrypt-demo-25-apr-1745519925395.mp4"
                 type="video/mp4"
               />
               Your browser does not support the video tag.
