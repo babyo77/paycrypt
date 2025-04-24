@@ -151,8 +151,12 @@ export default function HeroSection() {
                 </p>
 
                 <div className="mt-12 flex flex-col items-center justify-center gap-2 md:flex-row">
-                  <Button>View Demo</Button>
-                  <Button>Join Waitlist</Button>
+                  <Link href="/demo">
+                    <Button>View Demo</Button>
+                  </Link>
+                  <Link href="https://discord.gg/7A87VRZn6U">
+                    <Button>Join Waitlist</Button>
+                  </Link>
                 </div>
               </div>
             </div>
