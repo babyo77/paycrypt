@@ -97,7 +97,7 @@ export default function HeroSection() {
         </p>
       </div> */}
       <HeroHeader />
-      <main className="overflow-hidden">
+      <main className="overflow-hidden bg-[#f6f7f9] leading-tight tracking-tight">
         <div
           aria-hidden
           className="absolute inset-0 isolate hidden opacity-65 contain-strict lg:block"
@@ -121,7 +121,7 @@ export default function HeroSection() {
             <div className="mx-auto max-w-7xl px-4 md:px-6 ">
               <div className="text-center sm:mx-auto lg:mr-auto lg:mt-0">
                 <Link
-                  href="https://x.com/paycrypt_tech"
+                  href="https://docs.paycrypt.tech"
                   className="hover:bg-background dark:hover:border-t-border bg-muted/90 group mx-auto flex w-fit items-center gap-4 rounded-full border p-1 pl-4 shadow-md shadow-zinc-950/5 transition-colors duration-300 dark:border-t-white/5 dark:shadow-zinc-950"
                 >
                   <span className="text-foreground text-sm">
@@ -141,87 +141,28 @@ export default function HeroSection() {
                   </div>
                 </Link>
 
-                <p className="mt-8 text-balance text-6xl md:text-6xl lg:mt-16 xl:text-[5rem]">
+                <p className="mt-8 text-balance font-medium text-6xl md:text-6xl lg:mt-16 xl:text-[5rem]">
                   Sell more with Crypto
                 </p>
-                <p className="mx-auto mt-8 max-w-2xl text-balance text-lg">
+                <p className="mx-auto mt-8 max-w-2xl  tracking-normal text-balance text-lg">
                   Accept crypto payments globally and expand your business
                   reach. Fast, secure, and borderless transactions for modern
                   commerce.
                 </p>
 
                 <div className="mt-12 flex flex-col items-center justify-center gap-2 md:flex-row">
-                  <form onSubmit={handleSubmit} className="mx-auto max-w-sm">
-                    {isSuccess ? (
-                      <div className="text-center">
-                        <p className="text-blue-500 font-medium">
-                          Thanks for joining! We'll be in touch soon.
-                        </p>
-                      </div>
-                    ) : (
-                      <div className="bg-background/90 mb-3 has-[input:focus]:ring-muted relative grid grid-cols-[1fr_auto] items-center rounded-[calc(var(--radius)+0.5rem)] border pr-2 shadow shadow-zinc-950/5 has-[input:focus]:ring-2">
-                        <Mail className="pointer-events-none absolute inset-y-0 left-4 my-auto size-4" />
-
-                        <input
-                          value={email}
-                          onChange={(e) => {
-                            setError("");
-                            setEmail(e.target.value);
-                          }}
-                          placeholder="Your mail address"
-                          className={`h-12 w-full bg-transparent pl-12 focus:outline-none ${
-                            error ? "border-red-500" : ""
-                          }`}
-                          type="email"
-                          required
-                        />
-                        {error && (
-                          <div className="absolute -bottom-6 left-0 text-sm text-red-500">
-                            {error}
-                          </div>
-                        )}
-
-                        <div className="md:pr-1.5 lg:pr-0">
-                          <Button
-                            aria-label="submit"
-                            size="sm"
-                            type="submit"
-                            disabled={isLoading}
-                          >
-                            {isLoading ? (
-                              <div className="size-5 animate-spin rounded-full border-2 border-background border-t-foreground" />
-                            ) : (
-                              <>
-                                <span className="hidden md:block">
-                                  Join Waitlist
-                                </span>
-                                <SendHorizonal
-                                  className="relative mx-auto size-5 md:hidden"
-                                  strokeWidth={2}
-                                />
-                              </>
-                            )}
-                          </Button>
-                        </div>
-                      </div>
-                    )}
-                    <Link
-                      href="/s/idkwhy"
-                      className="text-sm hover:underline underline-offset-4 text-muted-foreground"
-                    >
-                      Sponsor us
-                    </Link>
-                  </form>
+                  <Button>View Demo</Button>
+                  <Button>Join Waitlist</Button>
                 </div>
               </div>
             </div>
 
-            <div className="relative max-md:mr-0 -mr-56 mt-8 overflow-hidden px-2 sm:mr-0 sm:mt-12 md:mt-20">
+            <div className="relative max-md:mr-0 pb-7 -mr-56 mt-8 overflow-hidden px-2 sm:mr-0 sm:mt-12 md:mt-20">
               <div
                 aria-hidden
-                className="bg-linear-to-b to-background absolute inset-0 z-10 from-transparent from-35%"
+                className=" to-background absolute inset-0 z-10 from-transparent from-35%"
               />
-              <div className="inset-shadow-2xs ring-background dark:inset-shadow-white/20 bg-background relative mx-auto max-w-6xl overflow-hidden rounded-2xl border p-4 shadow-lg shadow-zinc-950/15 ring-1">
+              <div className="inset-shadow-2xs ring-background dark:inset-shadow-white/20 bg-background relative mx-auto max-w-5xl overflow-hidden rounded-2xl border p-4 shadow-lg shadow-zinc-950/5 ring-1">
                 <div className="relative">
                   <Image
                     className="bg-background aspect-15/8 relative hidden rounded-2xl dark:block"
@@ -253,7 +194,7 @@ export default function HeroSection() {
         <Features />
         <TeamSection />
         <FAQSection />
-        <section className="bg-background overflow-hidden py-16">
+        <section className=" overflow-hidden py-16">
           <div className="flex items-center justify-center gap-4">
             <Link href="https://x.com/meyanksingh">
               <FaXTwitter className="size-4 text-muted-foreground hover:text-foreground" />

@@ -58,7 +58,7 @@ export default function LoginPage() {
             <Link href="/" aria-label="go home" className="mx-auto block w-fit">
               <Logo />
             </Link>
-            <h1 className="mb-1 mt-1 text-xl font-semibold">Paycrypt</h1>
+
             <p className="text-sm">Welcome! Continue to your Google account</p>
           </div>
 

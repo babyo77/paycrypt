@@ -7,8 +7,8 @@ import React from "react";
 import { cn } from "@/lib/utils";
 
 const menuItems = [
-  // { name: "Features", href: "#link" },
-  { name: "Solution", href: "#solutions" },
+  { name: "Products", href: "#products" },
+  { name: "Solutions", href: "#solutions" },
   { name: "FAQ", href: "#faq" },
   { name: "Team", href: "#team" },
 ];
@@ -89,13 +89,13 @@ export const HeroHeader = () => {
               </div>
               <div className="flex w-full flex-col space-y-3 sm:flex-row sm:gap-3 sm:space-y-0 md:w-fit">
                 <Button asChild size="sm">
-                  <Link href="/demo">
-                    <span>View Demo</span>
+                  <Link href="https://discord.gg/7A87VRZn6U">
+                    <span>Contact Us</span>
                   </Link>
                 </Button>
                 <Button asChild size="sm">
                   <Link href="https://app.paycrypt.tech/account">
-                    <span>Try V0</span>
+                    <span>Get Started</span>
                   </Link>
                 </Button>
               </div>

@@ -43,8 +43,8 @@ const faqs = [
 export default function FAQSection() {
   return (
     <section id="faqs" className="mt-12">
-      <div className="mx-auto  max-w-5xl w-full text-start space-y-1">
-        <h4 className="text-3xl text-blue-700 tracking-tighter sm:text-4xl md:text-5xl">
+      <div className="mx-auto max-w-5xl w-full text-start space-y-1">
+        <h4 className="text-3xl font-semibold text-blue-700 tracking-tighter sm:text-4xl md:text-5xl">
           Frequently Asked Questions
         </h4>
         <p className="text-muted-foreground  text-sm font-medium">

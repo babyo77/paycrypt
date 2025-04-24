@@ -4,7 +4,10 @@ import { motion } from "motion/react";
 
 export const Logo = ({ className }: { className?: string }) => {
   return (
-    <IconInnerShadowTop className={cn("size-6 text-blue-700", className)} />
+    <div className="flex items-center gap-2">
+      <IconInnerShadowTop className={cn("size-6 text-blue-700", className)} />
+      <p className="text-lg text-blue-700 font-semibold">Paycrypt</p>
+    </div>
   );
 };
 

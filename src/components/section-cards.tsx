@@ -12,6 +12,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { api } from "@/lib/utils";
+import { useUser } from "@/app/provider/user-provider";
 
 export function SectionCards() {
   const [metrics, setMetrics] = useState({
@@ -24,6 +25,7 @@ export function SectionCards() {
   // Add state to track previous values to simulate trends
   const [prevMetrics, setPrevMetrics] = useState<typeof metrics | null>(null);
 
+  const { userData } = useUser();
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -33,9 +35,12 @@ export function SectionCards() {
           new_customer: number;
           daily_all_transactions: number;
           success_rate: number;
-        }>("/metrics/dashboard", {
-          showErrorToast: false,
-        });
+        }>(
+          `/metrics/dashboard?timeframe=${userData?.timeframe}&mode=${userData?.networkMode}`,
+          {
+            showErrorToast: false,
+          }
+        );
 
         if (response.status === 200 && response.data) {
           // Store previous metrics before updating
@@ -58,7 +63,7 @@ export function SectionCards() {
     // Set up interval to refresh data (optional)
     // const interval = setInterval(fetchData, 300000); // every 5 minutes
     // return () => clearInterval(interval);
-  }, []);
+  }, [userData?.timeframe, userData?.networkMode]);
 
   // Format currency with $ and 2 decimal places
   const formatCurrency = (value: number | undefined) => {

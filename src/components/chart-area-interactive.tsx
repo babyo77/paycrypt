@@ -28,7 +28,7 @@ import {
 
 import { api } from "@/lib/utils";
 import { useEffect } from "react";
-
+import { useUser } from "@/app/provider/user-provider";
 export const description = "An interactive area chart";
 
 interface ChartDataItem {
@@ -38,13 +38,15 @@ interface ChartDataItem {
 
 interface ApiResponse {
   status: string;
-  transactions: number;
-  new_customer: number;
-  success_rate: number;
-  revenue: number;
+  transactions?: number;
+  new_customer?: number;
+  success_rate?: number;
+  revenue?: number;
   tx?: {
-    Month: string;
-    TotalTransactions: number;
+    Month?: string;
+    TotalTransactions?: number;
+    month?: string;
+    total_transactions?: number;
   }[];
 }
 
@@ -57,10 +59,7 @@ const chartConfig = {
 
 export function ChartAreaInteractive() {
   const isMobile = useIsMobile();
-  const [networkMode, setNetworkMode] = React.useState("MAINNET");
-  const [timeframe, setTimeframe] = React.useState("MONTHLY");
   const [chartData, setChartData] = React.useState<ChartDataItem[]>(() => {
-    // Initialize with all months, starting with January
     const months = [
       "January",
       "February",
@@ -84,25 +83,19 @@ export function ChartAreaInteractive() {
     }));
   });
 
-  const filteredData = chartData.filter((item) => {
-    // Always return true to show all months
-    return true;
+  const { userData, dispatch } = useUser();
 
-    // Alternative implementation if you want to keep the date filtering logic:
-    /*
-    const date = new Date(item.date);
-    const referenceDate = new Date();
-    const startDate = new Date(referenceDate);
-    startDate.setDate(startDate.getDate() - 365); // Show last 12 months
-    return date >= startDate;
-    */
+  const filteredData = chartData.filter((item) => {
+    const itemDate = new Date(item.date);
+    const currentYear = new Date().getFullYear();
+    return itemDate.getFullYear() === currentYear;
   });
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         const response = await api.get<ApiResponse>(
-          `/metrics/charts?timeframe=${timeframe}&mode=${networkMode}`,
+          `/metrics/charts?timeframe=${userData?.timeframe}&mode=${userData?.networkMode}`,
           {
             showErrorToast: false,
           }
@@ -110,44 +103,50 @@ export function ChartAreaInteractive() {
 
         if (response.status === 200 && response.data) {
           const existingData = [...chartData];
+          const currentYear = new Date().getFullYear();
 
-          // Handle both response formats
           if (response.data.tx && response.data.tx.length > 0) {
-            // Original response format
             response.data.tx.forEach((item) => {
-              const monthMatch = item.Month.trim().match(
-                /([a-zA-Z]+)\s+(\d{4})/
-              );
+              const monthStr = item.month || item.Month;
+              const transactions =
+                item.total_transactions || item.TotalTransactions;
+
+              if (!monthStr) {
+                console.error("Missing month in response:", item);
+                return;
+              }
+
+              const monthMatch = monthStr.trim().match(/([a-zA-Z]+)\s+(\d{4})/);
               if (!monthMatch) {
-                console.error("Invalid month format:", item.Month);
+                console.error("Invalid month format:", monthStr);
                 return;
               }
 
               const month = monthMatch[1];
               const year = parseInt(monthMatch[2]);
+
+              if (year !== currentYear) {
+                return;
+              }
+
               const monthIndex = new Date(`${month} 1, 2000`).getMonth();
 
-              // Find the corresponding month in our existing data
               const matchingIndex = existingData.findIndex((dataItem) => {
                 const itemDate = new Date(dataItem.date);
                 return itemDate.getMonth() === monthIndex;
               });
 
-              // If we found a matching month, update its orders value
               if (matchingIndex !== -1) {
                 existingData[matchingIndex] = {
                   ...existingData[matchingIndex],
-                  orders: item.TotalTransactions,
+                  orders: transactions || 0,
                 };
               }
             });
           } else if (response.data.transactions) {
-            // New response format - for simplicity, we'll use the transactions value
-            // for the current month and leave other months as is
             const currentDate = new Date();
             const currentMonth = currentDate.getMonth();
 
-            // Find the current month in our existing data
             const currentMonthIndex = existingData.findIndex((dataItem) => {
               const itemDate = new Date(dataItem.date);
               return itemDate.getMonth() === currentMonth;
@@ -159,10 +158,12 @@ export function ChartAreaInteractive() {
                 orders: response.data.transactions,
               };
             }
+          } else {
+            setChartData([]);
           }
 
           setChartData(existingData);
-          console.log("Updated chart data with all months:", existingData);
+          console.log("Updated chart data with current year:", existingData);
         }
       } catch (error) {
         console.error("Failed to fetch transactions:", error);
@@ -170,34 +171,43 @@ export function ChartAreaInteractive() {
     };
 
     fetchData();
-  }, [networkMode, timeframe]);
+  }, [userData?.networkMode, userData?.timeframe]);
 
   return (
     <Card className="@container/card">
       <CardHeader>
-        <CardTitle>Total Orders</CardTitle>
+        <CardTitle>Total Transactions</CardTitle>
         <CardDescription>
           <span className="hidden @[540px]/card:block">
-            {timeframe === "YEARLY" && "Total for the year"}
-            {timeframe === "MONTHLY" && "Total for the last 12 months"}
-            {timeframe === "WEEKLY" && "Total for the last few weeks"}
-            {timeframe === "DAILY" && "Total for the last few days"}
+            {userData?.timeframe === "YEARLY" && "Total for the year"}
+            {userData?.timeframe === "MONTHLY" && "Total for the last 30 days"}
+            {userData?.timeframe === "WEEKLY" && "Total for the last 7 days"}
+            {userData?.timeframe === "DAILY" && "Total for the last 24 hours"}
           </span>
           <span className="@[540px]/card:hidden">
-            {timeframe === "YEARLY" && "Yearly"}
-            {timeframe === "MONTHLY" && "Monthly"}
-            {timeframe === "WEEKLY" && "Weekly"}
-            {timeframe === "DAILY" && "Daily"}
+            {userData?.timeframe === "YEARLY" && "Yearly"}
+            {userData?.timeframe === "MONTHLY" && "Monthly"}
+            {userData?.timeframe === "WEEKLY" && "Weekly"}
+            {userData?.timeframe === "DAILY" && "Daily"}
           </span>
         </CardDescription>
         <CardAction className="flex flex-col gap-2 sm:flex-row">
-          <Select value={timeframe} onValueChange={setTimeframe}>
+          <Select
+            defaultValue={userData?.timeframe}
+            value={userData?.timeframe}
+            onValueChange={(value) =>
+              dispatch({
+                type: "SET_TIMEFRAME",
+                payload: value as "DAILY" | "WEEKLY" | "MONTHLY" | "YEARLY",
+              })
+            }
+          >
             <SelectTrigger
               className="flex w-40"
               size="sm"
               aria-label="Select time frame"
             >
-              <SelectValue placeholder="MONTHLY" />
+              <SelectValue placeholder={userData?.timeframe} />
             </SelectTrigger>
             <SelectContent className="rounded-xl">
               <SelectItem value="DAILY" className="rounded-lg">
@@ -215,13 +225,22 @@ export function ChartAreaInteractive() {
             </SelectContent>
           </Select>
 
-          <Select value={networkMode} onValueChange={setNetworkMode}>
+          <Select
+            defaultValue={userData?.networkMode}
+            value={userData?.networkMode}
+            onValueChange={(value) =>
+              dispatch({
+                type: "SET_NETWORK_MODE",
+                payload: value as "MAINNET" | "TESTNET",
+              })
+            }
+          >
             <SelectTrigger
               className="flex w-40"
               size="sm"
               aria-label="Select network mode"
             >
-              <SelectValue placeholder="MAINNET" />
+              <SelectValue placeholder={userData?.networkMode} />
             </SelectTrigger>
             <SelectContent className="rounded-xl">
               <SelectItem value="MAINNET" className="rounded-lg">
@@ -292,7 +311,9 @@ export function ChartAreaInteractive() {
           </ChartContainer>
         ) : (
           <div className="flex h-[250px] w-full items-center justify-center">
-            <p className="text-muted-foreground">No chart data available</p>
+            <p className="text-muted-foreground">
+              No chart data available for current year
+            </p>
           </div>
         )}
       </CardContent>

@@ -21,11 +21,18 @@ export interface UserData {
   full_name: string;
   message: string;
   webhook_url: string;
+  timeframe: "DAILY" | "WEEKLY" | "MONTHLY" | "YEARLY";
+  networkMode: "MAINNET" | "TESTNET";
 }
 
 type UserAction =
   | { type: "SET_USER"; payload: UserData }
-  | { type: "CLEAR_USER" };
+  | { type: "CLEAR_USER" }
+  | {
+      type: "SET_TIMEFRAME";
+      payload: "DAILY" | "WEEKLY" | "MONTHLY" | "YEARLY";
+    }
+  | { type: "SET_NETWORK_MODE"; payload: "MAINNET" | "TESTNET" };
 
 interface UserContextType {
   userData: UserData | null;
@@ -41,6 +48,12 @@ const userReducer = (
       return action.payload;
     case "CLEAR_USER":
       return null;
+    case "SET_TIMEFRAME":
+      if (!state) return null;
+      return { ...state, timeframe: action.payload };
+    case "SET_NETWORK_MODE":
+      if (!state) return null;
+      return { ...state, networkMode: action.payload };
     default:
       return state;
   }
@@ -52,7 +65,6 @@ const routesToPrefetch = [
   "/account",
   "/dashboard",
   "/transactions",
-  "/playground",
   "/settings",
 ];
 

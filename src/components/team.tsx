@@ -31,7 +31,7 @@ export default function TeamSection() {
   return (
     <section id="team">
       <div className="mb-8 max-w-5xl mx-auto space-y-2">
-        <h2 className="text-3xl text-blue-700 tracking-tighter sm:text-4xl md:text-5xl">
+        <h2 className="text-3xl font-semibold text-blue-700 tracking-tighter sm:text-4xl md:text-5xl">
           Our team
         </h2>
         <p className="text-muted-foreground text-sm font-medium">
