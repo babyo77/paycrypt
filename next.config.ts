@@ -63,7 +63,7 @@ const nextConfig: NextConfig = {
             key: "Content-Security-Policy",
             // Defines trusted sources for content loading, preventing XSS and data injection
             value:
-              "default-src 'self' *.api.paycrypt.tech api.paycrypt.tech; script-src 'self' 'unsafe-inline' https://js.stripe.com https://checkout.paypal.com; connect-src 'self' *.api.paycrypt.tech api.paycrypt.tech https://api.stripe.com https://api.paypal.com; frame-src 'self' *.api.paycrypt.tech api.paycrypt.tech https://js.stripe.com https://checkout.paypal.com; img-src 'self' *.api.paycrypt.tech api.paycrypt.tech https: data:; style-src 'self' *.api.paycrypt.tech api.paycrypt.tech 'unsafe-inline'; font-src 'self' *.api.paycrypt.tech api.paycrypt.tech data:; object-src 'none'; base-uri 'none'; form-action 'self' *.api.paycrypt.tech api.paycrypt.tech; frame-ancestors 'none'; upgrade-insecure-requests;",
+              "default-src 'self' *.api.paycrypt.tech api.paycrypt.tech; script-src 'self' 'unsafe-inline' https://js.stripe.com https://checkout.paypal.com; connect-src 'self' *.api.paycrypt.tech api.paycrypt.tech https://api.stripe.com https://api.paypal.com; frame-src 'self' *.api.paycrypt.tech api.paycrypt.tech https://js.stripe.com https://checkout.paypal.com; img-src 'self' *.api.paycrypt.tech api.paycrypt.tech https: data:; style-src 'self' *.api.paycrypt.tech api.paycrypt.tech 'unsafe-inline'; font-src 'self' *.api.paycrypt.tech api.paycrypt.tech data:; media-src 'self' *.api.paycrypt.tech api.paycrypt.tech *.tixte.net; object-src 'none'; base-uri 'none'; form-action 'self' *.api.paycrypt.tech api.paycrypt.tech; frame-ancestors 'none'; upgrade-insecure-requests;",
           },
           {
             key: "Cache-Control",
