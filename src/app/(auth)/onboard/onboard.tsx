@@ -21,10 +21,12 @@ function OnboardPage({ merchantData }: { merchantData: any }) {
     if (step < 2) {
       setStep(step + 1);
     } else {
-      await api.patch("/merchant/", {
+      const res = await api.patch("/merchant/", {
         is_active: true,
       });
-      router.push("/dashboard");
+      if (res.status === 200) {
+        router.push("/settings");
+      }
     }
   };
 
