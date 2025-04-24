@@ -9,7 +9,6 @@ import { api } from "@/lib/utils";
 function OnboardPage({ merchantData }: { merchantData: any }) {
   const [copied, setCopied] = useState({
     merchantId: false,
-    apiKey: false,
     solAddress: false,
     ethAddress: false,
   });
