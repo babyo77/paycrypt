@@ -122,7 +122,7 @@ export default function HeroSection() {
               <div className="text-center sm:mx-auto lg:mr-auto lg:mt-0">
                 <Link
                   href="https://docs.paycrypt.tech"
-                  className="hover:bg-background dark:hover:border-t-border bg-muted/90 group mx-auto flex w-fit items-center gap-4 rounded-full border p-1 pl-4 shadow-md shadow-zinc-950/5 transition-colors duration-300 dark:border-t-white/5 dark:shadow-zinc-950"
+                  className="hover:bg-background dark:hover:border-t-border group mx-auto flex w-fit items-center gap-4 rounded-full border p-1 pl-4 shadow-md shadow-zinc-950/5 transition-colors duration-300 dark:border-t-white/5 dark:shadow-zinc-950 bg-background/90"
                 >
                   <span className="text-foreground text-sm">
                     Introducing Paycrypt
