@@ -90,7 +90,7 @@ export const HeroHeader = () => {
               <div className="flex w-full flex-col space-y-3 sm:flex-row sm:gap-3 sm:space-y-0 md:w-fit">
                 <Button asChild size="sm">
                   <Link href="https://discord.gg/7A87VRZn6U">
-                    <span>Contact Us</span>
+                    <span>Contact sales</span>
                   </Link>
                 </Button>
                 <Button asChild size="sm">
