@@ -169,7 +169,7 @@ export default function WebhooksPage() {
                     </DialogTitle>
                   </DialogHeader>
                   <div>
-                    <div className="space-y-4">
+                    <form onSubmit={handleCreateWebhook} className="space-y-4">
                       <div className="space-y-1.5">
                         <Label
                           htmlFor="webhook_url"
@@ -207,7 +207,7 @@ export default function WebhooksPage() {
                           className="w-full text-sm"
                         />
                       </div>
-                    </div>
+                    </form>
                   </div>
                   <div className="flex justify-end gap-2">
                     <Button
@@ -220,8 +220,7 @@ export default function WebhooksPage() {
                       Cancel
                     </Button>
                     <Button
-                      type="button"
-                      onClick={handleCreateWebhook}
+                      type="submit"
                       disabled={isCreatingWebhook}
                       size="sm"
                     >

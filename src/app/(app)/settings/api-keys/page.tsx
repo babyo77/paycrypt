@@ -245,7 +245,7 @@ export default function ApiKeysPage() {
                         </Button>
                       </div>
                     ) : (
-                      <div className="space-y-4">
+                      <form onSubmit={handleCreateApiKey} className="space-y-4">
                         <div className="space-y-1.5">
                           <Label
                             htmlFor="api_key_name"
@@ -273,15 +273,14 @@ export default function ApiKeysPage() {
                             Cancel
                           </Button>
                           <Button
-                            type="button"
-                            onClick={handleCreateApiKey}
+                            type="submit"
                             disabled={isCreatingKey}
                             size="sm"
                           >
                             {isCreatingKey ? "Generating..." : "Generate Key"}
                           </Button>
                         </div>
-                      </div>
+                      </form>
                     )}
                   </div>
                 </DialogContent>
