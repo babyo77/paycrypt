@@ -340,7 +340,7 @@ export function PaymentLinksDataTable({
                   <DropdownMenuItem
                     onClick={() =>
                       navigator.clipboard.writeText(
-                        `${window.location.origin}/pay/${row.original.id}`
+                        `https://pay.paycrypt.tech/link/${row.original.id}`
                       )
                     }
                   >

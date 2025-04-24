@@ -2,6 +2,13 @@
 
 import * as React from "react";
 import { Area, AreaChart, CartesianGrid, XAxis, YAxis } from "recharts";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 import { useIsMobile } from "@/hooks/use-mobile";
 import {
@@ -30,7 +37,12 @@ interface ChartDataItem {
 }
 
 interface ApiResponse {
-  tx: {
+  status: string;
+  transactions: number;
+  new_customer: number;
+  success_rate: number;
+  revenue: number;
+  tx?: {
     Month: string;
     TotalTransactions: number;
   }[];
@@ -45,7 +57,8 @@ const chartConfig = {
 
 export function ChartAreaInteractive() {
   const isMobile = useIsMobile();
-  // const [timeRange, setTimeRange] = React.useState("90d");
+  const [networkMode, setNetworkMode] = React.useState("MAINNET");
+  const [timeframe, setTimeframe] = React.useState("MONTHLY");
   const [chartData, setChartData] = React.useState<ChartDataItem[]>(() => {
     // Initialize with all months, starting with January
     const months = [
@@ -71,12 +84,6 @@ export function ChartAreaInteractive() {
     }));
   });
 
-  // React.useEffect(() => {
-  //   if (isMobile) {
-  //     setTimeRange("7d");
-  //   }
-  // }, [isMobile]);
-
   const filteredData = chartData.filter((item) => {
     // Always return true to show all months
     return true;
@@ -94,38 +101,65 @@ export function ChartAreaInteractive() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await api.get<ApiResponse>("/metrics/charts", {
-          showErrorToast: false,
-        });
+        const response = await api.get<ApiResponse>(
+          `/metrics/charts?timeframe=${timeframe}&mode=${networkMode}`,
+          {
+            showErrorToast: false,
+          }
+        );
 
         if (response.status === 200 && response.data) {
           const existingData = [...chartData];
 
-          response.data.tx.forEach((item) => {
-            const monthMatch = item.Month.trim().match(/([a-zA-Z]+)\s+(\d{4})/);
-            if (!monthMatch) {
-              console.error("Invalid month format:", item.Month);
-              return;
-            }
+          // Handle both response formats
+          if (response.data.tx && response.data.tx.length > 0) {
+            // Original response format
+            response.data.tx.forEach((item) => {
+              const monthMatch = item.Month.trim().match(
+                /([a-zA-Z]+)\s+(\d{4})/
+              );
+              if (!monthMatch) {
+                console.error("Invalid month format:", item.Month);
+                return;
+              }
 
-            const month = monthMatch[1];
-            const year = parseInt(monthMatch[2]);
-            const monthIndex = new Date(`${month} 1, 2000`).getMonth();
+              const month = monthMatch[1];
+              const year = parseInt(monthMatch[2]);
+              const monthIndex = new Date(`${month} 1, 2000`).getMonth();
 
-            // Find the corresponding month in our existing data
-            const matchingIndex = existingData.findIndex((dataItem) => {
+              // Find the corresponding month in our existing data
+              const matchingIndex = existingData.findIndex((dataItem) => {
+                const itemDate = new Date(dataItem.date);
+                return itemDate.getMonth() === monthIndex;
+              });
+
+              // If we found a matching month, update its orders value
+              if (matchingIndex !== -1) {
+                existingData[matchingIndex] = {
+                  ...existingData[matchingIndex],
+                  orders: item.TotalTransactions,
+                };
+              }
+            });
+          } else if (response.data.transactions) {
+            // New response format - for simplicity, we'll use the transactions value
+            // for the current month and leave other months as is
+            const currentDate = new Date();
+            const currentMonth = currentDate.getMonth();
+
+            // Find the current month in our existing data
+            const currentMonthIndex = existingData.findIndex((dataItem) => {
               const itemDate = new Date(dataItem.date);
-              return itemDate.getMonth() === monthIndex;
+              return itemDate.getMonth() === currentMonth;
             });
 
-            // If we found a matching month, update its orders value
-            if (matchingIndex !== -1) {
-              existingData[matchingIndex] = {
-                ...existingData[matchingIndex],
-                orders: item.TotalTransactions,
+            if (currentMonthIndex !== -1) {
+              existingData[currentMonthIndex] = {
+                ...existingData[currentMonthIndex],
+                orders: response.data.transactions,
               };
             }
-          });
+          }
 
           setChartData(existingData);
           console.log("Updated chart data with all months:", existingData);
@@ -136,7 +170,7 @@ export function ChartAreaInteractive() {
     };
 
     fetchData();
-  }, []);
+  }, [networkMode, timeframe]);
 
   return (
     <Card className="@container/card">
@@ -144,42 +178,60 @@ export function ChartAreaInteractive() {
         <CardTitle>Total Orders</CardTitle>
         <CardDescription>
           <span className="hidden @[540px]/card:block">
-            Total for the last 12 months
+            {timeframe === "YEARLY" && "Total for the year"}
+            {timeframe === "MONTHLY" && "Total for the last 12 months"}
+            {timeframe === "WEEKLY" && "Total for the last few weeks"}
+            {timeframe === "DAILY" && "Total for the last few days"}
           </span>
-          <span className="@[540px]/card:hidden">12 months</span>
+          <span className="@[540px]/card:hidden">
+            {timeframe === "YEARLY" && "Yearly"}
+            {timeframe === "MONTHLY" && "Monthly"}
+            {timeframe === "WEEKLY" && "Weekly"}
+            {timeframe === "DAILY" && "Daily"}
+          </span>
         </CardDescription>
-        <CardAction>
-          {/* <ToggleGroup
-            type="single"
-            value={timeRange}
-            onValueChange={setTimeRange}
-            variant="outline"
-            className="hidden *:data-[slot=toggle-group-item]:!px-4 @[767px]/card:flex"
-          >
-            <ToggleGroupItem value="90d">Last 3 months</ToggleGroupItem>
-            <ToggleGroupItem value="30d">Last 30 days</ToggleGroupItem>
-            <ToggleGroupItem value="7d">Last 7 days</ToggleGroupItem>
-          </ToggleGroup> */}
-          {/* <Select value={timeRange} onValueChange={setTimeRange}>
+        <CardAction className="flex flex-col gap-2 sm:flex-row">
+          <Select value={timeframe} onValueChange={setTimeframe}>
             <SelectTrigger
-              className="flex w-40 **:data-[slot=select-value]:block **:data-[slot=select-value]:truncate @[767px]/card:hidden"
+              className="flex w-40"
               size="sm"
-              aria-label="Select a value"
+              aria-label="Select time frame"
             >
-              <SelectValue placeholder="Last 3 months" />
+              <SelectValue placeholder="MONTHLY" />
             </SelectTrigger>
             <SelectContent className="rounded-xl">
-              <SelectItem value="90d" className="rounded-lg">
-                Last 3 months
+              <SelectItem value="DAILY" className="rounded-lg">
+                Daily
               </SelectItem>
-              <SelectItem value="30d" className="rounded-lg">
-                Last 30 days
+              <SelectItem value="WEEKLY" className="rounded-lg">
+                Weekly
               </SelectItem>
-              <SelectItem value="7d" className="rounded-lg">
-                Last 7 days
+              <SelectItem value="MONTHLY" className="rounded-lg">
+                Monthly
+              </SelectItem>
+              <SelectItem value="YEARLY" className="rounded-lg">
+                Yearly
               </SelectItem>
             </SelectContent>
-          </Select> */}
+          </Select>
+
+          <Select value={networkMode} onValueChange={setNetworkMode}>
+            <SelectTrigger
+              className="flex w-40"
+              size="sm"
+              aria-label="Select network mode"
+            >
+              <SelectValue placeholder="MAINNET" />
+            </SelectTrigger>
+            <SelectContent className="rounded-xl">
+              <SelectItem value="MAINNET" className="rounded-lg">
+                MAINNET
+              </SelectItem>
+              <SelectItem value="TESTNET" className="rounded-lg">
+                TESTNET
+              </SelectItem>
+            </SelectContent>
+          </Select>
         </CardAction>
       </CardHeader>
       <CardContent className="px-2 pt-4 sm:px-6 sm:pt-6">
