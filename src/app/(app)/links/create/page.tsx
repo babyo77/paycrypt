@@ -100,7 +100,7 @@ export default function LinksPage() {
         // Add type assertion for the response data
         const linkData = response.data as { url?: string; id?: string };
         const linkUrl =
-          linkData.url || `https://pay.cryptopay.com/pay/${linkData.id}`;
+          linkData.url || `https://pay.paycrypt.tech/pay/${linkData.id}`;
 
         setPaymentLink(linkUrl);
         setLinkCreated(true);
