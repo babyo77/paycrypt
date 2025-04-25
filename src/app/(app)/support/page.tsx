@@ -1,68 +1,320 @@
 "use client";
-import React from "react";
+
+import { useState, useEffect, useRef } from "react";
+import { supportApi } from "@/lib/utils";
+import { cn } from "@/lib/utils";
+import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { useRouter } from "next/navigation";
+import { FaSpinner, FaPaperPlane, FaUser } from "react-icons/fa";
+import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
+import { Loader2 } from "lucide-react";
+
+// Define interfaces for API responses
+interface TicketResponse {
+  ticketId: string;
+  channelId: string;
+  channelName: string;
+  status: string;
+  responseTime: number;
+}
+
+interface ReplyItem {
+  id: string;
+  from: string;
+  content: string;
+  timestamp: number;
+  avatar: string;
+  displayName: string;
+  isBot: boolean;
+  isSupport: boolean;
+  userType: string;
+}
 
 export default function SupportPage() {
-  const router = useRouter();
+  const [ticketId, setTicketId] = useState<string | null>(null);
+  const [replies, setReplies] = useState<ReplyItem[]>([]);
+  const [loading, setLoading] = useState(false);
+  const [sendingMessage, setSendingMessage] = useState(false);
+  const [replyInput, setReplyInput] = useState("");
+  const messagesEndRef = useRef<HTMLDivElement>(null);
+  const chatContainerRef = useRef<HTMLDivElement>(null);
+  const [autoScroll, setAutoScroll] = useState(true);
+  const [previousRepliesLength, setPreviousRepliesLength] = useState(0);
 
-  const handleContactUs = () => {
-    router.push("https://discord.gg/wy5vsBs6");
+  // Create a new ticket automatically
+  const createTicket = async () => {
+    setLoading(true);
+    try {
+      const response = await supportApi.post<TicketResponse>("/ticket", {
+        subject: "Support Request",
+        message: "I need assistance with my account",
+      });
+
+      if (response.data) {
+        setTicketId(response.data.ticketId);
+        fetchReplies(response.data.ticketId);
+      }
+    } catch (error) {
+      console.error("Failed to create ticket:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Send a reply to an existing ticket
+  const sendReply = async () => {
+    if (!replyInput || !ticketId) return;
+
+    setSendingMessage(true);
+    try {
+      await supportApi.post(`/reply/${ticketId}`, {
+        message: replyInput,
+      });
+
+      setReplyInput("");
+      fetchReplies(ticketId);
+      // Always scroll to bottom when user sends a message
+      setAutoScroll(true);
+    } catch (error) {
+      console.error("Failed to send reply:", error);
+    } finally {
+      setSendingMessage(false);
+    }
+  };
+
+  // Fetch all replies for a ticket
+  const fetchReplies = async (id: string) => {
+    try {
+      const fetchedReplies = await supportApi.get<ReplyItem[]>(
+        `/replies/${id}`,
+        {
+          showErrorToast: false,
+        }
+      );
+      if (fetchedReplies.data) {
+        setPreviousRepliesLength(replies.length);
+        setReplies(fetchedReplies.data.slice(1, fetchedReplies.data.length));
+      }
+    } catch (error) {
+      console.error("Failed to fetch replies:", error);
+    }
+  };
+
+  // Format message content to handle special Discord formatting
+  const formatMessageContent = (content: string) => {
+    // Handle Discord user mentions like <@497085547970560021>
+    let formattedContent = content.replace(
+      /<@(\d+)>/g,
+      (match, userId) =>
+        `<a href="https://discord.com/users/${userId}" target="_blank" class="px-1.5 py-0.5 bg-blue-500/15 text-blue-600 rounded font-medium hover:underline">@User-${userId.substring(
+          0,
+          4
+        )}</a>`
+    );
+
+    // Handle Discord role mentions like <@&1364540037101781107>
+    formattedContent = formattedContent.replace(
+      /<@&(\d+)>/g,
+      '<span class="px-1.5 py-0.5 bg-blue-500/15 text-blue-600 rounded font-medium">@Support Team</span>'
+    );
+
+    // Convert newlines to <br>
+    return formattedContent.replace(/\n/g, "<br/>");
+  };
+
+  // Detect when user scrolls up (to disable auto-scroll)
+  const handleScroll = () => {
+    if (!chatContainerRef.current) return;
+
+    const { scrollTop, scrollHeight, clientHeight } = chatContainerRef.current;
+    const isAtBottom = scrollHeight - scrollTop - clientHeight < 100;
+
+    if (!isAtBottom && autoScroll) {
+      setAutoScroll(false);
+    } else if (isAtBottom && !autoScroll) {
+      setAutoScroll(true);
+    }
+  };
+
+  // Create ticket on page load if no ticket exists
+  useEffect(() => {
+    if (!ticketId) {
+      createTicket();
+    }
+  }, []);
+
+  // Scroll to bottom when new messages arrive if autoScroll is enabled
+  useEffect(() => {
+    // Only auto-scroll if we received new messages or if the user just sent a message
+    const hasNewMessages = replies.length > previousRepliesLength;
+
+    if (autoScroll && hasNewMessages) {
+      messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+    }
+  }, [replies, autoScroll, previousRepliesLength]);
+
+  // Refresh replies periodically if we have an active ticket
+  useEffect(() => {
+    if (!ticketId) return;
+
+    const interval = setInterval(() => {
+      fetchReplies(ticketId);
+    }, 3000); // Every 3 seconds
+
+    return () => clearInterval(interval);
+  }, [ticketId]);
+
+  const formatDate = (timestamp: number) => {
+    const date = new Date(timestamp);
+    return date.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
   };
 
   return (
-    <div className="flex flex-1 items-center justify-center bg-background">
-      <div className="flex flex-col items-center justify-center max-w-xl text-center p-10">
-        <div className="mb-6 border border-primary/10 bg-primary/5 rounded-full p-4">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="28"
-            height="28"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            className="text-primary"
+    <div className="flex flex-col h-[calc(100vh-6rem)] w-full max-w-full p-0 overflow-hidden">
+      {loading && !ticketId ? (
+        // Loading state while creating ticket
+        <div className="flex justify-center items-center h-screen">
+          <div className="flex flex-col items-center">
+            <Loader2 className="animate-spin text-blue-500 mb-4" size={32} />
+            <span className="text-gray-600">Connecting to support...</span>
+          </div>
+        </div>
+      ) : (
+        // Chat interface
+        <div className="flex flex-col bg-white overflow-hidden h-full">
+          {/* Messages container */}
+          <div
+            ref={chatContainerRef}
+            className="flex-1 overflow-y-auto p-4 pt-6 bg-white"
+            onScroll={handleScroll}
           >
-            <circle cx="12" cy="12" r="10" />
-            <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3" />
-            <path d="M12 17h.01" />
-          </svg>
+            <div className="w-full mx-auto space-y-4">
+              {replies.length === 0 && (
+                <div className="flex justify-center items-center h-[50vh]">
+                  <div className="text-center max-w-md p-8 rounded-lg  text-muted-foreground">
+                    <h3 className="text-lg font-medium mb-2 ">
+                      Welcome to Support
+                    </h3>
+                    <p>
+                      Your support conversation will appear here. Type a message
+                      below to get started with one of our agents.
+                    </p>
+                  </div>
+                </div>
+              )}
+
+              {/* Chat messages */}
+              {replies.map((reply, index) => {
+                const isUser = !reply.isBot && !reply.isSupport;
+                const isSupport = !isUser;
+                const hasMention = reply.content.includes("@");
+
+                return (
+                  <div
+                    key={reply.id}
+                    className={cn(
+                      "flex w-full items-end gap-3",
+                      isUser ? "flex-row-reverse" : "flex-row",
+                      isUser ? "ml-4" : "mr-4",
+                      hasMention ? "relative" : ""
+                    )}
+                  >
+                    {hasMention && (
+                      <div className="absolute top-0 right-0 w-2 h-2 bg-blue-500 rounded-full -mt-1 -mr-1"></div>
+                    )}
+
+                    <div
+                      className="w-10 h-10 rounded-full flex-shrink-0 overflow-hidden flex items-center justify-center"
+                      style={
+                        reply.avatar
+                          ? {
+                              backgroundImage: `url(${reply.avatar})`,
+                              backgroundSize: "cover",
+                              backgroundPosition: "center",
+                            }
+                          : {
+                              backgroundColor: isUser ? "#3b82f6" : "#e2e8f0",
+                            }
+                      }
+                    >
+                      {!reply.avatar && (
+                        <span
+                          className={cn(
+                            "text-lg font-medium",
+                            isUser ? "text-white" : "text-gray-600"
+                          )}
+                        >
+                          {isUser
+                            ? "P"
+                            : reply.displayName.charAt(0).toUpperCase()}
+                        </span>
+                      )}
+                    </div>
+
+                    <div className="flex flex-col max-w-[80%]">
+                      <div
+                        className={cn(
+                          "px-4 py-3 rounded-md",
+                          hasMention ? "ring-1 ring-blue-500/20" : "",
+                          isUser
+                            ? "bg-blue-500 text-white"
+                            : "bg-gray-100 text-gray-800"
+                        )}
+                      >
+                        <div
+                          dangerouslySetInnerHTML={{
+                            __html: formatMessageContent(reply.content),
+                          }}
+                        />
+                      </div>
+                      <div
+                        className={cn(
+                          "text-xs mt-1",
+                          isUser ? "text-right" : "text-left",
+                          hasMention ? "text-blue-600" : "text-gray-500"
+                        )}
+                      >
+                        {formatDate(reply.timestamp)}
+                        {hasMention && <span className="ml-2">@mentioned</span>}
+                      </div>
+                    </div>
+                  </div>
+                );
+              })}
+              <div ref={messagesEndRef} className="h-4" />
+            </div>
+          </div>
+
+          {/* Reply input - fixed at bottom */}
+          <div className="absolute bottom-0 left-0 right-0 p-3 bg-[#f8f9fa] border-t ">
+            <div className="flex items-center w-full px-4 mx-auto relative">
+              <Input
+                value={replyInput}
+                onChange={(e) => setReplyInput(e.target.value)}
+                placeholder="Type your message..."
+                disabled={sendingMessage}
+                className=" h-11"
+                onKeyDown={(e) =>
+                  e.key === "Enter" && !e.shiftKey && sendReply()
+                }
+              />
+              <Button
+                onClick={sendReply}
+                disabled={sendingMessage || !replyInput}
+                size="icon"
+                variant="ghost"
+                className="absolute right-6 h-10 w-10 rounded-full text-blue-500 hover:text-blue-600 hover:bg-transparent"
+              >
+                {sendingMessage ? (
+                  <FaSpinner className="animate-spin h-4 w-4" />
+                ) : (
+                  <FaPaperPlane className="h-5 w-5" />
+                )}
+              </Button>
+            </div>
+          </div>
         </div>
-
-        <h2 className="text-2xl font-medium tracking-tight mb-4">
-          We're On It!
-        </h2>
-
-        <p className="text-base text-muted-foreground mb-6 leading-relaxed">
-          Our support center is currently under development. Until then, you can
-          join our Discord community for immediate support, feature updates, and
-          to connect with other users.
-        </p>
-
-        <div className="flex flex-col sm:flex-row gap-4 justify-center w-full max-w-md">
-          <Button onClick={handleContactUs} size="lg">
-            Join Our Discord
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="16"
-              height="16"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              className="ml-2"
-            >
-              <path d="M5 12h14" />
-              <path d="m12 5 7 7-7 7" />
-            </svg>
-          </Button>
-        </div>
-      </div>
+      )}
     </div>
   );
 }

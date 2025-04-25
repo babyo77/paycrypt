@@ -1,6 +1,6 @@
 "use client";
 
-import { api } from "@/lib/utils";
+import { api, supportApi } from "@/lib/utils";
 import {
   createContext,
   useContext,
@@ -90,6 +90,7 @@ export function UserProvider({
     if (session) {
       dispatch({ type: "SET_USER", payload: session });
       api.setAuthToken(`Bearer ${session.token}`);
+      supportApi.setAuthToken(`Bearer ${session.token}`);
     }
   }, [session]);
 

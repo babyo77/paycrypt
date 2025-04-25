@@ -6,6 +6,11 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
 
+export const supportApi = new ApiClient({
+  baseUrl: process.env.NEXT_PUBLIC_SUPPORT_API_URL!,
+  toast,
+});
+
 export const api = new ApiClient({
   baseUrl: process.env.NEXT_PUBLIC_API_URL!,
   toast,
