@@ -17,7 +17,17 @@ import {
   IconCircleCheckFilled,
   IconCircleXFilled,
   IconLoader,
+  IconDotsVertical,
+  IconCopy,
 } from "@tabler/icons-react";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { Button } from "@/components/ui/button";
+import { toast } from "sonner";
 
 interface Transaction {
   id: string;
@@ -132,6 +142,18 @@ function PaymentLinkHistoryPage() {
     fetchHistory();
   }, [params.link]);
 
+  const copyToClipboard = (text: string) => {
+    navigator.clipboard.writeText(text).then(
+      () => {
+        toast.success("Copied to clipboard");
+      },
+      (err) => {
+        console.error("Could not copy text: ", err);
+        toast.error("Failed to copy");
+      }
+    );
+  };
+
   if (loading)
     return (
       <div className="flex flex-col items-center justify-center h-full">
@@ -213,6 +235,7 @@ function PaymentLinkHistoryPage() {
                           <TableHead>Sender Email</TableHead>
                           <TableHead>Created At</TableHead>
                           <TableHead>Expires At</TableHead>
+                          <TableHead className="w-[50px]"></TableHead>
                         </TableRow>
                       </TableHeader>
                       <TableBody>
@@ -256,6 +279,30 @@ function PaymentLinkHistoryPage() {
                               </TableCell>
                               <TableCell>
                                 {formatDate(transaction.expires_at)}
+                              </TableCell>
+                              <TableCell className="text-right">
+                                <DropdownMenu>
+                                  <DropdownMenuTrigger asChild>
+                                    <Button
+                                      variant="ghost"
+                                      size="sm"
+                                      className="h-8 w-8 p-0"
+                                    >
+                                      <IconDotsVertical className="h-4 w-4" />
+                                      <span className="sr-only">Open menu</span>
+                                    </Button>
+                                  </DropdownMenuTrigger>
+                                  <DropdownMenuContent align="end">
+                                    <DropdownMenuItem
+                                      onClick={() =>
+                                        copyToClipboard(transaction.id)
+                                      }
+                                    >
+                                      <IconCopy className="mr-2 h-4 w-4" />
+                                      <span>Copy ID</span>
+                                    </DropdownMenuItem>
+                                  </DropdownMenuContent>
+                                </DropdownMenu>
                               </TableCell>
                             </TableRow>
                           );
