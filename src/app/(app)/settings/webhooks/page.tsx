@@ -77,7 +77,7 @@ export default function WebhooksPage() {
     }
   };
 
-  const handleCreateWebhook = async (e: React.FormEvent) => {
+  const handleCreateWebhook = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (!newWebhookUrl.trim()) {
       toast.error("Please enter a URL for the webhook");
@@ -148,7 +148,10 @@ export default function WebhooksPage() {
       <div className="@container/main flex flex-1 flex-col gap-2">
         <div className="flex flex-col gap-4 py-4 md:gap-6 md:py-6">
           <div className="px-4 md:px-6">
-            <div className="flex justify-between items-center mb-6">
+            <form
+              onSubmit={handleCreateWebhook}
+              className="flex justify-between items-center mb-6"
+            >
               <div>
                 <h1 className="text-2xl font-semibold">Webhooks</h1>
                 <p className="text-sm text-gray-500 mt-1">
@@ -169,7 +172,7 @@ export default function WebhooksPage() {
                     </DialogTitle>
                   </DialogHeader>
                   <div>
-                    <form onSubmit={handleCreateWebhook} className="space-y-4">
+                    <div className="space-y-4">
                       <div className="space-y-1.5">
                         <Label
                           htmlFor="webhook_url"
@@ -207,7 +210,7 @@ export default function WebhooksPage() {
                           className="w-full text-sm"
                         />
                       </div>
-                    </form>
+                    </div>
                   </div>
                   <div className="flex justify-end gap-2">
                     <Button
@@ -229,7 +232,7 @@ export default function WebhooksPage() {
                   </div>
                 </DialogContent>
               </Dialog>
-            </div>
+            </form>
 
             {isLoading ? (
               <div className="text-center py-8 leading-tight font-medium text-muted-foreground">
