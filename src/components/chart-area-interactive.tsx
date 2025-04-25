@@ -191,7 +191,7 @@ export function ChartAreaInteractive() {
             {userData?.timeframe === "DAILY" && "Daily"}
           </span>
         </CardDescription>
-        <CardAction className="flex flex-col gap-2 sm:flex-row">
+        {/* <CardAction className="flex flex-col gap-2 sm:flex-row">
           <Select
             defaultValue={userData?.timeframe}
             value={userData?.timeframe}
@@ -251,7 +251,7 @@ export function ChartAreaInteractive() {
               </SelectItem>
             </SelectContent>
           </Select>
-        </CardAction>
+        </CardAction> */}
       </CardHeader>
       <CardContent className="px-2 pt-4 sm:px-6 sm:pt-6">
         {filteredData.length > 0 ? (
