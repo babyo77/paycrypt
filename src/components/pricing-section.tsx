@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 
 export default function PricingSection() {
   return (
-    <section className="py-12 md:py-24 bg-[#f6f7f9] relative">
+    <section id="pricing" className="py-12 md:py-24 bg-[#f6f7f9] relative">
       {/* Background decorations similar to hero section */}
       <div
         aria-hidden

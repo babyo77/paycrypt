@@ -35,41 +35,46 @@ const menuItems = [
   { name: "Solutions", href: "#solutions" },
   { name: "Developers", href: "#developers" },
   { name: "Pricing", href: "#pricing" },
-  { name: "About", href: "#about" },
 ];
 
 // Product dropdown items
 const products = [
   {
     name: "Payment Gateway",
-    description:
-      "Accept Crypto and fiat payment from single checkout interface",
+    description: "Accept crypto payments with our no-code checkout solution",
     href: "#payment-gateway",
     icon: <CreditCard className="size-5 mr-2 text-primary" />,
   },
   {
-    name: "Universal Checkout",
-    href: "#universal-checkout",
-    icon: <Coins className="size-5 mr-2 text-primary" />,
-  },
-  {
-    name: "Payment Link",
-    href: "#payment-link",
+    name: "Smart Payment Links",
+    description: "Create one-use, expiring, and token-gated payment links",
+    href: "#smart-payment-links",
     icon: <Link2 className="size-5 mr-2 text-primary" />,
   },
   {
-    name: "Crypto Subscription",
-    href: "#crypto-subscription",
-    icon: <DollarSign className="size-5 mr-2 text-primary" />,
+    name: "Merchant Dashboard",
+    description:
+      "Real-time analytics, transaction history, and payout summaries",
+    href: "#merchant-dashboard",
+    icon: <BarChart3 className="size-5 mr-2 text-primary" />,
   },
   {
-    name: "Invoices",
-    href: "#invoices",
+    name: "Multi-Chain Support",
+    description:
+      "Accept USDT/USDC on Ethereum, Tron, Solana, Polygon, and Arbitrum",
+    href: "#multi-chain-support",
+    icon: <Coins className="size-5 mr-2 text-primary" />,
+  },
+  {
+    name: "Refunds Engine",
+    description: "Automatic handling of failed, partial, and delayed payments",
+    href: "#refunds-engine",
     icon: <File className="size-5 mr-2 text-primary" />,
   },
   {
-    name: "E-commerce Integrations",
-    href: "#ecommerce-integrations",
+    name: "No-KYC Transactions",
+    description: "Accept payments up to $1,000/day without KYC requirements",
+    href: "#no-kyc",
     icon: <ShoppingCart className="size-5 mr-2 text-primary" />,
   },
 ];
@@ -77,31 +82,36 @@ const products = [
 // Solutions dropdown items
 const solutions = [
   {
-    name: "Global Payout",
-    description:
-      "Send funds to your vendors, contractors and employees in real time to 50+ countries",
-    href: "#global-payout",
+    name: "For Entrepreneurs",
+    description: "Plug-and-play payment infrastructure for small businesses",
+    href: "#entrepreneurs",
     icon: <Globe className="size-5 mr-2 text-primary" />,
   },
   {
-    name: "Crypto to Bank",
-    href: "#crypto-to-bank",
+    name: "For Freelancers",
+    description:
+      "Accept global payments without borders or banking restrictions",
+    href: "#freelancers",
     icon: <Building className="size-5 mr-2 text-primary" />,
   },
   {
-    name: "Bulk Payments",
-    href: "#bulk-payments",
-    icon: <BarChart3 className="size-5 mr-2 text-primary" />,
+    name: "For E-commerce",
+    description: "Integrate crypto payments into your online store",
+    href: "#ecommerce",
+    icon: <ShoppingCart className="size-5 mr-2 text-primary" />,
   },
   {
-    name: "Send payment to email",
-    href: "#send-payment-email",
-    icon: <Mail className="size-5 mr-2 text-primary" />,
+    name: "Emerging Markets",
+    description:
+      "Solutions designed for businesses in regions with limited banking access",
+    href: "#emerging-markets",
+    icon: <Globe className="size-5 mr-2 text-primary" />,
   },
   {
-    name: "Schedule Payments",
-    href: "#schedule-payments",
-    icon: <Calendar className="size-5 mr-2 text-primary" />,
+    name: "Coming Soon: Fiat Off-Ramp",
+    description: "Seamlessly convert crypto to fiat with our upcoming solution",
+    href: "#fiat-off-ramp",
+    icon: <DollarSign className="size-5 mr-2 text-primary" />,
   },
 ];
 
@@ -164,19 +174,19 @@ export const HeroHeader = () => {
                       Products
                     </NavigationMenuTrigger>
                     <NavigationMenuContent>
-                      <div className="grid w-[500px] gap-3 p-4">
+                      <div className="grid grid-cols-2 w-[550px] gap-3 p-6">
                         {products.map((product, index) => (
                           <Link
                             key={index}
                             href={product.href}
-                            className="block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground"
+                            className="block select-none rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground"
                           >
-                            <div className="text-sm font-medium leading-none flex items-center">
+                            <div className="text-sm font-medium leading-none flex items-center justify-start mb-1">
                               {product.icon}
                               {product.name}
                             </div>
                             {product.description && (
-                              <p className="line-clamp-2 text-sm leading-snug text-muted-foreground ml-7">
+                              <p className="text-xs leading-tight text-muted-foreground pl-7 line-clamp-1">
                                 {product.description}
                               </p>
                             )}
@@ -191,19 +201,19 @@ export const HeroHeader = () => {
                       Solutions
                     </NavigationMenuTrigger>
                     <NavigationMenuContent>
-                      <div className="grid w-[500px] gap-3 p-4">
+                      <div className="grid grid-cols-2 w-[550px] gap-3 p-6">
                         {solutions.map((solution, index) => (
                           <Link
                             key={index}
                             href={solution.href}
-                            className="block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground"
+                            className="block select-none rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground"
                           >
-                            <div className="text-sm font-medium leading-none flex items-center">
+                            <div className="text-sm font-medium leading-none flex items-center justify-start mb-1">
                               {solution.icon}
                               {solution.name}
                             </div>
                             {solution.description && (
-                              <p className="line-clamp-2 text-sm leading-snug text-muted-foreground ml-7">
+                              <p className="text-xs leading-tight text-muted-foreground pl-7 line-clamp-1">
                                 {solution.description}
                               </p>
                             )}
