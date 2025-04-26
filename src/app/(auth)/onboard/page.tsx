@@ -10,6 +10,10 @@ export default async function Onboard() {
     redirect("/account");
   }
 
+  if (merchantData.user.is_active) {
+    redirect("/dashboard");
+  }
+
   return (
     <UserProvider session={merchantData.user}>
       <OnboardPage merchantData={merchantData.user} />
