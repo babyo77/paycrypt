@@ -70,7 +70,7 @@ export default function TeamSection() {
           </div>
 
           <div className="mt-10 flex justify-center">
-            <div className="bg-muted/50 rounded-lg p-4 max-w-md text-center">
+            <div className="bg-muted border rounded-lg p-4 max-w-md text-center">
               <p className="text-sm">
                 We're expanding our team! If you're passionate about crypto
                 payments and emerging markets, we'd love to hear from you.
