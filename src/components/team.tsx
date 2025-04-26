@@ -1,3 +1,5 @@
+import { Button } from "@/components/ui/button";
+import Link from "next/link";
 const members = [
   {
     name: "Meyank Singh",
@@ -9,12 +11,11 @@ const members = [
     role: "Founding Engineer",
     avatar: "https://avatars.githubusercontent.com/u/144552425?v=4",
   },
-  // {
-  //   name: "Siddhi Patil",
-  //   role: "Founding Engineer",
-  //   avatar:
-  //     "https://logo-images.b-cdn.net/Screenshot%202025-04-07%20at%201.40.34%E2%80%AFAM.png",
-  // },
+  {
+    name: "Zade",
+    role: "Founding Engineer",
+    avatar: "https://avatars.githubusercontent.com/u/78777405?v=4",
+  },
   // {
   //   name: "",
   //   role: "Lawyer",
@@ -29,37 +30,57 @@ const members = [
 
 export default function TeamSection() {
   return (
-    <section id="team">
-      <div className="mb-8 px-4 md:px-0 max-w-5xl mx-auto space-y-2">
-        <h2 className="text-3xl font-semibold text-blue-700 tracking-tighter sm:text-4xl md:text-5xl">
-          Team
-        </h2>
-        <p className="text-muted-foreground text-sm font-medium">
-          PayCrypt is a team of forward-thinking innovators passionate about
-          reshaping the future of finance through secure and seamless payment
-          solutions.
-        </p>
+    <section
+      id="team"
+      className="py-12 bg-gradient-to-b from-background/50 to-muted/20"
+    >
+      <div className="px-4 md:px-6 max-w-5xl text-center mx-auto space-y-2">
+        <div className="text-center mb-16">
+          <h2 className="text-2xl sm:text-3xl md:text-4xl text-blue-500 lg:text-5xl font-medium mb-2 sm:mb-4">
+            Meet Our Team
+          </h2>
 
-        <div>
-          <div className="flex flex-wrap py-6 gap-6">
+          <p className="text-base sm:text-lg text-muted-foreground max-w-xs sm:max-w-lg md:max-w-2xl mx-auto px-2 sm:px-0">
+            PayCrypt is built by a dedicated team of entrepreneurs and engineers
+            with expertise in crypto, payments and emerging market financial
+            solutions.
+          </p>
+        </div>
+
+        <div className="mt-10">
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8 py-6">
             {members.map((member, index) => (
-              <div key={index}>
-                <div className="bg-background size-20 rounded-full border p-0.5 shadow shadow-zinc-950/5">
-                  <img
-                    className="aspect-square rounded-full object-cover"
-                    src={member.avatar}
-                    alt={member.name}
-                    height="460"
-                    width="460"
-                    loading="lazy"
-                  />
+              <div key={index} className="group flex flex-col items-center">
+                <div className="relative">
+                  <div className="bg-background size-28 rounded-full border-2 border-primary/20 p-1 shadow-md overflow-hidden transition-all duration-300 group-hover:border-primary/70">
+                    <img
+                      className="aspect-square rounded-full object-cover"
+                      src={member.avatar}
+                      alt={member.name}
+                      height="460"
+                      width="460"
+                      loading="lazy"
+                    />
+                  </div>
                 </div>
-                <span className="mt-2 block text-sm">{member.name}</span>
-                <span className="text-muted-foreground block text-xs">
-                  {member.role}
-                </span>
+                <h3 className="mt-4 text-base font-medium">{member.name}</h3>
+                <p className="text-muted-foreground text-xs">{member.role}</p>
               </div>
             ))}
+          </div>
+
+          <div className="mt-10 flex justify-center">
+            <div className="bg-muted/50 rounded-lg p-4 max-w-md text-center">
+              <p className="text-sm">
+                We're expanding our team! If you're passionate about crypto
+                payments and emerging markets, we'd love to hear from you.
+              </p>
+              <Link href="https://discord.gg/wy5vsBs6">
+                <Button variant="outline" className="mt-3">
+                  Join Our Team
+                </Button>
+              </Link>
+            </div>
           </div>
         </div>
       </div>

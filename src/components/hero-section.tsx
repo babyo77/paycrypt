@@ -1,101 +1,18 @@
-"use client";
-import React, { useState } from "react";
+import React from "react";
 import Link from "next/link";
-import {
-  ArrowRight,
-  Mail,
-  SendHorizonal,
-  Play,
-  AlertCircle,
-} from "lucide-react";
-import { FaXTwitter } from "react-icons/fa6";
-import { FaDiscord } from "react-icons/fa";
+import { ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import Image from "next/image";
-import { TextEffect } from "@/components/ui/text-effect";
+
 import { HeroHeader } from "@/components/hero5-header";
-import { AnimatedGroup } from "./ui/animated-group";
 import Features from "./features-11";
 import TeamSection from "./team";
-import { Dialog, DialogContent } from "@/components/ui/dialog";
 import FAQSection from "@/components/faq-section";
-
-const transitionVariants = {
-  item: {
-    hidden: {
-      opacity: 0,
-      filter: "blur(12px)",
-      y: 12,
-    },
-    visible: {
-      opacity: 1,
-      filter: "blur(0px)",
-      y: 0,
-      transition: {
-        type: "spring",
-        bounce: 0.3,
-        duration: 1.5,
-      },
-    },
-  },
-};
+import Footer from "./footer";
+import PricingSection from "./pricing-section";
 
 export default function HeroSection() {
-  const [email, setEmail] = useState("");
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState("");
-  const [isSuccess, setIsSuccess] = useState(false);
-  const [videoOpen, setVideoOpen] = useState(false);
-  const [isScrolled, setIsScrolled] = useState(false);
-  React.useEffect(() => {
-    const handleScroll = () => {
-      setIsScrolled(window.scrollY > 50);
-    };
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
-
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    setError("");
-
-    // Email validation
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(email)) {
-      setError("Please enter a valid email address");
-      return;
-    }
-
-    setIsLoading(true);
-    try {
-      await fetch("/api/sx", {
-        method: "POST",
-        body: JSON.stringify({
-          email: email,
-        }),
-      });
-      setIsSuccess(true);
-      setEmail(""); // Clear the input
-    } catch (error) {
-      console.error("Error submitting form:", error);
-      setError("Something went wrong. Please try again.");
-    } finally {
-      setIsLoading(false);
-    }
-  };
   return (
     <>
-      {/* <div
-        className={`text-black bg-white/40 backdrop-blur-2xl py-3 px-4 flex items-center justify-center space-x-2 fixed top-0 left-0 right-0 z-50 ${
-          isScrolled ? "opacity-0" : "opacity-100"
-        }`}
-      >
-        <AlertCircle className="size-4 flex-shrink-0" />
-        <p className="text-sm font-medium">
-          Layer 2 integration is underway — Arbitrum, Optimism & Base coming
-          soon.
-        </p>
-      </div> */}
       <HeroHeader />
       <main className="overflow-hidden bg-[#f6f7f9] leading-tight tracking-tight">
         <div
@@ -108,15 +25,6 @@ export default function HeroSection() {
         </div>
         <section>
           <div className="relative pt-24 md:pt-36">
-            <div className="absolute inset-0 -z-20">
-              <Image
-                src="https://res.cloudinary.com/dg4jhba5c/image/upload/v1741605538/night-background_ni3vqb.jpg"
-                alt="background"
-                className="absolute inset-x-0 top-56 -z-20 hidden lg:top-32 dark:block"
-                width="3276"
-                height="4095"
-              />
-            </div>
             <div className="absolute inset-0  -z-10 size-full [background:radial-gradient(125%_125%_at_50%_100%,transparent_0%,var(--color-background)_75%)]"></div>
             <div className="mx-auto max-w-7xl px-4 md:px-6 ">
               <div className="text-center sm:mx-auto lg:mr-auto lg:mt-0">
@@ -141,95 +49,60 @@ export default function HeroSection() {
                   </div>
                 </Link>
 
-                <p className="mt-8 text-balance font-medium text-5xl md:text-6xl lg:mt-16 xl:text-[5rem]">
-                  New way to accept payments
+                <p className="text-balance max-md:mt-12 font-medium text-6xl md:text-6xl lg:mt-16 xl:text-[5rem]">
+                  Sell more with crypto
                 </p>
-                <p className="mt-8 mx-auto max-w-3xl text-center tracking-normal text-sm md:text-lg">
-                  Accept crypto and other payment methods globally and expand
-                  your business reach. Fast, secure, and borderless transactions
-                  for modern commerce.
+                <p className="mt-8 px-4 mx-auto max-w-2xl text-center tracking-normal text-sm md:text-lg max-md:text-center">
+                  No-code crypto payments for emerging markets. Multi-chain
+                  support where traditional systems fail.
                 </p>
 
                 <div className="mt-12 flex items-center justify-center gap-2">
-                  <Link href="/demo">
-                    <Button>View Demo</Button>
+                  <Link href="https://app.paycrypt.tech">
+                    <Button size="lg">Get Started</Button>
                   </Link>
-                  <Link href="https://discord.gg/7A87VRZn6U">
-                    <Button>Join Waitlist</Button>
+                  <Link href="https://docs.paycrypt.tech">
+                    <Button variant={"outline"} size="lg">
+                      Learn More
+                    </Button>
                   </Link>
                 </div>
               </div>
             </div>
 
-            <div className="relative max-md:mr-0 pb-7 -mr-56 mt-8 overflow-hidden px-4 sm:mr-0 sm:mt-12 md:mt-20">
+            <div className="relative max-md:mr-0 md:pb-7 max-md:mt-16 -mr-56 overflow-hidden px-4 sm:mr-0 sm:mt-12 md:mt-20">
               <div
                 aria-hidden
                 className=" to-background absolute inset-0 z-10 from-transparent from-35%"
               />
-              <div className="inset-shadow-2xs ring-background dark:inset-shadow-white/20 bg-background relative mx-auto max-w-5xl overflow-hidden rounded-2xl border p-4 shadow-lg shadow-zinc-950/5 ring-1">
+              <div className="inset-shadow-2xs ring-background dark:inset-shadow-white/20 bg-background relative mx-auto max-w-5xl overflow-hidden rounded-2xl border shadow-lg shadow-zinc-950/5 ring-1">
                 <div className="relative">
-                  <Image
-                    className="bg-background aspect-15/8 relative hidden rounded-2xl dark:block"
-                    src="/sex.png"
-                    alt="app screen"
-                    width="2700"
-                    height="1440"
-                  />
-                  <Image
-                    className="z-2 border-border/25 aspect-15/8 relative rounded-2xl border dark:hidden"
-                    src="/sex.png"
-                    alt="app screen"
-                    width="2700"
-                    height="1440"
-                  />
-                  <button
-                    onClick={() => setVideoOpen(true)}
-                    className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 transform z-20"
+                  <video
+                    className="z-2 border-border/25 relative rounded-2xl border dark:hidden"
+                    autoPlay
+                    muted
+                    loop
+                    poster="https://us-east-1.tixte.net/uploads/tanmay111-files.tixte.co/gradii-1600x900.webp"
+                    preload="metadata"
+                    src="https://us-east-1.tixte.net/uploads/tanmay111-files.tixte.co/paycrypt-demo-25-apr-1745519925395.mp4"
                   >
-                    <div className="flex size-16 items-center justify-center rounded-full bg-black/30 shadow-lg backdrop-blur-md transition-transform hover:scale-110 hover:bg-black/40">
-                      <Play className="size-8 text-white" />
-                    </div>
-                  </button>
+                    <source
+                      src="https://us-east-1.tixte.net/uploads/tanmay111-files.tixte.co/paycrypt-demo-25-apr-1745519925395.mp4"
+                      type="video/mp4"
+                    />
+                    Your browser does not support the video tag.
+                  </video>
                 </div>
               </div>
             </div>
           </div>
         </section>
         <Features />
+        <PricingSection />
         <TeamSection />
         <FAQSection />
-        <section className=" overflow-hidden py-16">
-          <div className="flex items-center justify-center gap-4">
-            <Link href="https://x.com/meyanksingh">
-              <FaXTwitter className="size-4 text-muted-foreground hover:text-foreground" />
-            </Link>
-            <Link href="https://discord.gg/wy5vsBs6">
-              <FaDiscord className="size-5 text-muted-foreground hover:text-foreground" />
-            </Link>
-          </div>
-        </section>
+        <Footer />
       </main>
-      <Dialog open={videoOpen} onOpenChange={setVideoOpen}>
-        <DialogContent className="sm:max-w-[1000px] w-[95%] p-2 sm:p-6">
-          <div className="aspect-video w-full">
-            <video
-              className="size-full rounded-lg"
-              controls
-              autoPlay
-              loop
-              poster="https://us-east-1.tixte.net/uploads/tanmay111-files.tixte.co/gradii-1600x900.webp"
-              preload="metadata"
-              src="https://us-east-1.tixte.net/uploads/tanmay111-files.tixte.co/paycrypt-demo-25-apr-1745519925395.mp4"
-            >
-              <source
-                src="https://us-east-1.tixte.net/uploads/tanmay111-files.tixte.co/paycrypt-demo-25-apr-1745519925395.mp4"
-                type="video/mp4"
-              />
-              Your browser does not support the video tag.
-            </video>
-          </div>
-        </DialogContent>
-      </Dialog>
     </>
   );
 }

@@ -1,61 +1,138 @@
-import { Logo } from "@/components/logo";
 import Link from "next/link";
-import { FaDiscord } from "react-icons/fa";
-import { FaXTwitter } from "react-icons/fa6";
 
-const links = [
-  {
-    title: "Features",
-    href: "#features",
-  },
-  {
-    title: "Security",
-    href: "#security",
-  },
-  {
-    title: "Solutions",
-    href: "#solutions",
-  },
-  {
-    title: "Privacy Policy",
-    href: "/privacy-policy",
-  },
-  {
-    title: "Terms of Service",
-    href: "/terms-of-service",
-  },
-];
-
-export default function FooterSection() {
+export default function Footer() {
   return (
-    <footer className="py-12">
-      <div className="mx-auto max-w-8xl px-6 space-y-5 font-medium">
-        <Link href="/" aria-label="go home" className="mx-auto block size-fit">
-          <Logo />
-        </Link>
+    <footer className="border-t">
+      <div className="mx-auto max-w-5xl px-4 py-16 md:px-0">
+        {/* Main Footer Navigation */}
+        <div className="grid grid-cols-2 gap-x-8 gap-y-10 md:grid-cols-4">
+          {/* Features Column */}
+          <div>
+            <h3 className="text-lg font-semibold mb-6">Features</h3>
+            <ul className="space-y-4">
+              <li>
+                <Link
+                  href="/"
+                  className="text-muted-foreground hover:text-foreground text-sm"
+                >
+                  Payment Links
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="/"
+                  className="text-muted-foreground hover:text-foreground text-sm"
+                >
+                  Recurring Billing
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="/"
+                  className="text-muted-foreground hover:text-foreground text-sm"
+                >
+                  Integrations
+                </Link>
+              </li>
+            </ul>
+          </div>
 
-        <div className="flex flex-wrap justify-center gap-6 text-sm">
-          {links.map((link, index) => (
-            <Link
-              key={index}
-              href={link.href}
-              className="text-muted-foreground hover:text-primary block duration-150"
-            >
-              <span>{link.title}</span>
-            </Link>
-          ))}
+          {/* Use-cases Column */}
+          <div>
+            <h3 className="text-lg font-semibold mb-6">Use-cases</h3>
+            <ul className="space-y-4">
+              <li>
+                <Link
+                  href="/"
+                  className="text-muted-foreground hover:text-foreground text-sm"
+                >
+                  E-Commerce
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="/"
+                  className="text-muted-foreground hover:text-foreground text-sm"
+                >
+                  Donation
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="/"
+                  className="text-muted-foreground hover:text-foreground text-sm"
+                >
+                  Ticketing
+                </Link>
+              </li>
+            </ul>
+          </div>
+
+          {/* Developers Column */}
+          <div>
+            <h3 className="text-lg font-semibold mb-6">Developers</h3>
+            <ul className="space-y-4">
+              <li>
+                <Link
+                  href="https://docs.paycrypt.tech"
+                  className="text-muted-foreground hover:text-foreground text-sm"
+                >
+                  Documentation
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="https://docs.paycrypt.tech/api"
+                  className="text-muted-foreground hover:text-foreground text-sm"
+                >
+                  API Reference
+                </Link>
+              </li>
+            </ul>
+          </div>
+
+          {/* Resources Column */}
+          <div>
+            <h3 className="text-lg font-semibold mb-6">Resources</h3>
+            <ul className="space-y-4">
+              <li>
+                <Link
+                  href="/resources/tutorials"
+                  className="text-muted-foreground hover:text-foreground text-sm"
+                >
+                  Tutorials
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="/blog"
+                  className="text-muted-foreground hover:text-foreground text-sm"
+                >
+                  Blogs
+                </Link>
+              </li>
+            </ul>
+          </div>
         </div>
-        <div className="flex flex-wrap justify-center gap-6 text-sm">
-          <Link href="https://x.com/paycrypt_tech">
-            <FaXTwitter className="size-5 text-muted-foreground hover:text-foreground" />
-          </Link>
-          <Link href="https://discord.gg/7A87VRZn6U">
-            <FaDiscord className="size-6 text-muted-foreground hover:text-foreground" />
-          </Link>
+
+        {/* Company Info and Made with love */}
+        <div className="mt-8 flex flex-col md:flex-row justify-between items-start md:items-center border-t pt-6">
+          <p className="text-sm text-muted-foreground">
+            © {new Date().getFullYear()} Paycrypt
+          </p>
         </div>
-        <span className="text-muted-foreground block text-center text-sm">
-          © {new Date().getFullYear()} Paycrypt, All rights reserved
-        </span>
+
+        {/* Legal Text */}
+        <div className="mt-8">
+          <p className="text-xs text-muted-foreground">
+            Paycrypt is a financial technology company, not a bank or a money
+            services business. Certain services are provided by our licensed
+            partners across the globe. By creating your account on Paycrypt, you
+            agree to our terms and conditions, our partners' terms, to all
+            applicable laws and regulations, and agree that you are responsible
+            for compliance with any and all applicable local laws.
+          </p>
+        </div>
       </div>
     </footer>
   );
