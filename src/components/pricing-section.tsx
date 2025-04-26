@@ -68,7 +68,7 @@ export default function PricingSection() {
             </div>
 
             <div className="mt-8">
-              <Link href="https://app.paycrypt.tech">
+              <Link href="https://app.paycrypt.tech/account">
                 <Button className="w-full" variant="outline">
                   Get Started
                   <ArrowRight className="ml-2 h-4 w-4" />
