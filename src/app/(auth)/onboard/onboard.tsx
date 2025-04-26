@@ -25,7 +25,7 @@ function OnboardPage({ merchantData }: { merchantData: any }) {
         is_active: true,
       });
       if (res.status === 200) {
-        router.push("/settings");
+        router.push("/dashboard");
       }
     }
   };
