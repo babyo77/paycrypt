@@ -77,8 +77,13 @@ export default function WebhooksPage() {
     }
   };
 
-  const handleCreateWebhook = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
+  const handleCreateWebhook = async (
+    e: React.FormEvent<HTMLFormElement> | React.MouseEvent<HTMLButtonElement>
+  ) => {
+    if (e.type === "submit") {
+      e.preventDefault();
+    }
+
     if (!newWebhookUrl.trim()) {
       toast.error("Please enter a URL for the webhook");
       return;
@@ -224,6 +229,7 @@ export default function WebhooksPage() {
                     </Button>
                     <Button
                       type="submit"
+                      onClick={handleCreateWebhook}
                       disabled={isCreatingWebhook}
                       size="sm"
                     >
