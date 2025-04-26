@@ -91,7 +91,7 @@ export default function HeroSection() {
                 </p>
 
                 <div className="mt-12 flex items-center justify-center gap-2">
-                  <Link href="https://app.paycrypt.tech">
+                  <Link href="https://app.paycrypt.tech/account">
                     <Button size="lg">Get Started</Button>
                   </Link>
                   <Link href="https://docs.paycrypt.tech">
