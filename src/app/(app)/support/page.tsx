@@ -159,29 +159,6 @@ export default function SupportPage() {
         continue;
       }
 
-      // Check for YouTube links
-      const youtubeMatch = url.match(
-        /(?:youtube\.com\/watch\?v=|youtu\.be\/)([a-zA-Z0-9_-]{11})/
-      );
-      if (youtubeMatch) {
-        const youtubeId = youtubeMatch[1];
-        // Simplified YouTube iframe
-        const youtubeHtml = `
-          <div class="mt-2">
-            <iframe 
-              width="100%" 
-              height="200" 
-              src="https://www.youtube.com/embed/${youtubeId}"
-              frameborder="0" 
-              allowfullscreen 
-              class="rounded-md"
-            ></iframe>
-          </div>
-        `;
-        formattedContent = formattedContent.replace(url, youtubeHtml);
-        continue;
-      }
-
       // Regular URL (not processed as media)
       const linkClass = isUserMessage
         ? "text-white underline"
