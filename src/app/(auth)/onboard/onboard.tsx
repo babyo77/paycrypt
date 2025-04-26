@@ -72,7 +72,7 @@ function OnboardPage({ merchantData }: { merchantData: any }) {
       <div className="w-full max-w-lg mx-auto z-10">
         {/* Header with logo */}
         <div className="text-center mb-8">
-          <div className="inline-flex h-12 w-12 bg-background rounded-md items-center justify-center mb-5 border border-border ">
+          <div className="inline-flex p-2 bg-background rounded-md items-center justify-center mb-5 border border-border ">
             <Logo />
           </div>
 
