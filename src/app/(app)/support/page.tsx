@@ -100,22 +100,119 @@ export default function SupportPage() {
     }
   };
 
+  // Add this function to check if a URL is an image
+  const isImageUrl = (url: string) => {
+    const imageExtensions = ["jpg", "jpeg", "png", "gif", "webp", "svg", "bmp"];
+    const extension = url.split(".").pop()?.toLowerCase();
+    return extension && imageExtensions.includes(extension);
+  };
+
   // Format message content to handle special Discord formatting
-  const formatMessageContent = (content: string) => {
+  const formatMessageContent = (content: string, isUserMessage = false) => {
+    let formattedContent = content;
+    const urlRegex = /(https?:\/\/[^\s<>"]+)(?:\s|$)/g;
+    const matches = [...formattedContent.matchAll(urlRegex)];
+
+    // Process each URL
+    for (const match of matches) {
+      const url = match[1];
+
+      // First check if it looks like an image URL by extension
+      if (isImageUrl(url)) {
+        // Simplified image rendering without complicated JS event handlers
+        const imageHtml = `
+          <div class="mt-2 relative">
+            <img 
+              src="${url}" 
+              alt="Image" 
+              class="max-w-full rounded-md max-h-[300px]"
+            />
+          </div>
+        `;
+        formattedContent = formattedContent.replace(url, imageHtml);
+        continue;
+      }
+
+      // Check for video links
+      const videoExtensions = ["mp4", "webm", "mov", "ogg"];
+      const urlExtension = url.split(".").pop()?.toLowerCase();
+
+      if (urlExtension && videoExtensions.includes(urlExtension)) {
+        const extension = urlExtension;
+        let mimeType = "video/mp4"; // default
+
+        // Set the correct MIME type based on extension
+        if (extension === "webm") mimeType = "video/webm";
+        else if (extension === "ogg") mimeType = "video/ogg";
+        else if (extension === "mov") mimeType = "video/quicktime";
+
+        // Simplified video tag
+        const videoHtml = `
+          <div class="mt-2">
+            <video controls preload="metadata" class="max-w-full rounded-md max-h-[300px]">
+              <source src="${url}" type="${mimeType}">
+              Your browser does not support video.
+            </video>
+          </div>
+        `;
+        formattedContent = formattedContent.replace(url, videoHtml);
+        continue;
+      }
+
+      // Check for YouTube links
+      const youtubeMatch = url.match(
+        /(?:youtube\.com\/watch\?v=|youtu\.be\/)([a-zA-Z0-9_-]{11})/
+      );
+      if (youtubeMatch) {
+        const youtubeId = youtubeMatch[1];
+        // Simplified YouTube iframe
+        const youtubeHtml = `
+          <div class="mt-2">
+            <iframe 
+              width="100%" 
+              height="200" 
+              src="https://www.youtube.com/embed/${youtubeId}"
+              frameborder="0" 
+              allowfullscreen 
+              class="rounded-md"
+            ></iframe>
+          </div>
+        `;
+        formattedContent = formattedContent.replace(url, youtubeHtml);
+        continue;
+      }
+
+      // Regular URL (not processed as media)
+      const linkClass = isUserMessage
+        ? "text-white underline"
+        : "text-blue-500 hover:underline";
+      const linkHtml = `<a href="${url}" target="_blank" rel="noopener noreferrer" class="${linkClass}">${url}</a>`;
+      formattedContent = formattedContent.replace(url, linkHtml);
+    }
+
     // Handle Discord user mentions like <@497085547970560021>
-    let formattedContent = content.replace(
+    formattedContent = formattedContent.replace(
       /<@(\d+)>/g,
-      (match, userId) =>
-        `<a href="https://discord.com/users/${userId}" target="_blank" class="px-1.5 py-0.5 bg-blue-500/15 text-blue-600 rounded font-medium hover:underline">@User-${userId.substring(
+      (match, userId) => {
+        const mentionClass = isUserMessage
+          ? "bg-white/20 text-white"
+          : "bg-blue-500/15 text-blue-600";
+        return `<a href="https://discord.com/users/${userId}" target="_blank" class="px-1.5 py-0.5 ${mentionClass} rounded font-medium hover:underline">@User-${userId.substring(
           0,
           4
-        )}</a>`
+        )}</a>`;
+      }
     );
 
     // Handle Discord role mentions like <@&1364540037101781107>
     formattedContent = formattedContent.replace(
       /<@&(\d+)>/g,
-      '<span class="px-1.5 py-0.5 bg-blue-500/15 text-blue-600 rounded font-medium">@Support Team</span>'
+      (match, roleId) => {
+        const mentionClass = isUserMessage
+          ? "bg-white/20 text-white"
+          : "bg-blue-500/15 text-blue-600";
+        return `<span class="px-1.5 py-0.5 ${mentionClass} rounded font-medium">@Support Team</span>`;
+      }
     );
 
     // Convert newlines to <br>
@@ -167,6 +264,59 @@ export default function SupportPage() {
   const formatDate = (timestamp: number) => {
     const date = new Date(timestamp);
     return date.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
+  };
+
+  // Add this component to safely handle loading images
+  const ImageLoader = ({
+    url,
+    isUserMessage,
+  }: {
+    url: string;
+    isUserMessage: boolean;
+  }) => {
+    const [loaded, setLoaded] = useState(false);
+    const [error, setError] = useState(false);
+
+    return (
+      <div className="mt-2 relative">
+        {!loaded && !error && (
+          <div className="loading-spinner absolute inset-0 flex items-center justify-center">
+            <div
+              className={`animate-spin h-8 w-8 ${
+                isUserMessage ? "text-white" : "text-blue-500"
+              }`}
+            >
+              {/* Spinner implementation */}
+            </div>
+          </div>
+        )}
+
+        {error ? (
+          <a
+            href={url}
+            target="_blank"
+            rel="noopener noreferrer"
+            className={
+              isUserMessage
+                ? "text-white underline"
+                : "text-blue-500 hover:underline"
+            }
+          >
+            {url}
+          </a>
+        ) : (
+          <img
+            src={url}
+            alt="Image"
+            className={`max-w-full rounded-md max-h-[300px] ${
+              loaded ? "opacity-100" : "opacity-0"
+            } transition-opacity duration-300`}
+            onLoad={() => setLoaded(true)}
+            onError={() => setError(true)}
+          />
+        )}
+      </div>
+    );
   };
 
   return (
@@ -257,13 +407,13 @@ export default function SupportPage() {
                           "px-4 py-3 rounded-md",
                           hasMention ? "ring-1 ring-blue-500/20" : "",
                           isUser
-                            ? "bg-blue-500 text-white"
-                            : "bg-gray-100 text-gray-800"
+                            ? "bg-blue-500 text-white font-medium"
+                            : "bg-gray-100 text-blue-600"
                         )}
                       >
                         <div
                           dangerouslySetInnerHTML={{
-                            __html: formatMessageContent(reply.content),
+                            __html: formatMessageContent(reply.content, isUser),
                           }}
                         />
                       </div>
