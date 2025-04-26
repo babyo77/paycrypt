@@ -1,6 +1,8 @@
-import React from "react";
+"use client";
+
+import React, { useState, useEffect } from "react";
 import Link from "next/link";
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, AlertCircle, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 import { HeroHeader } from "@/components/hero5-header";
@@ -11,8 +13,39 @@ import Footer from "./footer";
 import PricingSection from "./pricing-section";
 
 export default function HeroSection() {
+  const [showBanner, setShowBanner] = useState(true);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      if (window.scrollY > 50) {
+        setShowBanner(false);
+      } else {
+        setShowBanner(true);
+      }
+    };
+
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
   return (
     <>
+      {showBanner && (
+        <div className="bg-blue-50 border-b border-blue-100 transition-all duration-300">
+          <div className="relative max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-center px-4 py-3 gap-2 sm:gap-4">
+            <div className="flex items-center max-w-full">
+              <span className="relative flex-shrink-0 flex h-3 w-3 mr-2">
+                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-blue-400 opacity-75"></span>
+                <span className="relative inline-flex rounded-full h-3 w-3 bg-blue-500"></span>
+              </span>
+              <p className="text-sm font-medium text-blue-800 text-center sm:text-left truncate">
+                <span className="hidden xs:inline">Coming Soon:</span> We're
+                Building L2 Payments on Arbitrum, Optimism & Base
+              </p>
+            </div>
+          </div>
+        </div>
+      )}
       <HeroHeader />
       <main className="overflow-hidden bg-[#f6f7f9] leading-tight tracking-tight">
         <div
