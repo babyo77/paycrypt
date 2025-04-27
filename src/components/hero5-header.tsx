@@ -260,14 +260,14 @@ export const HeroHeader = () => {
                 </ul>
               </div>
               <div className="flex w-full flex-col space-y-3 sm:flex-row sm:gap-3 sm:space-y-0 md:w-fit">
-                <Link href="https://app.paycrypt.tech/account">
-                  <Button size="sm">Get Started</Button>
-                </Link>
                 <Link href="https://discord.gg/UCqEx8SuZf">
+                  <Button size="sm">Join Waitlist</Button>
+                </Link>
+                {/* <Link href="https://discord.gg/UCqEx8SuZf">
                   <Button size="sm" variant="outline">
                     Contact Sales
                   </Button>
-                </Link>
+                </Link> */}
               </div>
             </div>
           </div>

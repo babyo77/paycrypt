@@ -39,8 +39,9 @@ export default function HeroSection() {
                 <span className="relative inline-flex rounded-full h-3 w-3 bg-blue-500"></span>
               </span>
               <p className="text-sm font-medium text-blue-800 text-center sm:text-left truncate">
-                <span className="hidden xs:inline">Coming Soon:</span> We're
-                Building L2 Payments on Arbitrum, Optimism & Base
+                <span className="hidden xs:inline">Work in Progress:</span>{" "}
+                We're actively building this site while developing Arbitrum,
+                Optimism, and Base integrations!
               </p>
             </div>
           </div>
@@ -91,14 +92,12 @@ export default function HeroSection() {
                 </p>
 
                 <div className="mt-12 flex items-center justify-center gap-2">
-                  <Link href="https://app.paycrypt.tech/account">
-                    <Button size="lg">Get Started</Button>
+                  <Link href="https://zigzag-soy-0fb.notion.site/Paycrypt-1e2af58eee2f806da94edb3d19e9bf13">
+                    <Button size="lg">Learn More</Button>
                   </Link>
-                  <Link href="https://docs.paycrypt.tech">
-                    <Button variant={"outline"} size="lg">
-                      Learn More
-                    </Button>
-                  </Link>
+                  {/* <Link href="https://docs.paycrypt.tech">
+                    <Button size="lg">Docs</Button>
+                  </Link> */}
                 </div>
               </div>
             </div>
