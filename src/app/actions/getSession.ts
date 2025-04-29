@@ -19,6 +19,7 @@ export async function getSession() {
       headers: {
         Authorization: `Bearer ${tesseraCookie?.value}`,
       },
+      cache: "no-cache",
     });
 
     if (error) {
