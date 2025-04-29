@@ -95,7 +95,7 @@ export default function HeroSection() {
                   <Link href="https://zigzag-soy-0fb.notion.site/Paycrypt-1e2af58eee2f806da94edb3d19e9bf13">
                     <Button size="lg">Learn More</Button>
                   </Link>
-                  <Link href={process.env.DEMO_ENDPOINT!}>
+                  <Link href={"/demo"}>
                     <Button size="lg">View Demo</Button>
                   </Link>
                 </div>
