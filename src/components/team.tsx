@@ -12,7 +12,7 @@ const members = [
     avatar: "https://avatars.githubusercontent.com/u/144552425?v=4",
   },
   {
-    name: "Zade",
+    name: "Prasanna Sharma",
     role: "Founding Engineer",
     avatar: "https://avatars.githubusercontent.com/u/78777405?v=4",
   },
