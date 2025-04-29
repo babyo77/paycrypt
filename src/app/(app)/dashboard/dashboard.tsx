@@ -9,7 +9,6 @@ import {
   CardFooter,
 } from "@/components/ui/card";
 import Link from "next/link";
-import { SectionCards } from "@/components/section-cards";
 
 export default function Dashboard() {
   return (

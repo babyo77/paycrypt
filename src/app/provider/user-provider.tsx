@@ -23,6 +23,7 @@ export interface UserData {
   webhook_url: string;
   timeframe: "DAILY" | "WEEKLY" | "MONTHLY" | "YEARLY";
   networkMode: "MAINNET" | "TESTNET";
+  avatar: string;
 }
 
 type UserAction =

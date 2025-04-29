@@ -33,12 +33,15 @@ export function NavUser() {
             >
               <Avatar className="h-9 w-9 rounded-md">
                 <AvatarImage
-                  src={`https://avatar.tobi.sh/${userData?.full_name.slice(
-                    0,
-                    1
-                  )}.svg?text=${userData?.full_name
-                    .slice(0, 2)
-                    .toUpperCase()}&size=512`}
+                  src={
+                    userData?.avatar ||
+                    `https://avatar.tobi.sh/${userData?.full_name.slice(
+                      0,
+                      1
+                    )}.svg?text=${userData?.full_name
+                      .slice(0, 2)
+                      .toUpperCase()}&size=512`
+                  }
                   alt={userData?.full_name}
                 />
                 <AvatarFallback className="rounded-md object-cover">
