@@ -49,7 +49,7 @@ export default function TeamSection() {
         </div>
 
         <div className="mt-10">
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8 py-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-8 py-6">
             {members.map((member, index) => (
               <div key={index} className="group flex flex-col items-center">
                 <div className="relative">
