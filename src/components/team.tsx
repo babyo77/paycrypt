@@ -13,14 +13,15 @@ const members = [
   },
   {
     name: "Prasanna Sharma",
-    role: "Founding Engineer",
+    role: "Business Development",
     avatar: "https://avatars.githubusercontent.com/u/78777405?v=4",
   },
-  // {
-  //   name: "",
-  //   role: "Lawyer",
-  //   avatar: "https://avatars.githubusercontent.com/u/111943685?v=4",
-  // },
+  {
+    name: "Vaanya Goel",
+    role: "Frontend Engineer",
+    avatar:
+      "https://cdn.discordapp.com/attachments/1355865138246189186/1366916656932065462/Screenshot_2025-04-30_at_4.48.35_AM.png?ex=6812afd7&is=68115e57&hm=71af6d318a18b4582f33c3cd146b26ccb15ac58b3e3314b123e505e8eba7e2ab&",
+  },
   // {
   //   name: "Aman Gupta",
   //   role: "Management",
