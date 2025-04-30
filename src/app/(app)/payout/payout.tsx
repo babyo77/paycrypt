@@ -6,24 +6,24 @@ import React, { useEffect, useState } from "react";
 
 // Define type for balance data
 interface BalanceData {
-  total_eth_balance: number | null;
-  total_eth_usd: number | null;
-  total_sol_balance: number | null;
-  total_sol_usd: number | null;
-  total_usdc_ethereum_balance: number | null;
-  total_usdc_ethereum_usd: number | null;
-  total_usdc_solana_balance: number | null;
-  total_usdc_solana_usd: number | null;
-  total_usdt_ethereum_balance: number | null;
-  total_usdt_ethereum_usd: number | null;
-  total_usdt_solana_balance: number | null;
-  total_usdt_solana_usd: number | null;
+  total_eth_balance: string | null;
+  total_eth_usd: string | null;
+  total_sol_balance: string | null;
+  total_sol_usd: string | null;
+  total_usdc_ethereum_balance: string | null;
+  total_usdc_ethereum_usd: string | null;
+  total_usdc_solana_balance: string | null;
+  total_usdc_solana_usd: string | null;
+  total_usdt_ethereum_balance: string | null;
+  total_usdt_ethereum_usd: string | null;
+  total_usdt_solana_balance: string | null;
+  total_usdt_solana_usd: string | null;
 }
 
 // Card component for displaying cryptocurrency amount
 interface CryptoAmountProps {
   coinSymbol: string;
-  amount: number | null;
+  amount: string | null;
   iconPath: string;
 }
 
@@ -32,9 +32,9 @@ const CryptoAmount: React.FC<CryptoAmountProps> = ({
   amount,
   iconPath,
 }) => {
-  const formatValue = (value: number | null): string => {
+  const formatValue = (value: string | null): string => {
     if (value === null) return "N/A";
-    return value.toFixed(6);
+    return Number(value).toFixed(6);
   };
 
   return (
