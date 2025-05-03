@@ -170,14 +170,29 @@ export function PaymentLinksDataTable({
       {
         accessorKey: "Type",
         header: "Type",
-        cell: ({ row }: any) => (
-          <div className="max-w-[300px] truncate capitalize">
-            {row.original.link_type
-              ? row.original.link_type.charAt(0).toUpperCase() +
-                row.original.link_type.slice(1).toLowerCase()
-              : ""}
-          </div>
-        ),
+        cell: ({ row }: any) => {
+          const linkType = row.original.link_type;
+
+          // Determine text color based on type
+          let textColorClass = "";
+          if (linkType === "ONE_TIME") {
+            textColorClass = "text-blue-600";
+          } else if (linkType === "PERMANENT") {
+            textColorClass = "text-green-600";
+          }
+
+          return (
+            <div className={`font-medium ${textColorClass}`}>
+              {linkType === "ONE_TIME"
+                ? "One Time"
+                : linkType === "PERMANENT"
+                ? "Permanent"
+                : linkType
+                ? linkType.replace(/_/g, " ").toLowerCase()
+                : ""}
+            </div>
+          );
+        },
       },
       {
         accessorKey: "created_at",
@@ -421,13 +436,13 @@ export function PaymentLinksDataTable({
       <div className="flex items-center justify-between px-4 lg:px-6">
         <div className="text-xl font-semibold">Payment Links</div>
         <div className="flex items-center gap-2">
-          <Input
+          {/* <Input
             placeholder="Search links..."
             className="max-w-sm"
             onChange={(event) => {
               table.setGlobalFilter(event.target.value);
             }}
-          />
+          /> */}
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button variant="outline" size="sm">
@@ -461,7 +476,7 @@ export function PaymentLinksDataTable({
             </DropdownMenuContent>
           </DropdownMenu>
           <Link prefetch href="/links/create">
-            <Button>
+            <Button size="sm">
               <IconPlus className="h-4 w-4" />
               Create Link
             </Button>
