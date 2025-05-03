@@ -374,15 +374,13 @@ export function DataTable({
     const fetchData = async () => {
       try {
         const response = await api.get<{
-          transactions: z.infer<typeof schema>[];
+          tx: z.infer<typeof schema>[];
         }>("/metrics/transactions", {
           showErrorToast: false,
         });
         if (response.status === 200 && response.data) {
           // Sort transactions by status when data is loaded
-          const sortedTransactions = sortTransactionsByStatus(
-            response.data.transactions
-          );
+          const sortedTransactions = sortTransactionsByStatus(response.data.tx);
           setData(sortedTransactions);
         }
       } catch (error) {
