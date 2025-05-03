@@ -32,7 +32,7 @@ import {
 } from "@tabler/icons-react";
 
 import { z } from "zod";
-import { format, parseISO } from "date-fns";
+import { format, parseISO, formatDistanceToNow } from "date-fns";
 
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -240,7 +240,92 @@ const columns: ColumnDef<z.infer<typeof schema>>[] = [
       );
     },
     cell: ({ row }) => {
-      return <div>{format(parseISO(row.original.created_at), "PPp")}</div>;
+      const date = parseISO(row.original.created_at);
+      const now = new Date();
+      const diffMs = now.getTime() - date.getTime();
+      const diffMins = Math.floor(diffMs / (1000 * 60));
+      const diffHours = Math.floor(diffMs / (1000 * 60 * 60));
+      const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
+
+      // Determine which time format to use
+      let content;
+
+      if (diffMins < 5) {
+        // Very recent transaction (< 5 minutes)
+        content = (
+          <div className="flex items-center">
+            <div className="relative flex items-center mr-2">
+              <span className="absolute size-2 bg-green-500 rounded-full animate-ping opacity-75"></span>
+              <span className="relative size-2 bg-green-500 rounded-full"></span>
+            </div>
+            <span className="font-semibold text-green-600">Just now</span>
+          </div>
+        );
+      } else if (diffMins < 60) {
+        // Recent transaction (< 1 hour)
+        content = (
+          <div className="flex items-center">
+            <div className="w-1 h-full bg-gradient-to-r from-green-400 to-green-600 rounded-full mr-2"></div>
+            <span className="font-medium text-green-700">{diffMins}m ago</span>
+          </div>
+        );
+      } else if (diffHours < 24) {
+        // Same day transaction
+        let bgColor = "from-teal-400 to-blue-500";
+        let textColor = "text-blue-700";
+
+        if (diffHours < 6) {
+          bgColor = "from-green-400 to-teal-500";
+          textColor = "text-teal-700";
+        }
+
+        content = (
+          <div className="flex items-center">
+            <div
+              className={`w-1 h-full bg-gradient-to-r ${bgColor} rounded-full mr-2`}
+            ></div>
+            <span className={`font-medium ${textColor}`}>
+              About {diffHours}h ago
+            </span>
+          </div>
+        );
+      } else if (diffDays < 7) {
+        // Recent week
+        content = (
+          <div className="flex items-center">
+            <div className="w-1 h-full bg-gradient-to-r from-blue-400 to-indigo-600 rounded-full mr-2"></div>
+            <span className="font-medium text-indigo-700">
+              About {diffDays}d ago
+            </span>
+          </div>
+        );
+      } else if (diffDays < 30) {
+        // Last month
+        content = (
+          <div className="flex items-center">
+            <div className="w-1 h-full bg-gradient-to-r from-indigo-400 to-purple-600 rounded-full mr-2"></div>
+            <span className="font-medium text-purple-700">
+              About {diffDays}d ago
+            </span>
+          </div>
+        );
+      } else {
+        // Older transaction
+        content = (
+          <div className="flex items-center">
+            <div className="w-1 h-full bg-gradient-to-r from-gray-400 to-gray-600 rounded-full mr-2"></div>
+            <span className="font-medium text-gray-700">
+              {format(date, "MMM d, yyyy")}
+            </span>
+          </div>
+        );
+      }
+
+      return (
+        <div className="flex items-center py-1" title={format(date, "PPpp")}>
+          {content}
+        </div>
+      );
     },
   },
   {

@@ -9,9 +9,7 @@ export default function Playground() {
     router.push("/demo");
   };
 
-  const handleSponsor = () => {
-    window.open("/demo", "_blank");
-  };
+  const handleGetNotified = () => {};
 
   return (
     <div className="flex flex-1 items-center justify-center bg-background">
@@ -66,8 +64,8 @@ export default function Playground() {
             </svg>
           </Button>
 
-          <Button onClick={handleSponsor} size="lg" variant={"secondary"}>
-            Sponsor Us
+          <Button onClick={handleGetNotified} size="lg" variant={"secondary"}>
+            Get Notified
             <svg
               xmlns="http://www.w3.org/2000/svg"
               width="16"
@@ -80,7 +78,8 @@ export default function Playground() {
               strokeLinejoin="round"
               className="ml-2"
             >
-              <path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z" />
+              <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9" />
+              <path d="M13.73 21a2 2 0 0 1-3.46 0" />
             </svg>
           </Button>
         </div>
