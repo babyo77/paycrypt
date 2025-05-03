@@ -1,8 +1,8 @@
-import HeroSection from "@/components/hero-section";
+import LoginPage from "@/components/login";
 import React from "react";
 
 function page() {
-  return <HeroSection />;
+  return <LoginPage />;
 }
 
 export default page;
