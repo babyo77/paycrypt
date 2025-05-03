@@ -1,8 +1,7 @@
-import LoginPage from "@/components/login";
-import React from "react";
+import { redirect } from "next/navigation";
 
 function page() {
-  return <LoginPage />;
+  redirect("/account");
 }
 
 export default page;
