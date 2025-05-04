@@ -68,7 +68,7 @@ export function NavUser() {
             <DropdownMenuItem
               onClick={async () => {
                 await api
-                  .get("/auth/logout", {
+                  .post("/auth/logout", {
                     credentials: "include",
                   })
                   .then((res) => {
