@@ -26,6 +26,7 @@ import Link from "next/link";
 import { Logo } from "./logo";
 import { Button } from "./ui/button";
 import { useUser } from "@/app/provider/user-provider";
+import { UserData } from "@/app/provider/user-provider";
 import { api } from "@/lib/utils";
 const data = {
   navMain: [
@@ -104,7 +105,7 @@ const data = {
 };
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
-  const { userData } = useUser();
+  const { userData, dispatch } = useUser();
   return (
     <Sidebar collapsible="offcanvas" {...props}>
       <SidebarHeader>
@@ -141,8 +142,18 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
             size="sm"
             onClick={async () => {
               await api.patch("/merchant/", {
-                is_waitlist: !userData?.is_waitlist,
+                is_waitlist: true,
               });
+
+              if (userData) {
+                dispatch({
+                  type: "SET_USER",
+                  payload: {
+                    ...userData,
+                    is_waitlist: true,
+                  } as UserData,
+                });
+              }
             }}
             variant="default"
             className="w-full"
