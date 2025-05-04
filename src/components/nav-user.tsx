@@ -44,8 +44,8 @@ export function NavUser() {
                   }
                   alt={userData?.full_name}
                 />
-                <AvatarFallback className="rounded-md object-cover">
-                  CN
+                <AvatarFallback className="rounded-md object-cover bg-gradient-to-r from-blue-500 to-blue-300 text-white">
+                  {userData?.full_name.slice(0, 2).toUpperCase()}
                 </AvatarFallback>
               </Avatar>
               <div className="grid flex-1 text-left text-sm leading-tight">

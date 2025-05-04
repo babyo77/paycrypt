@@ -3,6 +3,34 @@ import { useUser } from "@/app/provider/user-provider";
 import { Button } from "@/components/ui/button";
 import { api } from "@/lib/utils";
 import React, { useEffect, useState } from "react";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { format } from "date-fns";
+import { Wallet, Copy, ExternalLink, MoreVertical } from "lucide-react";
+import { toast } from "sonner";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import { Tabs, TabsContent } from "@/components/ui/tabs";
+import { Badge } from "@/components/ui/badge";
 
 // Define type for balance data
 interface BalanceData {
@@ -14,27 +42,44 @@ interface BalanceData {
   total_usdc_ethereum_usd: string | null;
   total_usdc_solana_balance: string | null;
   total_usdc_solana_usd: string | null;
-  total_usdt_ethereum_balance: string | null;
-  total_usdt_ethereum_usd: string | null;
-  total_usdt_solana_balance: string | null;
-  total_usdt_solana_usd: string | null;
+}
+
+// Define type for payout history based on the new data structure
+interface PayoutHistory {
+  id: string;
+  merchant_id: string;
+  sol_amount: number;
+  eth_amount: number;
+  processed_sol_amount: number;
+  processed_eth_amount: number;
+  status: string;
+  created_at: string;
+  updated_at: string;
 }
 
 // Card component for displaying cryptocurrency amount
 interface CryptoAmountProps {
   coinSymbol: string;
   amount: string | null;
+  usdAmount: string | null;
   iconPath: string;
 }
 
 const CryptoAmount: React.FC<CryptoAmountProps> = ({
   coinSymbol,
   amount,
+  usdAmount,
   iconPath,
 }) => {
   const formatValue = (value: string | null): string => {
-    if (value === null) return "N/A";
+    if (value === null) return "0.000";
     return Number(value).toFixed(6);
+  };
+
+  // Format USD value
+  const formatUsd = (value: string | null): string => {
+    if (value === null) return "0.000";
+    return `$${Number(value).toFixed(2)}`;
   };
 
   return (
@@ -48,6 +93,7 @@ const CryptoAmount: React.FC<CryptoAmountProps> = ({
           <span className="text-gray-500 text-sm">{coinSymbol}</span>
         </p>
       </div>
+      <div className="text-green-600 font-medium">{formatUsd(usdAmount)}</div>
     </div>
   );
 };
@@ -102,16 +148,75 @@ const SkeletonGroup = () => (
   </div>
 );
 
+// Get status badge style
+const getStatusBadgeVariant = (status: string) => {
+  switch (status.toLowerCase()) {
+    case "completed":
+    case "paid":
+      return { color: "bg-green-100 text-green-700", icon: "✓ " };
+    case "pending":
+    case "processing":
+      return { color: "bg-yellow-100 text-yellow-700", icon: "⧖ " };
+    case "failed":
+    case "cancelled":
+      return { color: "bg-red-100 text-red-700", icon: "✕ " };
+    default:
+      return { color: "bg-gray-100 text-gray-700", icon: "• " };
+  }
+};
+
+// Format date helper
+const formatDate = (dateString: string | undefined) => {
+  if (!dateString) return "0.000";
+  try {
+    return format(new Date(dateString), "MMMM d, yyyy");
+  } catch (e) {
+    return "Invalid Date";
+  }
+};
+
+// Format crypto amount
+const formatCryptoAmount = (amount: number): string => {
+  return amount.toFixed(6);
+};
+
+// Calculate total USD balance
+const calculateTotalBalance = (balanceData: BalanceData | null): number => {
+  if (!balanceData) return 0;
+
+  const eth = Number(balanceData.total_eth_usd || 0);
+  const sol = Number(balanceData.total_sol_usd || 0);
+  const usdcEth = Number(balanceData.total_usdc_ethereum_usd || 0);
+  const usdcSol = Number(balanceData.total_usdc_solana_usd || 0);
+
+  return eth + sol + usdcEth + usdcSol;
+};
+
 function PayoutPage() {
   const { userData } = useUser();
   const [balanceData, setBalanceData] = useState<BalanceData | null>(null);
+  const [payoutHistory, setPayoutHistory] = useState<PayoutHistory[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [isHistoryLoading, setIsHistoryLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [isPaying, setIsPaying] = useState(false);
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [ethAddress, setEthAddress] = useState("");
+  const [solAddress, setSolAddress] = useState("");
 
   // CDN base URL for cryptocurrency icons
   const iconBaseUrl =
     "https://cdn.jsdelivr.net/gh/atomiclabs/cryptocurrency-icons@1a63530be6e374711a8554f31b17e4cb92c25fa5/128/color";
+
+  // Handle dialog open state changes
+  const handleDialogOpenChange = (open: boolean) => {
+    // Reset form fields when dialog is opened
+    if (open) {
+      setEthAddress("");
+      setSolAddress("");
+    }
+    setIsDialogOpen(open);
+  };
 
   useEffect(() => {
     if (!userData) return;
@@ -134,20 +239,93 @@ function PayoutPage() {
     fetchPayouts();
   }, [userData]);
 
+  useEffect(() => {
+    if (!userData) return;
+
+    const fetchPayoutHistory = async () => {
+      try {
+        setIsHistoryLoading(true);
+        const res = await api.get("/payout/pending");
+
+        // Check if response has the expected format
+        if (
+          res.data &&
+          typeof res.data === "object" &&
+          "payout" in res.data &&
+          Array.isArray(res.data.payout)
+        ) {
+          setPayoutHistory(res.data.payout as PayoutHistory[]);
+        } else if (res.data && Array.isArray(res.data)) {
+          setPayoutHistory(res.data as PayoutHistory[]);
+        } else {
+          setPayoutHistory([]);
+        }
+      } catch (err) {
+        console.error("Error fetching payout history:", err);
+        setPayoutHistory([]);
+      } finally {
+        setIsHistoryLoading(false);
+      }
+    };
+
+    fetchPayoutHistory();
+  }, [userData]);
+
+  const copyToClipboard = (text: string) => {
+    navigator.clipboard.writeText(text);
+    // Replace alert with toast notification
+    toast.success("Copied to clipboard");
+  };
+
   const handleGetPayout = async () => {
     if (!userData) return;
 
+    // Validate addresses
+    if (!ethAddress.trim()) {
+      toast.error("Ethereum address is required");
+      return;
+    }
+
+    if (!solAddress.trim()) {
+      toast.error("Solana address is required");
+      return;
+    }
+
     try {
       setIsPaying(true);
-      const res = await api.post("/payout/request", {});
-      alert("Payout request submitted successfully!");
+      const res = await api.post("/payout/request", {
+        ethereum_address: ethAddress,
+        solana_address: solAddress,
+      });
+
+      // Close dialog
+      setIsDialogOpen(false);
+
+      // Show success toast
+      toast.success("Payout request submitted successfully!");
+
       console.log(res.data);
       // Refetch the data to update balances
       const updatedData = await api.get("/payout/");
       setBalanceData(updatedData.data as BalanceData);
+
+      // Refresh history data
+      const historyData = await api.get("/payout/pending");
+      if (
+        historyData.data &&
+        typeof historyData.data === "object" &&
+        "payout" in historyData.data &&
+        Array.isArray(historyData.data.payout)
+      ) {
+        setPayoutHistory(historyData.data.payout as PayoutHistory[]);
+      } else if (historyData.data && Array.isArray(historyData.data)) {
+        setPayoutHistory(historyData.data as PayoutHistory[]);
+      } else {
+        setPayoutHistory([]);
+      }
     } catch (err) {
       console.error("Error requesting payout:", err);
-      alert("Failed to process payout request. Please try again later.");
+      toast.error("Failed to process payout request. Please try again later.");
     } finally {
       setIsPaying(false);
     }
@@ -159,7 +337,7 @@ function PayoutPage() {
         <div className="space-y-6">
           <SkeletonGroup />
           <SkeletonGroup />
-          <div className="h-10 bg-gray-200 rounded w-full max-w-xs mx-auto animate-pulse"></div>
+          <div className="h-10 bg-gray-200 rounded w-full max-w-xs animate-pulse"></div>
         </div>
       </div>
     );
@@ -168,7 +346,7 @@ function PayoutPage() {
   if (error) {
     return (
       <div className="w-full p-6">
-        <div className="bg-red-50 text-red-500 p-4 rounded-lg">
+        <div className="bg-red-50 text-red-500 p-4 rounded-lg border border-red-200">
           <p>{error}</p>
           <button
             className="mt-2 px-4 py-2 bg-red-500 text-white rounded-md hover:bg-red-600 transition-colors text-sm"
@@ -181,69 +359,319 @@ function PayoutPage() {
     );
   }
 
-  if (!balanceData) {
-    return (
-      <div className="w-full p-6 text-center">
-        <p className="text-gray-500">No balance data available</p>
-      </div>
-    );
-  }
+  // Calculate total balance
+  const totalBalance = calculateTotalBalance(balanceData);
 
   return (
-    <div className="w-full p-6 relative">
-      <div className="space-y-6 w-full">
-        <NetworkGroup
-          networkName="Ethereum Network"
-          networkIcon={`${iconBaseUrl}/eth.png`}
-        >
-          <CryptoAmount
-            coinSymbol="ETH"
-            amount={balanceData.total_eth_balance}
-            iconPath={`${iconBaseUrl}/eth.png`}
-          />
+    <div className="flex flex-1 flex-col">
+      <div className="@container/main flex flex-1 flex-col gap-2">
+        <div className="flex flex-col gap-4 py-4 md:gap-6 md:py-6">
+          <Tabs
+            defaultValue="payout"
+            className="w-full flex-col justify-start gap-6"
+          >
+            <div className="flex items-center justify-between px-4 lg:px-6">
+              <div className="text-xl font-semibold">Your Payouts</div>
+            </div>
 
-          <CryptoAmount
-            coinSymbol="USDC"
-            amount={balanceData.total_usdc_ethereum_balance}
-            iconPath={`${iconBaseUrl}/usdc.png`}
-          />
+            <TabsContent
+              value="payout"
+              className="relative flex flex-col gap-4 overflow-auto px-4 lg:px-6"
+            >
+              {/* Combined balance and networks card */}
+              <div className="mb-5">
+                <div className="bg-white rounded-lg border border-gray-200 overflow-hidden w-full">
+                  <div className="bg-gray-50 p-4 border-b border-gray-200 flex justify-between items-center">
+                    <div className="flex flex-col">
+                      <h2 className="font-semibold text-gray-700">
+                        Available Balance
+                      </h2>
+                      <div className="text-2xl font-semibold mt-1">
+                        ${totalBalance.toFixed(2)}
+                      </div>
+                    </div>
+                    <Button
+                      onClick={() => handleDialogOpenChange(true)}
+                      disabled={isPaying}
+                      variant="default"
+                    >
+                      <Wallet className="mr-2 h-4 w-4" />
+                      {isPaying ? "Processing..." : "Withdraw"}
+                    </Button>
+                  </div>
+                  <div className="p-4 space-y-3">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                      <CryptoAmount
+                        coinSymbol="ETH"
+                        amount={balanceData?.total_eth_balance || null}
+                        usdAmount={balanceData?.total_eth_usd || null}
+                        iconPath={`${iconBaseUrl}/eth.png`}
+                      />
 
-          <CryptoAmount
-            coinSymbol="USDT"
-            amount={balanceData.total_usdt_ethereum_balance}
-            iconPath={`${iconBaseUrl}/usdt.png`}
-          />
-        </NetworkGroup>
+                      <CryptoAmount
+                        coinSymbol="SOL"
+                        amount={balanceData?.total_sol_balance || null}
+                        usdAmount={balanceData?.total_sol_usd || null}
+                        iconPath={`${iconBaseUrl}/sol.png`}
+                      />
+                    </div>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                      <CryptoAmount
+                        coinSymbol="USDC (ETH)"
+                        amount={
+                          balanceData?.total_usdc_ethereum_balance || null
+                        }
+                        usdAmount={balanceData?.total_usdc_ethereum_usd || null}
+                        iconPath={`${iconBaseUrl}/usdc.png`}
+                      />
 
-        {/* Solana Network Group */}
-        <NetworkGroup
-          networkName="Solana Network"
-          networkIcon={`${iconBaseUrl}/sol.png`}
-        >
-          <CryptoAmount
-            coinSymbol="SOL"
-            amount={balanceData.total_sol_balance}
-            iconPath={`${iconBaseUrl}/sol.png`}
-          />
+                      <CryptoAmount
+                        coinSymbol="USDC (SOL)"
+                        amount={balanceData?.total_usdc_solana_balance || null}
+                        usdAmount={balanceData?.total_usdc_solana_usd || null}
+                        iconPath={`${iconBaseUrl}/usdc.png`}
+                      />
+                    </div>
+                  </div>
+                </div>
+              </div>
 
-          <CryptoAmount
-            coinSymbol="USDC"
-            amount={balanceData.total_usdc_solana_balance}
-            iconPath={`${iconBaseUrl}/usdc.png`}
-          />
+              {/* Withdrawal Dialog */}
+              <Dialog open={isDialogOpen} onOpenChange={handleDialogOpenChange}>
+                <DialogContent className="sm:max-w-lg">
+                  <DialogHeader>
+                    <DialogTitle>Withdraw Earnings</DialogTitle>
+                    <DialogDescription>
+                      Enter your wallet addresses to receive your funds.
+                    </DialogDescription>
+                  </DialogHeader>
+                  <div className="flex flex-col gap-4 items-start">
+                    <div className="flex items-center gap-2 w-full">
+                      <label
+                        htmlFor="eth-address"
+                        className="text-right font-medium whitespace-nowrap"
+                      >
+                        ETH Address
+                      </label>
+                      <div className="w-full">
+                        <Input
+                          id="eth-address"
+                          value={ethAddress}
+                          onChange={(e) => setEthAddress(e.target.value)}
+                          placeholder="Enter Ethereum Address"
+                          className="w-full"
+                        />
+                        {ethAddress && (
+                          <Button
+                            type="button"
+                            variant="outline"
+                            size="icon"
+                            className="ml-2"
+                            onClick={() => copyToClipboard(ethAddress)}
+                          >
+                            <Copy className="h-4 w-4" />
+                          </Button>
+                        )}
+                      </div>
+                    </div>
+                    <div className="flex items-center gap-2 w-full">
+                      <label
+                        htmlFor="sol-address"
+                        className="text-right font-medium whitespace-nowrap"
+                      >
+                        SOL Address
+                      </label>
+                      <div className="w-full">
+                        <Input
+                          id="sol-address"
+                          value={solAddress}
+                          onChange={(e) => setSolAddress(e.target.value)}
+                          placeholder="Enter Solana Address"
+                          className="w-full"
+                        />
+                        {solAddress && (
+                          <Button
+                            type="button"
+                            variant="outline"
+                            size="icon"
+                            className="ml-2"
+                            onClick={() => copyToClipboard(solAddress)}
+                          >
+                            <Copy className="h-4 w-4" />
+                          </Button>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                  <DialogFooter>
+                    <Button
+                      type="button"
+                      variant="outline"
+                      onClick={() => setIsDialogOpen(false)}
+                    >
+                      Cancel
+                    </Button>
+                    <Button
+                      type="button"
+                      onClick={handleGetPayout}
+                      disabled={isPaying}
+                    >
+                      {isPaying ? "Processing..." : "Withdraw"}
+                    </Button>
+                  </DialogFooter>
+                </DialogContent>
+              </Dialog>
 
-          <CryptoAmount
-            coinSymbol="USDT"
-            amount={balanceData.total_usdt_solana_balance}
-            iconPath={`${iconBaseUrl}/usdt.png`}
-          />
-        </NetworkGroup>
+              {/* Payout History */}
+              <div>
+                <div className="flex items-center justify-between mb-6">
+                  <h2 className="text-xl font-semibold">Payout History</h2>
+                </div>
 
-        {/* Get Payout Button */}
-        <div className="flex justify-start w-full">
-          <Button onClick={handleGetPayout} disabled>
-            {isPaying ? "Processing..." : "Get Payout"}
-          </Button>
+                {isHistoryLoading ? (
+                  <div className="w-full flex justify-center p-6">
+                    <div className="h-6 w-6 border-2 border-t-blue-500 rounded-full animate-spin"></div>
+                  </div>
+                ) : payoutHistory.length === 0 ? (
+                  <div className="text-center p-8 bg-white rounded-lg border border-gray-200">
+                    <div className="flex flex-col items-center gap-2">
+                      <Wallet className="h-12 w-12 text-gray-300" />
+                      <h3 className="font-medium text-lg">No payout history</h3>
+                      <p className="text-gray-500">
+                        Your completed payouts will appear here
+                      </p>
+                    </div>
+                  </div>
+                ) : (
+                  <div className="overflow-hidden rounded-lg border ">
+                    <Table>
+                      <TableHeader className="bg-muted sticky top-0 z-10">
+                        <TableRow>
+                          <TableHead className="w-1/5">
+                            Transaction ID
+                          </TableHead>
+                          <TableHead>ETH Amount</TableHead>
+                          <TableHead>SOL Amount</TableHead>
+                          <TableHead>Status</TableHead>
+                          <TableHead>Date</TableHead>
+                          <TableHead className="w-8"></TableHead>
+                        </TableRow>
+                      </TableHeader>
+                      <TableBody>
+                        {payoutHistory.map((payout) => {
+                          const statusStyle = getStatusBadgeVariant(
+                            payout.status
+                          );
+                          return (
+                            <TableRow
+                              key={payout.id}
+                              className="hover:bg-muted/50 group transition-colors"
+                            >
+                              <TableCell className=" text-sm">
+                                {payout.id.substring(0, 23)}...
+                              </TableCell>
+                              <TableCell className="font-medium">
+                                <div className="flex items-center">
+                                  <img
+                                    src={`${iconBaseUrl}/eth.png`}
+                                    alt="ETH"
+                                    className="w-4 h-4 mr-2"
+                                  />
+                                  {formatCryptoAmount(payout.eth_amount)} ETH
+                                </div>
+                              </TableCell>
+                              <TableCell>
+                                <div className="flex items-center">
+                                  <img
+                                    src={`${iconBaseUrl}/sol.png`}
+                                    alt="SOL"
+                                    className="w-4 h-4 mr-2"
+                                  />
+                                  {formatCryptoAmount(payout.sol_amount)} SOL
+                                </div>
+                              </TableCell>
+                              <TableCell>
+                                <Badge
+                                  variant={
+                                    payout.status.toLowerCase() ===
+                                      "completed" ||
+                                    payout.status.toLowerCase() === "paid"
+                                      ? "default"
+                                      : payout.status.toLowerCase() ===
+                                          "pending" ||
+                                        payout.status.toLowerCase() ===
+                                          "processing"
+                                      ? "secondary"
+                                      : "destructive"
+                                  }
+                                  className={`whitespace-nowrap font-medium ${
+                                    payout.status.toLowerCase() ===
+                                      "completed" ||
+                                    payout.status.toLowerCase() === "paid"
+                                      ? "bg-green-100 text-green-800 hover:bg-green-200"
+                                      : payout.status.toLowerCase() ===
+                                          "pending" ||
+                                        payout.status.toLowerCase() ===
+                                          "processing"
+                                      ? "bg-yellow-100 text-yellow-800 hover:bg-yellow-200"
+                                      : ""
+                                  }`}
+                                >
+                                  {payout.status.toUpperCase()}
+                                </Badge>
+                              </TableCell>
+                              <TableCell className="text-muted-foreground">
+                                {formatDate(payout.created_at)}
+                              </TableCell>
+                              <TableCell>
+                                <DropdownMenu>
+                                  <DropdownMenuTrigger asChild>
+                                    <Button
+                                      variant="ghost"
+                                      className="data-[state=open]:bg-muted text-muted-foreground flex size-8 opacity-0 group-hover:opacity-100 transition-opacity"
+                                      size="icon"
+                                    >
+                                      <MoreVertical className="h-4 w-4" />
+                                      <span className="sr-only">Open menu</span>
+                                    </Button>
+                                  </DropdownMenuTrigger>
+                                  <DropdownMenuContent
+                                    align="end"
+                                    className="w-56"
+                                  >
+                                    <DropdownMenuItem
+                                      onClick={() => copyToClipboard(payout.id)}
+                                    >
+                                      <Copy className="mr-2 h-4 w-4" />
+                                      <span>Copy Transaction ID</span>
+                                    </DropdownMenuItem>
+                                    {payout.status.toLowerCase() ===
+                                      "completed" && (
+                                      <DropdownMenuItem
+                                        onClick={() => {
+                                          window.open(
+                                            `https://etherscan.io/tx/${payout.id}`,
+                                            "_blank"
+                                          );
+                                        }}
+                                      >
+                                        <ExternalLink className="mr-2 h-4 w-4" />
+                                        <span>View on Explorer</span>
+                                      </DropdownMenuItem>
+                                    )}
+                                  </DropdownMenuContent>
+                                </DropdownMenu>
+                              </TableCell>
+                            </TableRow>
+                          );
+                        })}
+                      </TableBody>
+                    </Table>
+                  </div>
+                )}
+              </div>
+            </TabsContent>
+          </Tabs>
         </div>
       </div>
     </div>
