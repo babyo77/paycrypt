@@ -25,7 +25,8 @@ import { Receipt, Settings2, AlertCircle } from "lucide-react";
 import Link from "next/link";
 import { Logo } from "./logo";
 import { Button } from "./ui/button";
-
+import { useUser } from "@/app/provider/user-provider";
+import { api } from "@/lib/utils";
 const data = {
   navMain: [
     {
@@ -103,6 +104,7 @@ const data = {
 };
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
+  const { userData } = useUser();
   return (
     <Sidebar collapsible="offcanvas" {...props}>
       <SidebarHeader>
@@ -133,11 +135,22 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
             You're using the test environment. All transactions are simulated
             and no real funds are involved.
           </p>
-          <Link href="/waitlist">
-            <Button size="sm" variant="default" className="w-full">
-              Join Mainnet Waitlist
-            </Button>
-          </Link>
+
+          <Button
+            disabled={userData?.is_waitlist}
+            size="sm"
+            onClick={async () => {
+              await api.patch("/merchant/", {
+                is_waitlist: !userData?.is_waitlist,
+              });
+            }}
+            variant="default"
+            className="w-full"
+          >
+            {userData?.is_waitlist
+              ? "You're on the waitlist"
+              : "Join Mainnet Waitlist"}
+          </Button>
         </div>
       </div>
 

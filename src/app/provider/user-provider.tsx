@@ -20,7 +20,10 @@ export interface UserData {
   eth_address: string;
   full_name: string;
   message: string;
+  payout_eth_address: string;
+  payout_sol_address: string;
   webhook_url: string;
+  is_waitlist: boolean;
   timeframe: "DAILY" | "WEEKLY" | "MONTHLY" | "YEARLY";
   networkMode: "MAINNET" | "TESTNET";
   avatar: string;

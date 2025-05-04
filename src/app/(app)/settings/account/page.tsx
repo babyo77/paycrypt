@@ -14,6 +14,8 @@ export default function AccountPage() {
   const [formData, setFormData] = useState({
     first_name: userData?.full_name?.split(" ")[0] || "",
     last_name: userData?.full_name?.split(" ").slice(1).join(" ") || "",
+    payout_eth_address: userData?.payout_eth_address || "",
+    payout_sol_address: userData?.payout_sol_address || "",
   });
 
   const [isLoading, setIsLoading] = useState(false);
@@ -35,6 +37,8 @@ export default function AccountPage() {
 
       const response = await api.patch("/merchant/", {
         full_name: fullName,
+        payout_eth_address: formData.payout_eth_address,
+        payout_sol_address: formData.payout_sol_address,
       });
 
       if (response.status === 200) {
@@ -43,6 +47,8 @@ export default function AccountPage() {
           payload: {
             ...userData!,
             full_name: fullName,
+            payout_eth_address: formData.payout_eth_address,
+            payout_sol_address: formData.payout_sol_address,
           },
         });
 
@@ -117,6 +123,46 @@ export default function AccountPage() {
                   <div className="text-gray-700 py-2 px-3 border border-gray-200 rounded-md bg-gray-50">
                     {userData?.email}
                   </div>
+                </div>
+
+                <div className="space-y-2">
+                  <Label
+                    htmlFor="payout_eth_address"
+                    className="text-sm font-medium"
+                  >
+                    Ethereum Payout Address
+                  </Label>
+                  <Input
+                    id="payout_eth_address"
+                    name="payout_eth_address"
+                    value={formData.payout_eth_address}
+                    onChange={handleChange}
+                    placeholder="Enter Ethereum Address"
+                    className="w-full text-sm"
+                  />
+                  <p className="text-xs text-gray-500">
+                    Enter your Ethereum wallet address for receiving payments
+                  </p>
+                </div>
+
+                <div className="space-y-2">
+                  <Label
+                    htmlFor="payout_sol_address"
+                    className="text-sm font-medium"
+                  >
+                    Solana Payout Address
+                  </Label>
+                  <Input
+                    id="payout_sol_address"
+                    name="payout_sol_address"
+                    value={formData.payout_sol_address}
+                    onChange={handleChange}
+                    placeholder="Enter Solana Address"
+                    className="w-full text-sm"
+                  />
+                  <p className="text-xs text-gray-500">
+                    Enter your Solana wallet address for receiving payments
+                  </p>
                 </div>
               </form>
             </div>

@@ -127,27 +127,6 @@ const NetworkGroup: React.FC<NetworkGroupProps> = ({
   );
 };
 
-// Loading skeleton component
-const SkeletonGroup = () => (
-  <div className="bg-white rounded-lg border border-gray-200 overflow-hidden animate-pulse w-full">
-    <div className="bg-gray-50 p-4 border-b border-gray-200 flex items-center">
-      <div className="w-5 h-5 bg-gray-200 rounded-full mr-2"></div>
-      <div className="h-5 bg-gray-200 rounded w-24"></div>
-    </div>
-    <div className="p-4 space-y-3">
-      {[...Array(3)].map((_, i) => (
-        <div
-          key={i}
-          className="flex items-center p-3 bg-white rounded-lg border border-gray-100 w-full"
-        >
-          <div className="w-6 h-6 bg-gray-200 rounded-full mr-3"></div>
-          <div className="h-5 bg-gray-200 rounded w-32"></div>
-        </div>
-      ))}
-    </div>
-  </div>
-);
-
 // Get status badge style
 const getStatusBadgeVariant = (status: string) => {
   switch (status.toLowerCase()) {
@@ -204,17 +183,18 @@ function PayoutPage() {
   const [ethAddress, setEthAddress] = useState("");
   const [solAddress, setSolAddress] = useState("");
 
+  useEffect(() => {
+    if (userData?.payout_eth_address && userData?.payout_sol_address) {
+      setEthAddress(userData.payout_eth_address);
+      setSolAddress(userData.payout_sol_address);
+    }
+  }, [userData]);
   // CDN base URL for cryptocurrency icons
   const iconBaseUrl =
     "https://cdn.jsdelivr.net/gh/atomiclabs/cryptocurrency-icons@1a63530be6e374711a8554f31b17e4cb92c25fa5/128/color";
 
   // Handle dialog open state changes
   const handleDialogOpenChange = (open: boolean) => {
-    // Reset form fields when dialog is opened
-    if (open) {
-      setEthAddress("");
-      setSolAddress("");
-    }
     setIsDialogOpen(open);
   };
 
@@ -261,7 +241,6 @@ function PayoutPage() {
           setPayoutHistory([]);
         }
       } catch (err) {
-        console.error("Error fetching payout history:", err);
         setPayoutHistory([]);
       } finally {
         setIsHistoryLoading(false);
@@ -293,7 +272,7 @@ function PayoutPage() {
 
     try {
       setIsPaying(true);
-      const res = await api.post("/payout", {
+      const res = await api.post("/payout/", {
         ethereum_address: ethAddress,
         solana_address: solAddress,
       });
@@ -301,10 +280,6 @@ function PayoutPage() {
       // Close dialog
       setIsDialogOpen(false);
 
-      // Show success toast
-      toast.success("Payout request submitted successfully!");
-
-      console.log(res.data);
       // Refetch the data to update balances
       const updatedData = await api.get("/payout/");
       setBalanceData(updatedData.data as BalanceData);
@@ -325,23 +300,10 @@ function PayoutPage() {
       }
     } catch (err) {
       console.error("Error requesting payout:", err);
-      toast.error("Failed to process payout request. Please try again later.");
     } finally {
       setIsPaying(false);
     }
   };
-
-  if (isLoading) {
-    return (
-      <div className="w-full p-6">
-        <div className="space-y-6">
-          <SkeletonGroup />
-          <SkeletonGroup />
-          <div className="h-10 bg-gray-200 rounded w-full max-w-xs animate-pulse"></div>
-        </div>
-      </div>
-    );
-  }
 
   if (error) {
     return (
@@ -461,17 +423,6 @@ function PayoutPage() {
                           placeholder="Enter Ethereum Address"
                           className="w-full"
                         />
-                        {ethAddress && (
-                          <Button
-                            type="button"
-                            variant="outline"
-                            size="icon"
-                            className="ml-2"
-                            onClick={() => copyToClipboard(ethAddress)}
-                          >
-                            <Copy className="h-4 w-4" />
-                          </Button>
-                        )}
                       </div>
                     </div>
                     <div className="flex items-center gap-2 w-full">
@@ -489,17 +440,6 @@ function PayoutPage() {
                           placeholder="Enter Solana Address"
                           className="w-full"
                         />
-                        {solAddress && (
-                          <Button
-                            type="button"
-                            variant="outline"
-                            size="icon"
-                            className="ml-2"
-                            onClick={() => copyToClipboard(solAddress)}
-                          >
-                            <Copy className="h-4 w-4" />
-                          </Button>
-                        )}
                       </div>
                     </div>
                   </div>
