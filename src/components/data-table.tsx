@@ -149,17 +149,16 @@ const columns: ColumnDef<z.infer<typeof schema>>[] = [
         "https://cdn.jsdelivr.net/gh/atomiclabs/cryptocurrency-icons@1a63530be6e374711a8554f31b17e4cb92c25fa5/128/color";
 
       // Add icon for SOL and ETH currencies
-      if (currency === "SOL" || currency === "ETH") {
-        const iconPath = `${iconBaseUrl}/${currency.toLowerCase()}.png`;
-        return (
-          <div className="flex items-center">
-            <img src={iconPath} alt={currency} className="w-4 h-4 mr-2" />
-            <span>
-              {formattedAmount} {currency}
-            </span>
-          </div>
-        );
-      }
+
+      const iconPath = `${iconBaseUrl}/${currency.toLowerCase()}.png`;
+      return (
+        <div className="flex items-center">
+          <img src={iconPath} alt={currency} className="w-4 h-4 mr-2" />
+          <span>
+            {formattedAmount} {currency}
+          </span>
+        </div>
+      );
 
       // For other currencies, just display amount and currency
       return (
@@ -254,6 +253,7 @@ const columns: ColumnDef<z.infer<typeof schema>>[] = [
         OPTIMISM: "op.png",
         ARBITRUM: "arb.png",
         BASE: "base.png",
+        USDC: "usdc.png",
       };
 
       // Get the appropriate icon or use a fallback
