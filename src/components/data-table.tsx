@@ -130,12 +130,13 @@ const columns: ColumnDef<z.infer<typeof schema>>[] = [
     cell: ({ row }) => {
       // Format cryptocurrency amounts based on currency
       let formattedAmount = row.original.amount;
+      const currency = row.original.currency;
 
       // Different formatting based on cryptocurrency type
-      if (row.original.currency === "SOL" || row.original.currency === "ETH") {
+      if (currency === "SOL" || currency === "ETH") {
         // For SOL/ETH, show 4 decimal places
         formattedAmount = parseFloat(row.original.amount.toFixed(4));
-      } else if (row.original.currency === "BTC") {
+      } else if (currency === "BTC") {
         // For BTC, show 6 decimal places
         formattedAmount = parseFloat(row.original.amount.toFixed(6));
       } else {
@@ -143,7 +144,29 @@ const columns: ColumnDef<z.infer<typeof schema>>[] = [
         formattedAmount = parseFloat(row.original.amount.toFixed(2));
       }
 
-      return <div>{formattedAmount}</div>;
+      // CDN base URL for cryptocurrency icons
+      const iconBaseUrl =
+        "https://cdn.jsdelivr.net/gh/atomiclabs/cryptocurrency-icons@1a63530be6e374711a8554f31b17e4cb92c25fa5/128/color";
+
+      // Add icon for SOL and ETH currencies
+      if (currency === "SOL" || currency === "ETH") {
+        const iconPath = `${iconBaseUrl}/${currency.toLowerCase()}.png`;
+        return (
+          <div className="flex items-center">
+            <img src={iconPath} alt={currency} className="w-4 h-4 mr-2" />
+            <span>
+              {formattedAmount} {currency}
+            </span>
+          </div>
+        );
+      }
+
+      // For other currencies, just display amount and currency
+      return (
+        <div>
+          {formattedAmount} {currency}
+        </div>
+      );
     },
   },
   {
@@ -215,11 +238,46 @@ const columns: ColumnDef<z.infer<typeof schema>>[] = [
   {
     accessorKey: "network",
     header: "Network",
-    cell: ({ row }) => (
-      <Badge variant="outline" className="text-muted-foreground px-1.5">
-        {row.original.network}
-      </Badge>
-    ),
+    cell: ({ row }) => {
+      const network = row.original.network;
+      // CDN base URL for cryptocurrency icons
+      const iconBaseUrl =
+        "https://cdn.jsdelivr.net/gh/atomiclabs/cryptocurrency-icons@1a63530be6e374711a8554f31b17e4cb92c25fa5/128/color";
+
+      // Map network names to icon filenames
+      const networkIcons: Record<string, string> = {
+        ETHEREUM: "eth.png",
+        SOLANA: "sol.png",
+        BITCOIN: "btc.png",
+        POLYGON: "matic.png",
+        AVALANCHE: "avax.png",
+        OPTIMISM: "op.png",
+        ARBITRUM: "arb.png",
+        BASE: "base.png",
+      };
+
+      // Get the appropriate icon or use a fallback
+      const iconFile = networkIcons[network] || `${network.toLowerCase()}.png`;
+      const iconPath = `${iconBaseUrl}/${iconFile}`;
+
+      return (
+        <Badge
+          variant="outline"
+          className="text-muted-foreground px-1.5 flex items-center"
+        >
+          <img
+            src={iconPath}
+            alt={network}
+            className="w-3.5 h-3.5 mr-1.5"
+            onError={(e) => {
+              // Hide icon if it fails to load
+              (e.target as HTMLImageElement).style.display = "none";
+            }}
+          />
+          {network}
+        </Badge>
+      );
+    },
   },
   {
     accessorKey: "created_at",
