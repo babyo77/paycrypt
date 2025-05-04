@@ -56,7 +56,7 @@ export default function LoginPage() {
         <div className="bg-card -m-px rounded-[calc(var(--radius)+.125rem)] border p-8 pb-6">
           <div className="text-center">
             <Link href="/" aria-label="go home" className="mx-auto block w-fit">
-              <Logo />
+              <Logo className=" size-10" textClassName=" text-2xl" />
             </Link>
 
             <p className="text-sm">Welcome! Continue to your Google account</p>

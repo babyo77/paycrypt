@@ -1,9 +1,15 @@
 import { cn } from "@/lib/utils";
 import Image from "next/image";
 
-export const Logo = ({ className }: { className?: string }) => {
+export const Logo = ({
+  className,
+  textClassName,
+}: {
+  className?: string;
+  textClassName?: string;
+}) => {
   return (
-    <div className="flex items-center gap-1">
+    <div className="flex items-center gap-0.5">
       <Image
         src="https://us-east-1.tixte.net/uploads/tanmay111-files.tixte.co/p_transparent.png" // Update this path to your actual logo image
         alt="Paycrypt Logo"
@@ -11,7 +17,9 @@ export const Logo = ({ className }: { className?: string }) => {
         height={30}
         className={cn("size-7", className)}
       />
-      <p className="text-blue-700 font-semibold">Paycrypt</p>
+      <p className={cn("text-blue-700 font-semibold", textClassName)}>
+        Paycrypt
+      </p>
     </div>
   );
 };
