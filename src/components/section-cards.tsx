@@ -16,9 +16,9 @@ import { useUser } from "@/app/provider/user-provider";
 
 export function SectionCards() {
   const [metrics, setMetrics] = useState({
-    weekly_revenue: 0,
-    total_customer: 0,
-    daily_all_transactions: 0,
+    new_customer: 0,
+    revenue: 0,
+    transactions: 0,
     success_rate: 0,
   });
 
@@ -31,9 +31,9 @@ export function SectionCards() {
       try {
         const response = await api.get<{
           message: string;
-          weekly_revenue: number;
+          revenue: number;
           new_customer: number;
-          daily_all_transactions: number;
+          transactions: number;
           success_rate: number;
         }>(
           `/metrics/dashboard?timeframe=${userData?.timeframe}&mode=${userData?.networkMode}`,
@@ -47,9 +47,9 @@ export function SectionCards() {
           setPrevMetrics(metrics);
 
           setMetrics({
-            weekly_revenue: response.data.weekly_revenue || 0,
-            total_customer: response.data.new_customer || 0,
-            daily_all_transactions: response.data.daily_all_transactions || 0,
+            new_customer: response.data.new_customer || 0,
+            revenue: response.data.revenue || 0,
+            transactions: response.data.transactions || 0,
             success_rate: response.data.success_rate || 0,
           });
         }
@@ -124,9 +124,9 @@ export function SectionCards() {
   };
 
   // Get trend values for each metric
-  const revenueTrend = getTrendValue("weekly_revenue");
-  const customerTrend = getTrendValue("total_customer");
-  const transactionTrend = getTrendValue("daily_all_transactions");
+  const revenueTrend = getTrendValue("revenue");
+  const customerTrend = getTrendValue("new_customer");
+  const transactionTrend = getTrendValue("transactions");
   const successTrend = getTrendValue("success_rate");
 
   return (
@@ -135,7 +135,7 @@ export function SectionCards() {
         <CardHeader>
           <CardDescription>Weekly Revenue</CardDescription>
           <CardTitle className="text-2xl font-semibold tabular-nums @[250px]/card:text-3xl">
-            {formatCurrency(metrics.weekly_revenue)}
+            {formatCurrency(metrics.revenue)}
           </CardTitle>
           <CardAction>
             <Badge variant={getBadgeVariant()}>
@@ -158,7 +158,7 @@ export function SectionCards() {
         <CardHeader>
           <CardDescription>Weekly Orders</CardDescription>
           <CardTitle className="text-2xl font-semibold tabular-nums @[250px]/card:text-3xl">
-            {metrics.total_customer.toLocaleString()}
+            {metrics.new_customer.toLocaleString()}
           </CardTitle>
           <CardAction>
             <Badge variant={getBadgeVariant()}>
@@ -183,7 +183,7 @@ export function SectionCards() {
         <CardHeader>
           <CardDescription>Weekly Transactions</CardDescription>
           <CardTitle className="text-2xl font-semibold tabular-nums @[250px]/card:text-3xl">
-            {metrics.daily_all_transactions.toLocaleString()}
+            {metrics.transactions.toLocaleString()}
           </CardTitle>
           <CardAction>
             <Badge variant={getBadgeVariant()}>

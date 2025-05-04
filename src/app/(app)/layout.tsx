@@ -65,8 +65,8 @@ export default async function AppLayout({
     <UserProvider
       session={{
         ...session.user,
-        timeframe: "MONTHLY",
-        networkMode: "MAINNET",
+        timeframe: "WEEKLY",
+        networkMode: "TESTNET",
       }}
     >
       <SidebarProvider
