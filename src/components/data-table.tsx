@@ -272,11 +272,9 @@ const columns: ColumnDef<z.infer<typeof schema>>[] = [
       } else if (diffHours < 24) {
         // Same day transaction
         let bgColor = "from-teal-400 to-blue-500";
-        let textColor = "text-blue-700";
 
         if (diffHours < 6) {
           bgColor = "from-green-400 to-teal-500";
-          textColor = "text-teal-700";
         }
 
         content = (
@@ -284,9 +282,7 @@ const columns: ColumnDef<z.infer<typeof schema>>[] = [
             <div
               className={`w-1 h-full bg-gradient-to-r ${bgColor} rounded-full mr-2`}
             ></div>
-            <span className={`font-medium ${textColor}`}>
-              About {diffHours}h ago
-            </span>
+            <span>About {diffHours}h ago</span>
           </div>
         );
       } else if (diffDays < 7) {
