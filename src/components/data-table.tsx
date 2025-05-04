@@ -518,9 +518,7 @@ export function DataTable({
           showErrorToast: false,
         });
         if (response.status === 200 && response.data) {
-          // Sort transactions by status when data is loaded
-          const sortedTransactions = sortTransactionsByStatus(response.data.tx);
-          setData(sortedTransactions);
+          setData(response.data.tx);
         }
       } catch (error) {
         console.error("Failed to fetch transactions:", error);
