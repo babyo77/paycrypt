@@ -462,7 +462,7 @@ export default function LinksPage() {
                                 URL to receive payment notifications
                               </p>
                             </div>
-
+                            {/* 
                             <div className="flex items-center space-x-2 p-3 rounded-md hover:bg-muted/30 mt-2">
                               <Checkbox
                                 id="allow_promotional_code"
@@ -485,9 +485,9 @@ export default function LinksPage() {
                                   </p>
                                 </div>
                               </Label>
-                            </div>
+                            </div> */}
                           </div>
-
+                          {/* 
                           <div className="flex flex-col space-y-3">
                             <div className="flex flex-col space-y-1.5">
                               <Label htmlFor="callToActionLabel">
@@ -518,7 +518,7 @@ export default function LinksPage() {
                                 Button text displayed on the payment page
                               </p>
                             </div>
-                          </div>
+                          </div> */}
 
                           {/* <div className="md:col-span-2 mt-2">
                             <Label className="text-base font-medium">

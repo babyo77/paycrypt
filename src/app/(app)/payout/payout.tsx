@@ -293,7 +293,7 @@ function PayoutPage() {
 
     try {
       setIsPaying(true);
-      const res = await api.post("/payout/request", {
+      const res = await api.post("/payout", {
         ethereum_address: ethAddress,
         solana_address: solAddress,
       });
@@ -535,9 +535,9 @@ function PayoutPage() {
                 ) : payoutHistory.length === 0 ? (
                   <div className="text-center p-8 bg-white rounded-lg border border-gray-200">
                     <div className="flex flex-col items-center gap-2">
-                      <Wallet className="h-12 w-12 text-gray-300" />
-                      <h3 className="font-medium text-lg">No payout history</h3>
-                      <p className="text-gray-500">
+                      <Wallet className="size-10 text-gray-200" />
+                      <h3 className="font-medium">No payout history</h3>
+                      <p className="text-gray-500 text-sm">
                         Your completed payouts will appear here
                       </p>
                     </div>

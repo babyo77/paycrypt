@@ -33,7 +33,7 @@ export default function AccountPage() {
     try {
       const fullName = `${formData.first_name} ${formData.last_name}`.trim();
 
-      const response = await api.patch("/merchant", {
+      const response = await api.patch("/merchant/", {
         full_name: fullName,
       });
 

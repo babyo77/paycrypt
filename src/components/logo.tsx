@@ -1,12 +1,17 @@
 import { cn } from "@/lib/utils";
-import { IconInnerShadowTop } from "@tabler/icons-react";
-import { motion } from "motion/react";
+import Image from "next/image";
 
 export const Logo = ({ className }: { className?: string }) => {
   return (
     <div className="flex items-center gap-1">
-      <IconInnerShadowTop className={cn("size-6 text-blue-700", className)} />
-      <p className="text-lg text-blue-700 font-semibold">Paycrypt</p>
+      <Image
+        src="https://us-east-1.tixte.net/uploads/tanmay111-files.tixte.co/p_transparent.png" // Update this path to your actual logo image
+        alt="Paycrypt Logo"
+        width={30}
+        height={30}
+        className={cn("size-7", className)}
+      />
+      <p className="text-blue-700 font-semibold">Paycrypt</p>
     </div>
   );
 };

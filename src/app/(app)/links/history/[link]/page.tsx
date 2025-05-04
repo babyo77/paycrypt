@@ -765,7 +765,7 @@ function PaymentLinkHistoryPage() {
                       </p>
                     </div>
 
-                    <div className="flex items-center space-x-2 p-3 rounded-md hover:bg-muted/30 mt-2">
+                    {/* <div className="flex items-center space-x-2 p-3 rounded-md hover:bg-muted/30 mt-2">
                       <Checkbox
                         id="allow_promotional_code"
                         checked={editFormData?.allow_promotional_code || false}
@@ -787,10 +787,10 @@ function PaymentLinkHistoryPage() {
                           </p>
                         </div>
                       </Label>
-                    </div>
+                    </div> */}
                   </div>
 
-                  <div className="flex flex-col space-y-3">
+                  {/* <div className="flex flex-col space-y-3">
                     <div className="flex flex-col space-y-1.5">
                       <Label htmlFor="callToActionLabel">
                         Label for call to action
@@ -815,7 +815,7 @@ function PaymentLinkHistoryPage() {
                         Button text displayed on the payment page
                       </p>
                     </div>
-                  </div>
+                  </div> */}
                 </div>
               </CollapsibleContent>
             </Collapsible>
