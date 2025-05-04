@@ -188,7 +188,7 @@ function PayoutPage() {
       setEthAddress(userData.payout_eth_address);
       setSolAddress(userData.payout_sol_address);
     }
-  }, [userData]);
+  }, []);
   // CDN base URL for cryptocurrency icons
   const iconBaseUrl =
     "https://cdn.jsdelivr.net/gh/atomiclabs/cryptocurrency-icons@1a63530be6e374711a8554f31b17e4cb92c25fa5/128/color";
@@ -259,22 +259,19 @@ function PayoutPage() {
   const handleGetPayout = async () => {
     if (!userData) return;
 
-    // Validate addresses
-    if (!ethAddress.trim()) {
-      toast.error("Ethereum address is required");
-      return;
-    }
-
-    if (!solAddress.trim()) {
-      toast.error("Solana address is required");
+    // Validate addresses - require at least one address
+    if (!ethAddress.trim() && !solAddress.trim()) {
+      toast.error(
+        "At least one wallet address (Ethereum or Solana) is required"
+      );
       return;
     }
 
     try {
       setIsPaying(true);
       const res = await api.post("/payout/", {
-        ethereum_address: ethAddress,
-        solana_address: solAddress,
+        ethereum_address: ethAddress.trim() || undefined,
+        solana_address: solAddress.trim() || undefined,
       });
 
       // Close dialog
