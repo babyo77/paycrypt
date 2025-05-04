@@ -33,7 +33,7 @@ export const description = "An interactive area chart";
 
 interface ChartDataItem {
   date: string;
-  orders: number;
+  payments: number;
 }
 
 interface ApiResponse {
@@ -51,8 +51,8 @@ interface ApiResponse {
 }
 
 const chartConfig = {
-  orders: {
-    label: "Orders",
+  payments: {
+    label: "Payments",
     color: "var(--blue-9)",
   },
 } satisfies ChartConfig;
@@ -79,7 +79,7 @@ export function ChartAreaInteractive() {
 
     return months.map((month, index) => ({
       date: new Date(currentYear, index, 15).toISOString().split("T")[0],
-      orders: 0,
+      payments: 0,
     }));
   });
 
@@ -139,7 +139,7 @@ export function ChartAreaInteractive() {
               if (matchingIndex !== -1) {
                 existingData[matchingIndex] = {
                   ...existingData[matchingIndex],
-                  orders: transactions || 0,
+                  payments: transactions || 0,
                 };
               }
             });
@@ -155,7 +155,7 @@ export function ChartAreaInteractive() {
             if (currentMonthIndex !== -1) {
               existingData[currentMonthIndex] = {
                 ...existingData[currentMonthIndex],
-                orders: response.data.transactions,
+                payments: response.data.transactions,
               };
             }
           } else {
@@ -178,7 +178,7 @@ export function ChartAreaInteractive() {
       <CardHeader>
         <CardTitle>Total Transactions</CardTitle>
         <CardDescription>
-          <span className="hidden @[540px]/card:block">
+          {/* <span className="hidden @[540px]/card:block">
             {userData?.timeframe === "YEARLY" && "Total for the year"}
             {userData?.timeframe === "MONTHLY" && "Total for the last 30 days"}
             {userData?.timeframe === "WEEKLY" && "Total for the last 7 days"}
@@ -189,7 +189,8 @@ export function ChartAreaInteractive() {
             {userData?.timeframe === "MONTHLY" && "Monthly"}
             {userData?.timeframe === "WEEKLY" && "Weekly"}
             {userData?.timeframe === "DAILY" && "Daily"}
-          </span>
+          </span> */}
+          <span> Total payments for the year</span>
         </CardDescription>
         {/* <CardAction className="flex flex-col gap-2 sm:flex-row">
           <Select
@@ -299,7 +300,7 @@ export function ChartAreaInteractive() {
               />
 
               <Area
-                dataKey="orders"
+                dataKey="payments"
                 type="monotone"
                 fill="url(#fillOrders)"
                 stroke="#3b82f6"
