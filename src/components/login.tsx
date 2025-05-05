@@ -154,6 +154,22 @@ export default function LoginPage() {
           <p className="text-accent-foreground text-center text-sm">
             Securely manage your payments with Paycrypt
           </p>
+          <p className="text-muted-foreground text-center text-xs mt-2">
+            By continuing, you agree to our{" "}
+            <Link
+              href="https://paycrypt.tech/en/privacy"
+              className="text-primary hover:underline"
+            >
+              Privacy Policy
+            </Link>{" "}
+            and{" "}
+            <Link
+              href="https://paycrypt.tech/en/terms"
+              className="text-primary hover:underline"
+            >
+              Terms
+            </Link>
+          </p>
         </div>
       </form>
     </section>
