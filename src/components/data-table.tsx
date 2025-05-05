@@ -535,7 +535,7 @@ export function DataTable({
       <div className="flex items-center justify-between px-4 lg:px-6">
         <div className="text-xl font-semibold">Transactions</div>
         <div className="flex items-center gap-2">
-          <Select
+          {/* <Select
             value={
               (table.getColumn("status")?.getFilterValue() as string) || "all"
             }
@@ -554,7 +554,7 @@ export function DataTable({
               <SelectItem value="PENDING">Pending</SelectItem>
               <SelectItem value="EXPIRED">Expired</SelectItem>
             </SelectContent>
-          </Select>
+          </Select> */}
 
           <Select
             value={

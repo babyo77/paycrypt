@@ -1,15 +1,32 @@
 "use client";
-import React from "react";
-import { Button } from "@/components/ui/button";
+
 import { useRouter } from "next/navigation";
+import { UserData, useUser } from "@/app/provider/user-provider";
+import { api } from "@/lib/utils";
+import { Button } from "@/components/ui/button";
 export default function Playground() {
   const router = useRouter();
+  const { userData, dispatch } = useUser();
 
   const handleViewDemo = () => {
     router.push("/demo");
   };
 
-  const handleGetNotified = () => {};
+  const handleGetNotified = async () => {
+    await api.patch("/merchant/", {
+      is_waitlist: true,
+    });
+
+    if (userData) {
+      dispatch({
+        type: "SET_USER",
+        payload: {
+          ...userData,
+          is_waitlist: true,
+        } as UserData,
+      });
+    }
+  };
 
   return (
     <div className="flex flex-1 items-center justify-center bg-background">
@@ -64,7 +81,12 @@ export default function Playground() {
             </svg>
           </Button>
 
-          <Button onClick={handleGetNotified} size="lg" variant={"secondary"}>
+          <Button
+            disabled={userData?.is_waitlist}
+            onClick={handleGetNotified}
+            size="lg"
+            variant={"secondary"}
+          >
             Get Notified
             <svg
               xmlns="http://www.w3.org/2000/svg"
