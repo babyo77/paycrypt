@@ -553,7 +553,7 @@ function PayoutPage() {
                     <Table>
                       <TableHeader className="bg-muted sticky top-0 z-10">
                         <TableRow>
-                          <TableHead className="w-1/5 text-xs">
+                          <TableHead className="w-1/5">
                             Transaction ID
                           </TableHead>
                           <TableHead>ETH Amount</TableHead>
