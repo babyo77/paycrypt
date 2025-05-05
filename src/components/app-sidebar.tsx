@@ -115,7 +115,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
               asChild
               className="data-[slot=sidebar-menu-button]:!p-1.5"
             >
-              <Link className=" -ml-1" prefetch href="https://paycrypt.tech">
+              <Link className=" -ml-1.5" prefetch href="https://paycrypt.tech">
                 <Logo />
               </Link>
             </SidebarMenuButton>

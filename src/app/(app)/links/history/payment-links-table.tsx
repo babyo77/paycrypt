@@ -154,9 +154,26 @@ export function PaymentLinksDataTable({
       {
         accessorKey: "amount",
         header: "Amount",
-        cell: ({ row }: any) => (
-          <div className="w-32">${row.original.amount.toFixed(2)}</div>
-        ),
+        cell: ({ row }: any) => {
+          // CDN base URL for cryptocurrency icons
+          const iconBaseUrl =
+            "https://cdn.jsdelivr.net/gh/atomiclabs/cryptocurrency-icons@1a63530be6e374711a8554f31b17e4cb92c25fa5/128/color";
+
+          return (
+            <div className="flex items-center w-32">
+              <img
+                src={`${iconBaseUrl}/usd.png`}
+                alt="USD"
+                className="w-4 h-4 mr-2"
+                onError={(e) => {
+                  // Hide icon if it fails to load
+                  (e.target as HTMLImageElement).style.display = "none";
+                }}
+              />
+              ${row.original.amount.toFixed(2)}
+            </div>
+          );
+        },
       },
       {
         accessorKey: "description",
