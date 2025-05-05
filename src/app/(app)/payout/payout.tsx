@@ -556,10 +556,10 @@ function PayoutPage() {
                           <TableHead className="w-1/5 text-xs">
                             Transaction ID
                           </TableHead>
-                          <TableHead className="text-xs">ETH Amount</TableHead>
-                          <TableHead className="text-xs">SOL Amount</TableHead>
-                          <TableHead className="text-xs">Status</TableHead>
-                          <TableHead className="text-xs">Date</TableHead>
+                          <TableHead>ETH Amount</TableHead>
+                          <TableHead>SOL Amount</TableHead>
+                          <TableHead>Status</TableHead>
+                          <TableHead>Date</TableHead>
                           <TableHead className="w-8"></TableHead>
                         </TableRow>
                       </TableHeader>
