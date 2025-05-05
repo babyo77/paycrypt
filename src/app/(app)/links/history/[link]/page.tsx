@@ -103,6 +103,10 @@ interface ApiResponse {
   status: string;
 }
 
+// CDN base URL for cryptocurrency icons
+const iconBaseUrl =
+  "https://cdn.jsdelivr.net/gh/atomiclabs/cryptocurrency-icons@1a63530be6e374711a8554f31b17e4cb92c25fa5/128/color";
+
 function formatDate(dateString: string | null) {
   if (!dateString) return "N/A";
   try {
@@ -373,9 +377,22 @@ function PaymentLinkHistoryPage() {
                                 {transaction.id.slice(-6)}
                               </TableCell>
                               <TableCell>
-                                ${transaction.amount_usd.toFixed(2)} (
-                                {parseFloat(transaction.amount.toFixed(4))}{" "}
-                                {transaction.currency})
+                                <div className="flex items-center">
+                                  <img
+                                    src={`${iconBaseUrl}/${transaction.currency.toLowerCase()}.png`}
+                                    alt={transaction.currency}
+                                    className="w-4 h-4 mr-2"
+                                    onError={(e) => {
+                                      // Hide icon if it fails to load
+                                      (
+                                        e.target as HTMLImageElement
+                                      ).style.display = "none";
+                                    }}
+                                  />
+                                  ${transaction.amount_usd.toFixed(2)} (
+                                  {parseFloat(transaction.amount.toFixed(4))}{" "}
+                                  {transaction.currency})
+                                </div>
                               </TableCell>
                               <TableCell>
                                 <Badge
