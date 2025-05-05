@@ -183,12 +183,6 @@ function PayoutPage() {
   const [ethAddress, setEthAddress] = useState("");
   const [solAddress, setSolAddress] = useState("");
 
-  useEffect(() => {
-    if (userData?.payout_eth_address && userData?.payout_sol_address) {
-      setEthAddress(userData.payout_eth_address);
-      setSolAddress(userData.payout_sol_address);
-    }
-  }, []);
   // CDN base URL for cryptocurrency icons
   const iconBaseUrl =
     "https://cdn.jsdelivr.net/gh/atomiclabs/cryptocurrency-icons@1a63530be6e374711a8554f31b17e4cb92c25fa5/128/color";
@@ -203,9 +197,13 @@ function PayoutPage() {
 
     const fetchPayouts = async () => {
       try {
+        if (userData?.payout_eth_address && userData?.payout_sol_address) {
+          setEthAddress(userData.payout_eth_address);
+          setSolAddress(userData.payout_sol_address);
+        }
         setIsLoading(true);
         const res = await api.get("/payout/");
-        // Type assertion to ensure the response data matches our expected format
+
         setBalanceData(res.data as BalanceData);
         console.log(res.data);
       } catch (err) {
