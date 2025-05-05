@@ -65,35 +65,38 @@ interface CryptoAmountProps {
   iconPath: string;
 }
 
+// Move formatting functions to outer scope so they can be used directly
+const formatValue = (value: string | null): string => {
+  if (value === null) return "0.000";
+  return Number(value).toFixed(6);
+};
+
+// Format USD value
+const formatUsd = (value: string | null): string => {
+  if (value === null) return "0.000";
+  return `$${Number(value).toFixed(2)}`;
+};
+
 const CryptoAmount: React.FC<CryptoAmountProps> = ({
   coinSymbol,
   amount,
   usdAmount,
   iconPath,
 }) => {
-  const formatValue = (value: string | null): string => {
-    if (value === null) return "0.000";
-    return Number(value).toFixed(6);
-  };
-
-  // Format USD value
-  const formatUsd = (value: string | null): string => {
-    if (value === null) return "0.000";
-    return `$${Number(value).toFixed(2)}`;
-  };
-
   return (
-    <div className="flex items-center p-3 bg-white rounded-lg border border-gray-100">
-      <div className="flex-shrink-0 mr-3">
-        <img src={iconPath} alt={coinSymbol} width={24} height={24} />
+    <div className="flex items-center p-1.5 bg-white rounded-md border border-gray-100">
+      <div className="flex-shrink-0 mr-1.5">
+        <img src={iconPath} alt={coinSymbol} width={16} height={16} />
       </div>
       <div className="flex-grow">
-        <p className="font-medium">
-          {formatValue(amount)}{" "}
-          <span className="text-gray-500 text-sm">{coinSymbol}</span>
+        <p className="text-xs font-medium">
+          {formatValue(amount)}
+          <span className="text-gray-500 text-xs ml-0.5">{coinSymbol}</span>
         </p>
       </div>
-      <div className="text-green-600 font-medium">{formatUsd(usdAmount)}</div>
+      <div className="text-green-600 font-medium text-xs">
+        {formatUsd(usdAmount)}
+      </div>
     </div>
   );
 };
@@ -136,6 +139,8 @@ const getStatusBadgeVariant = (status: string) => {
     case "pending":
     case "processing":
       return { color: "bg-yellow-100 text-yellow-700", icon: "⧖ " };
+    case "partially_completed":
+      return { color: "bg-red-100 text-red-700", icon: "◑ " };
     case "failed":
     case "cancelled":
       return { color: "bg-red-100 text-red-700", icon: "✕ " };
@@ -321,11 +326,11 @@ function PayoutPage() {
 
   return (
     <div className="flex flex-1 flex-col">
-      <div className="@container/main flex flex-1 flex-col gap-2">
-        <div className="flex flex-col gap-4 py-4 md:gap-6 md:py-6">
+      <div className="@container/main flex flex-1 flex-col gap-1.5">
+        <div className="flex flex-col gap-3 py-3 md:gap-4 md:py-4">
           <Tabs
             defaultValue="payout"
-            className="w-full flex-col justify-start gap-6"
+            className="w-full flex-col justify-start gap-4"
           >
             <div className="flex items-center justify-between px-4 lg:px-6">
               <div className="text-xl font-semibold">Your Payouts</div>
@@ -333,17 +338,17 @@ function PayoutPage() {
 
             <TabsContent
               value="payout"
-              className="relative flex flex-col gap-4 overflow-auto px-4 lg:px-6"
+              className="relative flex flex-col gap-3 overflow-auto px-4 lg:px-6"
             >
               {/* Combined balance and networks card */}
-              <div className="mb-5">
-                <div className="bg-white rounded-lg border border-gray-200 overflow-hidden w-full">
-                  <div className="bg-gray-50 p-4 border-b border-gray-200 flex justify-between items-center">
+              <div className="mb-3">
+                <div className="bg-white rounded-md border border-gray-200 overflow-hidden w-full">
+                  <div className="bg-gray-50 p-2 border-b border-gray-200 flex justify-between items-center">
                     <div className="flex flex-col">
-                      <h2 className="font-semibold text-gray-700">
+                      <h2 className=" font-medium text-gray-600">
                         Available Balance
                       </h2>
-                      <div className="text-2xl font-semibold mt-1">
+                      <div className="text-xl font-semibold mt-0.5">
                         ${totalBalance.toFixed(2)}
                       </div>
                     </div>
@@ -352,42 +357,108 @@ function PayoutPage() {
                       disabled={isPaying}
                       variant="default"
                     >
-                      <Wallet className="mr-2 h-4 w-4" />
+                      <Wallet className="mr-1 h-3 w-3" />
                       {isPaying ? "Processing..." : "Withdraw"}
                     </Button>
                   </div>
-                  <div className="p-4 space-y-3">
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                      <CryptoAmount
-                        coinSymbol="ETH"
-                        amount={balanceData?.total_eth_balance || null}
-                        usdAmount={balanceData?.total_eth_usd || null}
-                        iconPath={`${iconBaseUrl}/eth.png`}
-                      />
+                  <div className="p-2 space-y-1.5">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-1.5">
+                      <div className="flex items-center p-1.5 bg-white rounded-md border border-gray-100">
+                        <div className="flex-shrink-0 mr-1.5">
+                          <img
+                            src={`${iconBaseUrl}/eth.png`}
+                            alt="ETH"
+                            width={16}
+                            height={16}
+                          />
+                        </div>
+                        <div className="flex-grow">
+                          <p className=" font-medium">
+                            {formatValue(
+                              balanceData?.total_eth_balance || null
+                            )}
+                            <span className="text-gray-500  ml-0.5">ETH</span>
+                          </p>
+                        </div>
+                        <div className="text-green-600 font-medium ">
+                          {formatUsd(balanceData?.total_eth_usd || null)}
+                        </div>
+                      </div>
 
-                      <CryptoAmount
-                        coinSymbol="SOL"
-                        amount={balanceData?.total_sol_balance || null}
-                        usdAmount={balanceData?.total_sol_usd || null}
-                        iconPath={`${iconBaseUrl}/sol.png`}
-                      />
+                      <div className="flex items-center p-1.5 bg-white rounded-md border border-gray-100">
+                        <div className="flex-shrink-0 mr-1.5">
+                          <img
+                            src={`${iconBaseUrl}/sol.png`}
+                            alt="SOL"
+                            width={16}
+                            height={16}
+                          />
+                        </div>
+                        <div className="flex-grow">
+                          <p className="font-medium">
+                            {formatValue(
+                              balanceData?.total_sol_balance || null
+                            )}
+                            <span className="text-gray-500 ml-0.5">SOL</span>
+                          </p>
+                        </div>
+                        <div className="text-green-600 font-medium">
+                          {formatUsd(balanceData?.total_sol_usd || null)}
+                        </div>
+                      </div>
                     </div>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                      <CryptoAmount
-                        coinSymbol="USDC (ETH)"
-                        amount={
-                          balanceData?.total_usdc_ethereum_balance || null
-                        }
-                        usdAmount={balanceData?.total_usdc_ethereum_usd || null}
-                        iconPath={`${iconBaseUrl}/usdc.png`}
-                      />
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-1.5">
+                      <div className="flex items-center p-1.5 bg-white rounded-md border border-gray-100">
+                        <div className="flex-shrink-0 mr-1.5">
+                          <img
+                            src={`${iconBaseUrl}/usdc.png`}
+                            alt="USDC"
+                            width={16}
+                            height={16}
+                          />
+                        </div>
+                        <div className="flex-grow">
+                          <p className="font-medium">
+                            {formatValue(
+                              balanceData?.total_usdc_ethereum_balance || null
+                            )}
+                            <span className="text-gray-500 ml-0.5">
+                              USDC (ETH)
+                            </span>
+                          </p>
+                        </div>
+                        <div className="text-green-600 font-medium">
+                          {formatUsd(
+                            balanceData?.total_usdc_ethereum_usd || null
+                          )}
+                        </div>
+                      </div>
 
-                      <CryptoAmount
-                        coinSymbol="USDC (SOL)"
-                        amount={balanceData?.total_usdc_solana_balance || null}
-                        usdAmount={balanceData?.total_usdc_solana_usd || null}
-                        iconPath={`${iconBaseUrl}/usdc.png`}
-                      />
+                      <div className="flex items-center p-1.5 bg-white rounded-md border border-gray-100">
+                        <div className="flex-shrink-0 mr-1.5">
+                          <img
+                            src={`${iconBaseUrl}/usdc.png`}
+                            alt="USDC"
+                            width={16}
+                            height={16}
+                          />
+                        </div>
+                        <div className="flex-grow">
+                          <p className="font-medium">
+                            {formatValue(
+                              balanceData?.total_usdc_solana_balance || null
+                            )}
+                            <span className=" text-gray-500 ml-0.5">
+                              USDC (SOL)
+                            </span>
+                          </p>
+                        </div>
+                        <div className="text-green-600 font-medium">
+                          {formatUsd(
+                            balanceData?.total_usdc_solana_usd || null
+                          )}
+                        </div>
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -459,8 +530,8 @@ function PayoutPage() {
 
               {/* Payout History */}
               <div>
-                <div className="flex items-center justify-between mb-6">
-                  <h2 className="text-xl font-semibold">Payout History</h2>
+                <div className="flex items-center justify-between mb-3">
+                  <h2 className="text-base font-medium">Payout History</h2>
                 </div>
 
                 {isHistoryLoading ? (
@@ -482,13 +553,13 @@ function PayoutPage() {
                     <Table>
                       <TableHeader className="bg-muted sticky top-0 z-10">
                         <TableRow>
-                          <TableHead className="w-1/5">
+                          <TableHead className="w-1/5 text-xs">
                             Transaction ID
                           </TableHead>
-                          <TableHead>ETH Amount</TableHead>
-                          <TableHead>SOL Amount</TableHead>
-                          <TableHead>Status</TableHead>
-                          <TableHead>Date</TableHead>
+                          <TableHead className="text-xs">ETH Amount</TableHead>
+                          <TableHead className="text-xs">SOL Amount</TableHead>
+                          <TableHead className="text-xs">Status</TableHead>
+                          <TableHead className="text-xs">Date</TableHead>
                           <TableHead className="w-8"></TableHead>
                         </TableRow>
                       </TableHeader>
@@ -505,24 +576,66 @@ function PayoutPage() {
                               <TableCell className=" text-sm">
                                 {payout.id.substring(0, 23)}...
                               </TableCell>
-                              <TableCell className="font-medium">
-                                <div className="flex items-center">
-                                  <img
-                                    src={`${iconBaseUrl}/eth.png`}
-                                    alt="ETH"
-                                    className="w-4 h-4 mr-2"
-                                  />
-                                  {formatCryptoAmount(payout.eth_amount)} ETH
+                              <TableCell>
+                                <div className="flex flex-col">
+                                  <div className="flex items-center text-sm">
+                                    <img
+                                      src={`${iconBaseUrl}/eth.png`}
+                                      alt="ETH"
+                                      className="w-4 h-4 mr-1"
+                                    />
+                                    <span className="font-medium">
+                                      {formatCryptoAmount(payout.eth_amount)}
+                                    </span>
+                                    <span className="text-gray-500 ml-1">
+                                      ETH
+                                    </span>
+                                  </div>
+                                  <div className="flex items-center mt-0.5 ml-5 text-xs">
+                                    <span
+                                      className={
+                                        payout.processed_eth_amount > 0
+                                          ? "text-green-600"
+                                          : "text-gray-400"
+                                      }
+                                    >
+                                      Processed:{" "}
+                                      {formatCryptoAmount(
+                                        payout.processed_eth_amount
+                                      )}
+                                    </span>
+                                  </div>
                                 </div>
                               </TableCell>
                               <TableCell>
-                                <div className="flex items-center">
-                                  <img
-                                    src={`${iconBaseUrl}/sol.png`}
-                                    alt="SOL"
-                                    className="w-4 h-4 mr-2"
-                                  />
-                                  {formatCryptoAmount(payout.sol_amount)} SOL
+                                <div className="flex flex-col">
+                                  <div className="flex items-center text-sm">
+                                    <img
+                                      src={`${iconBaseUrl}/sol.png`}
+                                      alt="SOL"
+                                      className="w-4 h-4 mr-1"
+                                    />
+                                    <span className="font-medium">
+                                      {formatCryptoAmount(payout.sol_amount)}
+                                    </span>
+                                    <span className="text-gray-500 ml-1">
+                                      SOL
+                                    </span>
+                                  </div>
+                                  <div className="flex items-center mt-0.5 ml-5 text-xs">
+                                    <span
+                                      className={
+                                        payout.processed_sol_amount > 0
+                                          ? "text-green-600"
+                                          : "text-gray-400"
+                                      }
+                                    >
+                                      Processed:{" "}
+                                      {formatCryptoAmount(
+                                        payout.processed_sol_amount
+                                      )}
+                                    </span>
+                                  </div>
                                 </div>
                               </TableCell>
                               <TableCell>
@@ -537,9 +650,12 @@ function PayoutPage() {
                                         payout.status.toLowerCase() ===
                                           "processing"
                                       ? "secondary"
+                                      : payout.status.toLowerCase() ===
+                                        "partially_completed"
+                                      ? "destructive"
                                       : "destructive"
                                   }
-                                  className={`whitespace-nowrap font-medium ${
+                                  className={`text-xs whitespace-nowrap ${
                                     payout.status.toLowerCase() ===
                                       "completed" ||
                                     payout.status.toLowerCase() === "paid"
@@ -549,21 +665,39 @@ function PayoutPage() {
                                         payout.status.toLowerCase() ===
                                           "processing"
                                       ? "bg-yellow-100 text-yellow-800 hover:bg-yellow-200"
+                                      : payout.status.toLowerCase() ===
+                                        "partially_completed"
+                                      ? "bg-red-100 text-red-800 hover:bg-red-200"
                                       : ""
                                   }`}
                                 >
-                                  {payout.status.toUpperCase()}
+                                  {payout.status
+                                    .replace(/_/g, " ")
+                                    .toUpperCase()}
                                 </Badge>
                               </TableCell>
                               <TableCell className="text-muted-foreground">
-                                {formatDate(payout.created_at)}
+                                <div className="flex flex-col">
+                                  <span className="text-sm">
+                                    {format(
+                                      new Date(payout.created_at),
+                                      "MMM d, yyyy"
+                                    )}
+                                  </span>
+                                  <span className="text-xs text-gray-400">
+                                    {format(
+                                      new Date(payout.created_at),
+                                      "h:mm a"
+                                    )}
+                                  </span>
+                                </div>
                               </TableCell>
                               <TableCell>
                                 <DropdownMenu>
                                   <DropdownMenuTrigger asChild>
                                     <Button
                                       variant="ghost"
-                                      className="data-[state=open]:bg-muted text-muted-foreground flex size-8 opacity-0 group-hover:opacity-100 transition-opacity"
+                                      className="data-[state=open]:bg-muted text-muted-foreground flex size-8 transition-opacity"
                                       size="icon"
                                     >
                                       <MoreVertical className="h-4 w-4" />
@@ -580,20 +714,6 @@ function PayoutPage() {
                                       <Copy className="mr-2 h-4 w-4" />
                                       <span>Copy Transaction ID</span>
                                     </DropdownMenuItem>
-                                    {payout.status.toLowerCase() ===
-                                      "completed" && (
-                                      <DropdownMenuItem
-                                        onClick={() => {
-                                          window.open(
-                                            `https://etherscan.io/tx/${payout.id}`,
-                                            "_blank"
-                                          );
-                                        }}
-                                      >
-                                        <ExternalLink className="mr-2 h-4 w-4" />
-                                        <span>View on Explorer</span>
-                                      </DropdownMenuItem>
-                                    )}
                                   </DropdownMenuContent>
                                 </DropdownMenu>
                               </TableCell>
