@@ -645,8 +645,7 @@ function PayoutPage() {
                               <TableCell>
                                 <Badge
                                   variant={
-                                    payout.status.toLowerCase() ===
-                                      "completed" ||
+                                    payout.status.toLowerCase() === "success" ||
                                     payout.status.toLowerCase() === "paid"
                                       ? "default"
                                       : payout.status.toLowerCase() ===
@@ -660,8 +659,7 @@ function PayoutPage() {
                                       : "destructive"
                                   }
                                   className={`text-xs whitespace-nowrap ${
-                                    payout.status.toLowerCase() ===
-                                      "completed" ||
+                                    payout.status.toLowerCase() === "success" ||
                                     payout.status.toLowerCase() === "paid"
                                       ? "bg-green-100 text-green-800 hover:bg-green-200"
                                       : payout.status.toLowerCase() ===
