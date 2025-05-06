@@ -654,7 +654,7 @@ function PayoutPage() {
                                       ? "secondary"
                                       : payout.status.toLowerCase() ===
                                         "partially_completed"
-                                      ? "destructive"
+                                      ? "secondary"
                                       : "destructive"
                                   }
                                   className={`text-xs whitespace-nowrap ${
