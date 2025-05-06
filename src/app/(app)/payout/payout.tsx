@@ -655,7 +655,7 @@ function PayoutPage() {
                                           "processing"
                                       ? "secondary"
                                       : payout.status.toLowerCase() ===
-                                        "partially-completed"
+                                        "partially-confirmed"
                                       ? "secondary"
                                       : "destructive"
                                   }
