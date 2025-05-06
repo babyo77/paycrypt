@@ -180,8 +180,7 @@ function PayoutPage() {
   const { userData } = useUser();
   const [balanceData, setBalanceData] = useState<BalanceData | null>(null);
   const [payoutHistory, setPayoutHistory] = useState<PayoutHistory[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
-  const [isHistoryLoading, setIsHistoryLoading] = useState(true);
+
   const [error, setError] = useState<string | null>(null);
   const [isPaying, setIsPaying] = useState(false);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
@@ -206,7 +205,7 @@ function PayoutPage() {
           setEthAddress(userData.payout_eth_address);
           setSolAddress(userData.payout_sol_address);
         }
-        setIsLoading(true);
+
         const res = await api.get("/payout/");
 
         setBalanceData(res.data as BalanceData);
@@ -214,8 +213,6 @@ function PayoutPage() {
       } catch (err) {
         console.error("Error fetching payout data:", err);
         setError("Failed to load payout data. Please try again later.");
-      } finally {
-        setIsLoading(false);
       }
     };
 
@@ -227,8 +224,9 @@ function PayoutPage() {
 
     const fetchPayoutHistory = async () => {
       try {
-        setIsHistoryLoading(true);
-        const res = await api.get("/payout/pending");
+        const res = await api.get("/payout/pending", {
+          showErrorToast: false,
+        });
 
         // Check if response has the expected format
         if (
@@ -240,14 +238,8 @@ function PayoutPage() {
           setPayoutHistory(res.data.payout as PayoutHistory[]);
         } else if (res.data && Array.isArray(res.data)) {
           setPayoutHistory(res.data as PayoutHistory[]);
-        } else {
-          setPayoutHistory([]);
         }
-      } catch (err) {
-        setPayoutHistory([]);
-      } finally {
-        setIsHistoryLoading(false);
-      }
+      } catch (err) {}
     };
 
     // Initial fetch
@@ -542,11 +534,7 @@ function PayoutPage() {
                   <h2 className="text-xl font-semibold">Payout History</h2>
                 </div>
 
-                {isHistoryLoading ? (
-                  <div className="w-full flex justify-center p-6">
-                    <div className="h-6 w-6 border-2 border-t-blue-500 rounded-full animate-spin"></div>
-                  </div>
-                ) : payoutHistory.length === 0 ? (
+                {payoutHistory.length === 0 ? (
                   <div className="text-center p-8 bg-white rounded-lg border border-gray-200">
                     <div className="flex flex-col items-center gap-2">
                       <Wallet className="size-10 text-gray-200" />
@@ -573,9 +561,6 @@ function PayoutPage() {
                       </TableHeader>
                       <TableBody>
                         {payoutHistory.map((payout) => {
-                          const statusStyle = getStatusBadgeVariant(
-                            payout.status
-                          );
                           return (
                             <TableRow
                               key={payout.id}
