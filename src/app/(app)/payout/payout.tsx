@@ -343,7 +343,7 @@ function PayoutPage() {
               {/* Combined balance and networks card */}
               <div className="mb-3">
                 <div className="bg-white rounded-md border border-gray-200 overflow-hidden w-full">
-                  <div className="bg-gray-50 p-2 border-b border-gray-200 flex justify-between items-center">
+                  <div className="bg-gray-50 p-3 border-b border-gray-200 flex justify-between items-center">
                     <div className="flex flex-col">
                       <h2 className=" font-medium text-gray-600">
                         Available Balance
@@ -361,15 +361,15 @@ function PayoutPage() {
                       {isPaying ? "Processing..." : "Withdraw"}
                     </Button>
                   </div>
-                  <div className="p-2 space-y-1.5">
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-1.5">
+                  <div className="p-3">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-3 text-sm">
                       <div className="flex items-center p-1.5 bg-white rounded-md border border-gray-100">
                         <div className="flex-shrink-0 mr-1.5">
                           <img
                             src={`${iconBaseUrl}/eth.png`}
                             alt="ETH"
-                            width={16}
-                            height={16}
+                            width={20}
+                            height={20}
                           />
                         </div>
                         <div className="flex-grow">
@@ -390,8 +390,8 @@ function PayoutPage() {
                           <img
                             src={`${iconBaseUrl}/sol.png`}
                             alt="SOL"
-                            width={16}
-                            height={16}
+                            width={20}
+                            height={20}
                           />
                         </div>
                         <div className="flex-grow">
@@ -406,15 +406,14 @@ function PayoutPage() {
                           {formatUsd(balanceData?.total_sol_usd || null)}
                         </div>
                       </div>
-                    </div>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-1.5">
+
                       <div className="flex items-center p-1.5 bg-white rounded-md border border-gray-100">
                         <div className="flex-shrink-0 mr-1.5">
                           <img
                             src={`${iconBaseUrl}/usdc.png`}
                             alt="USDC"
-                            width={16}
-                            height={16}
+                            width={20}
+                            height={20}
                           />
                         </div>
                         <div className="flex-grow">
@@ -439,8 +438,8 @@ function PayoutPage() {
                           <img
                             src={`${iconBaseUrl}/usdc.png`}
                             alt="USDC"
-                            width={16}
-                            height={16}
+                            width={20}
+                            height={20}
                           />
                         </div>
                         <div className="flex-grow">
@@ -531,7 +530,7 @@ function PayoutPage() {
               {/* Payout History */}
               <div>
                 <div className="flex items-center justify-between mb-3">
-                  <h2 className="text-base font-medium">Payout History</h2>
+                  <h2 className="text-xl font-semibold">Payout History</h2>
                 </div>
 
                 {isHistoryLoading ? (

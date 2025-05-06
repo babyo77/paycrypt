@@ -151,10 +151,7 @@ export default function LoginPage() {
         </div>
 
         <div className="p-3">
-          <p className="text-accent-foreground text-center text-sm">
-            Securely manage your payments with Paycrypt
-          </p>
-          <p className="text-muted-foreground text-center text-xs mt-2">
+          <p className="text-muted-foreground text-center text-xs">
             By continuing, you agree to our{" "}
             <Link
               href="https://paycrypt.tech/en/privacy"
