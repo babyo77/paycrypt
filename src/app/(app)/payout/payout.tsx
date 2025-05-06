@@ -250,7 +250,16 @@ function PayoutPage() {
       }
     };
 
+    // Initial fetch
     fetchPayoutHistory();
+
+    // Set up polling with 3-second interval
+    const pollingInterval = setInterval(() => {
+      fetchPayoutHistory();
+    }, 3000);
+
+    // Clean up interval on component unmount
+    return () => clearInterval(pollingInterval);
   }, [userData]);
 
   const copyToClipboard = (text: string) => {
