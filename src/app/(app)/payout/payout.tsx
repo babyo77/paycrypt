@@ -343,7 +343,7 @@ function PayoutPage() {
               {/* Combined balance and networks card */}
               <div className="mb-3">
                 <div className="bg-white rounded-md border border-gray-200 overflow-hidden w-full">
-                  <div className="bg-gray-50 p-3 border-b border-gray-200 flex justify-between items-center">
+                  <div className="bg-gray-50 p-3 px-4 border-b border-gray-200 flex justify-between items-center">
                     <div className="flex flex-col">
                       <h2 className=" font-medium text-gray-600">
                         Available Balance
