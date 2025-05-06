@@ -216,7 +216,16 @@ function PayoutPage() {
       }
     };
 
+    // Initial fetch
     fetchPayouts();
+
+    // Set up polling with 3-second interval
+    const pollingInterval = setInterval(() => {
+      fetchPayouts();
+    }, 3000);
+
+    // Clean up interval on component unmount
+    return () => clearInterval(pollingInterval);
   }, [userData]);
 
   useEffect(() => {
