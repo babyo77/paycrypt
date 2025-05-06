@@ -206,7 +206,9 @@ function PayoutPage() {
           setSolAddress(userData.payout_sol_address);
         }
 
-        const res = await api.get("/payout/");
+        const res = await api.get("/payout/", {
+          showErrorToast: false,
+        });
 
         setBalanceData(res.data as BalanceData);
         console.log(res.data);
