@@ -96,11 +96,11 @@ const data = {
       url: "/settings",
       icon: Settings2,
     },
-    {
-      title: "Support & Help",
-      url: "/support",
-      icon: IconHelp,
-    },
+    // {
+    //   title: "Support & Help",
+    //   url: "/support",
+    //   icon: IconHelp,
+    // },
   ],
 };
 
