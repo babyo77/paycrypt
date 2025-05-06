@@ -670,8 +670,8 @@ function PayoutPage() {
                                           "processing"
                                       ? "bg-yellow-100 text-yellow-800 hover:bg-yellow-200"
                                       : payout.status.toLowerCase() ===
-                                        "partially_completed"
-                                      ? "bg-red-100 text-red-800 hover:bg-red-200"
+                                        "partially-confirmed"
+                                      ? "bg-yellow-100 text-yellow-800 hover:bg-yellow-200"
                                       : ""
                                   }`}
                                 >
