@@ -201,11 +201,6 @@ function PayoutPage() {
 
     const fetchPayouts = async () => {
       try {
-        if (userData?.payout_eth_address && userData?.payout_sol_address) {
-          setEthAddress(userData.payout_eth_address);
-          setSolAddress(userData.payout_sol_address);
-        }
-
         const res = await api.get("/payout/", {
           showErrorToast: false,
         });
@@ -230,6 +225,14 @@ function PayoutPage() {
     return () => clearInterval(pollingInterval);
   }, [userData]);
 
+  useEffect(() => {
+    if (!userData) return;
+
+    if (userData?.payout_eth_address && userData?.payout_sol_address) {
+      setEthAddress(userData.payout_eth_address);
+      setSolAddress(userData.payout_sol_address);
+    }
+  }, [userData]);
   useEffect(() => {
     if (!userData) return;
 
