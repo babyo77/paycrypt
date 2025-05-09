@@ -544,7 +544,7 @@ function PayoutPage() {
 
               {/* Payout History */}
               <div>
-                <div className="flex items-center justify-between mb-3">
+                <div className="flex items-center justify-between mb-4">
                   <h2 className="text-xl font-semibold">Payout History</h2>
                 </div>
 
