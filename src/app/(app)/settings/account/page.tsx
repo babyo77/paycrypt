@@ -75,7 +75,6 @@ export default function AccountPage() {
                 type="submit"
                 form="account-form"
                 disabled={isLoading}
-                className="bg-blue-600 hover:bg-blue-700 text-white"
                 size="sm"
               >
                 {isLoading ? "Saving..." : "Save changes"}

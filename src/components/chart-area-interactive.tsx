@@ -53,7 +53,7 @@ interface ApiResponse {
 const chartConfig = {
   payments: {
     label: "Payments",
-    color: "var(--blue-9)",
+    color: "black",
   },
 } satisfies ChartConfig;
 
