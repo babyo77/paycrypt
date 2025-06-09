@@ -51,10 +51,6 @@ export const appMetadata: Metadata = {
     ],
   },
   icons: {
-    icon: "https://us-east-1.tixte.net/uploads/tanmay111-files.tixte.co/p_transparent.png",
-    apple:
-      "https://us-east-1.tixte.net/uploads/tanmay111-files.tixte.co/p_transparent.png",
-    shortcut:
-      "https://us-east-1.tixte.net/uploads/tanmay111-files.tixte.co/p_transparent.png",
+    icon: "https://us-east-1.tixte.net/uploads/tanmay111-files.tixte.co/Untitled_design.png",
   },
 };
