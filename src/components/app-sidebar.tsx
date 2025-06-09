@@ -125,7 +125,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       <SidebarContent>
         <NavMain items={data.navMain} />
       </SidebarContent>
-
+      {/* 
       <div className="px-3 mb-3">
         <div className="bg-blue-50 dark:bg-blue-900/20 border dark:border-blue-800 rounded-lg p-3 text-sm ">
           <div className="flex items-center gap-2 text-blue-700 dark:text-blue-400 font-medium mb-2">
@@ -163,7 +163,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
               : "Join Mainnet Waitlist"}
           </Button>
         </div>
-      </div>
+      </div> */}
 
       <SidebarFooter>
         <NavUser />

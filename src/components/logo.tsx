@@ -11,15 +11,13 @@ export const Logo = ({
   return (
     <div className="flex items-center gap-0.5">
       <Image
-        src="https://us-east-1.tixte.net/uploads/tanmay111-files.tixte.co/p_transparent.png" // Update this path to your actual logo image
+        src="https://us-east-1.tixte.net/uploads/tanmay111-files.tixte.co/Untitled_design.png"
         alt="Paycrypt Logo"
         width={30}
         height={30}
         className={cn("size-7", className)}
       />
-      <p className={cn("text-blue-700 font-semibold", textClassName)}>
-        Paycrypt
-      </p>
+      <p className={cn(" font-semibold", textClassName)}>Paycrypt</p>
     </div>
   );
 };
