@@ -303,7 +303,7 @@ export function ChartAreaInteractive() {
                 dataKey="payments"
                 type="monotone"
                 fill="url(#fillOrders)"
-                stroke="#3b82f6"
+                stroke="#00000"
                 stackId="a"
                 baseValue={0}
                 connectNulls
