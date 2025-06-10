@@ -12,7 +12,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { api } from "@/lib/utils";
+import { api, TESTNET } from "@/lib/utils";
 import { Checkbox } from "@/components/ui/checkbox";
 import {
   Collapsible,
@@ -100,7 +100,10 @@ export default function LinksPage() {
         // Add type assertion for the response data
         const linkData = response.data as { url?: string; id?: string };
         const linkUrl =
-          linkData.url || `https://pay.paycrypt.tech/link/${linkData.id}`;
+          linkData.url ||
+          `https://${TESTNET ? "dev.pay" : "pay"}.paycrypt.tech/link/${
+            linkData.id
+          }`;
 
         setPaymentLink(linkUrl);
         setLinkCreated(true);
@@ -420,7 +423,7 @@ export default function LinksPage() {
                     </Collapsible>
 
                     {/* Advanced Options */}
-                    <Collapsible
+                    {/* <Collapsible
                       className="rounded-lg border border-border/60 overflow-hidden"
                       open={advancedOptionsOpen}
                       onOpenChange={setAdvancedOptionsOpen}
@@ -486,8 +489,8 @@ export default function LinksPage() {
                                 </div>
                               </Label>
                             </div> */}
-                          </div>
-                          {/* 
+                    {/* </div> */}
+                    {/* 
                           <div className="flex flex-col space-y-3">
                             <div className="flex flex-col space-y-1.5">
                               <Label htmlFor="callToActionLabel">
@@ -520,7 +523,7 @@ export default function LinksPage() {
                             </div>
                           </div> */}
 
-                          {/* <div className="md:col-span-2 mt-2">
+                    {/* <div className="md:col-span-2 mt-2">
                             <Label className="text-base font-medium">
                               Confirmation page
                             </Label>
@@ -600,9 +603,9 @@ export default function LinksPage() {
                               </div>
                             </div>
                           </div> */}
-                        </div>
-                      </CollapsibleContent>
-                    </Collapsible>
+                    {/* </div> */}
+                    {/* </CollapsibleContent> */}
+                    {/* </Collapsible>  */}
 
                     <Button
                       type="submit"

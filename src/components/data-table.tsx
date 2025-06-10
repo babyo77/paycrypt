@@ -387,7 +387,7 @@ const columns: ColumnDef<z.infer<typeof schema>>[] = [
     header: "Mode",
     cell: ({ row }) => (
       <Badge variant="outline" className="text-muted-foreground px-1.5">
-        {row.original.mode}
+        {row.original.mode || "UNKNOWN"}
       </Badge>
     ),
   },

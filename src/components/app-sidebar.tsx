@@ -27,7 +27,7 @@ import { Logo } from "./logo";
 import { Button } from "./ui/button";
 import { useUser } from "@/app/provider/user-provider";
 import { UserData } from "@/app/provider/user-provider";
-import { api } from "@/lib/utils";
+import { api, TESTNET } from "@/lib/utils";
 const data = {
   navMain: [
     {
@@ -125,45 +125,34 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       <SidebarContent>
         <NavMain items={data.navMain} />
       </SidebarContent>
-      {/* 
+
       <div className="px-3 mb-3">
-        <div className="bg-blue-50 dark:bg-blue-900/20 border dark:border-blue-800 rounded-lg p-3 text-sm ">
-          <div className="flex items-center gap-2 text-blue-700 dark:text-blue-400 font-medium mb-2">
+        <div className="bg-gray-50 dark:bg-gray-900/20 border dark:border-gray-800 rounded-lg p-3 text-sm ">
+          <div className="flex items-center gap-2 text-gray-700 dark:text-gray-400 font-medium mb-2">
             <AlertCircle size={16} className="animate-pulse" />
-            <span className="uppercase tracking-wide">Testnet Mode</span>
+            <span className="uppercase tracking-wide">
+              {TESTNET ? "Testnet Mode" : "Mainnet Mode"}
+            </span>
           </div>
-          <p className="text-xs text-blue-600 dark:text-blue-300 mb-3">
-            You're using the test environment. All transactions are simulated
-            and no real funds are involved.
+          <p className="text-xs text-gray-600 dark:text-gray-300 mb-3">
+            {TESTNET
+              ? "You're using the test environment. All transactions are simulated and no real funds are involved."
+              : "You're using the mainnet environment. All transactions are real and involve actual funds."}
           </p>
 
-          <Button
-            disabled={userData?.is_waitlist}
-            size="sm"
-            onClick={async () => {
-              await api.patch("/merchant/", {
-                is_waitlist: true,
-              });
-
-              if (userData) {
-                dispatch({
-                  type: "SET_USER",
-                  payload: {
-                    ...userData,
-                    is_waitlist: true,
-                  } as UserData,
-                });
-              }
-            }}
-            variant="default"
-            className="w-full"
+          <Link
+            href={
+              TESTNET
+                ? "https://dev.paycrypt.tech"
+                : "https://app.paycrypt.tech"
+            }
           >
-            {userData?.is_waitlist
-              ? "You're on the waitlist"
-              : "Join Mainnet Waitlist"}
-          </Button>
+            <Button size="sm" variant="default" className="w-full">
+              {TESTNET ? "Switch to Mainnet" : "Switch to Testnet"}
+            </Button>
+          </Link>
         </div>
-      </div> */}
+      </div>
 
       <SidebarFooter>
         <NavUser />

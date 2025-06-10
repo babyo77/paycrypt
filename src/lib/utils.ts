@@ -54,3 +54,6 @@ export const appMetadata: Metadata = {
     icon: "https://us-east-1.tixte.net/uploads/tanmay111-files.tixte.co/Untitled_design.png",
   },
 };
+
+export const TESTNET =
+  process.env.NEXT_PUBLIC_MODE === "testnet" ? true : false;

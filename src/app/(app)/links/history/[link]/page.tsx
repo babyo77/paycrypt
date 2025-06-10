@@ -739,7 +739,7 @@ function PaymentLinkHistoryPage() {
             </Collapsible>
 
             {/* Advanced Options */}
-            <Collapsible
+            {/* <Collapsible
               className="rounded-lg border border-border/60 overflow-hidden"
               open={advancedOptionsOpen}
               onOpenChange={setAdvancedOptionsOpen}
@@ -805,9 +805,9 @@ function PaymentLinkHistoryPage() {
                         </div>
                       </Label>
                     </div> */}
-                  </div>
+            {/* </div> */}
 
-                  {/* <div className="flex flex-col space-y-3">
+            {/* <div className="flex flex-col space-y-3">
                     <div className="flex flex-col space-y-1.5">
                       <Label htmlFor="callToActionLabel">
                         Label for call to action
@@ -833,9 +833,9 @@ function PaymentLinkHistoryPage() {
                       </p>
                     </div>
                   </div> */}
-                </div>
-              </CollapsibleContent>
-            </Collapsible>
+            {/* </div> */}
+            {/* </CollapsibleContent> */}
+            {/* </Collapsible>  */}
           </div>
 
           <DialogFooter>

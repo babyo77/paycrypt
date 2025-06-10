@@ -1,7 +1,7 @@
 "use client";
 import { useUser } from "@/app/provider/user-provider";
 import { Button } from "@/components/ui/button";
-import { api } from "@/lib/utils";
+import { api, TESTNET } from "@/lib/utils";
 import React, { useEffect, useState } from "react";
 import {
   Table,
@@ -18,7 +18,13 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { format } from "date-fns";
-import { Wallet, Copy, ExternalLink, MoreVertical } from "lucide-react";
+import {
+  Wallet,
+  Copy,
+  ExternalLink,
+  MoreVertical,
+  InfoIcon,
+} from "lucide-react";
 import { toast } from "sonner";
 import {
   Dialog,
@@ -186,8 +192,6 @@ function PayoutPage() {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [ethAddress, setEthAddress] = useState("");
   const [solAddress, setSolAddress] = useState("");
-  const [showTestnetBanner, setShowTestnetBanner] = useState(true);
-
   // CDN base URL for cryptocurrency icons
   const iconBaseUrl =
     "https://cdn.jsdelivr.net/gh/atomiclabs/cryptocurrency-icons@1a63530be6e374711a8554f31b17e4cb92c25fa5/128/color";
@@ -351,50 +355,13 @@ function PayoutPage() {
             <div className="flex items-center justify-between px-4 lg:px-6">
               <div className="text-xl font-semibold">Your Payouts</div>
             </div>
-
-            {/* Notification Banner: Switch to Testnet */}
-            {showTestnetBanner && (
-              <div className="flex items-center gap-3 bg-blue-50 border border-blue-200 text-blue-800 rounded-md px-4 py-2 mx-4 lg:mx-6 mt-2 relative">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  strokeWidth={1.5}
-                  stroke="currentColor"
-                  className="w-5 h-5 text-blue-500"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    d="M12 9v2.25m0 3.75h.01m-6.938 4.243a9 9 0 1112.727 0A9 9 0 015.062 19.243z"
-                  />
-                </svg>
+            {TESTNET && (
+              <div className="flex items-center gap-1 bg-gray-50 border border-gray-200 text-gray-800 rounded-md px-4 py-2 mx-4 lg:mx-6 mt-2 relative">
+                <InfoIcon className="size-4" />
                 <span className="flex-1 text-sm">
                   Only native payouts are supported. Use Ethereum testnet or
                   Solana devnet. SPL and ERC-20 tokens are not supported.
                 </span>
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  className="text-blue-500 hover:bg-blue-100 absolute right-2 top-1/2 -translate-y-1/2 flex items-center justify-center"
-                  onClick={() => setShowTestnetBanner(false)}
-                  aria-label="Dismiss notification"
-                >
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    className="h-4 w-4"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M6 18L18 6M6 6l12 12"
-                    />
-                  </svg>
-                </Button>
               </div>
             )}
 
