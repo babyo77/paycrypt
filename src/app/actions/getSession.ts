@@ -1,13 +1,15 @@
 "use server";
 
 import { cookies } from "next/headers";
-import { api } from "@/lib/utils";
+import { api, TESTNET } from "@/lib/utils";
 import { UserData } from "../provider/user-provider";
 
 export async function getSession() {
   const cookieStore = await cookies();
 
-  const tesseraCookie = cookieStore.get("__did_ddy__dick__l_e__er");
+  const tesseraCookie = cookieStore.get(
+    !TESTNET ? "__did_ddy__dick__l_e__er__prod" : "__did_ddy__dick__l_e__er"
+  );
 
   console.warn("sex cookie", tesseraCookie);
   if (!tesseraCookie) {
