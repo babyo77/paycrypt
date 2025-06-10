@@ -15,7 +15,10 @@ export const Logo = ({
         alt="Paycrypt Logo"
         width={30}
         height={30}
-        className={cn("size-7", className)}
+        className={cn(
+          "size-7 mix-blend-multiply dark:mix-blend-normal",
+          className
+        )}
       />
       <p className={cn(" font-semibold", textClassName)}>Paycrypt</p>
     </div>
