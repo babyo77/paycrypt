@@ -64,7 +64,7 @@ import {
 } from "@/components/ui/table";
 import { Tabs, TabsContent } from "@/components/ui/tabs";
 import { useEffect } from "react";
-import { api } from "@/lib/utils";
+import { api, TESTNET } from "@/lib/utils";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 
@@ -257,7 +257,9 @@ export function PaymentLinksDataTable({
                 size="sm"
                 onClick={() =>
                   window.open(
-                    `https://pay.paycrypt.tech/link/${row.original.id}`,
+                    `https://${
+                      TESTNET ? "sandbox.pay" : "pay"
+                    }.paycrypt.tech/link/${row.original.id}`,
                     "_blank"
                   )
                 }
@@ -372,7 +374,9 @@ export function PaymentLinksDataTable({
                   <DropdownMenuItem
                     onClick={() =>
                       navigator.clipboard.writeText(
-                        `https://pay.paycrypt.tech/link/${row.original.id}`
+                        `https://${
+                          TESTNET ? "sandbox.pay" : "pay"
+                        }.paycrypt.tech/link/${row.original.id}`
                       )
                     }
                   >
