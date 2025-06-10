@@ -142,7 +142,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 
           <Link
             href={
-              TESTNET
+              !TESTNET
                 ? "https://dev.paycrypt.tech"
                 : "https://app.paycrypt.tech"
             }
