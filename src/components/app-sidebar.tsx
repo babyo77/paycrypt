@@ -128,8 +128,8 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 
       <div className="px-3 mb-3">
         <div className="bg-gray-50 dark:bg-gray-900/20 border dark:border-gray-800 rounded-lg p-3 text-sm ">
-          <div className="flex items-center gap-2 text-gray-700 dark:text-gray-400 font-medium mb-2">
-            <AlertCircle size={16} className="animate-pulse" />
+          <div className="flex items-center gap-1 text-gray-700 dark:text-gray-400 font-medium mb-2">
+            <AlertCircle size={16} />
             <span className="uppercase tracking-wide">
               {TESTNET ? "Testnet Mode" : "Mainnet Mode"}
             </span>
