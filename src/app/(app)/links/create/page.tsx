@@ -101,7 +101,7 @@ export default function LinksPage() {
         const linkData = response.data as { url?: string; id?: string };
         const linkUrl =
           linkData.url ||
-          `https://${TESTNET ? "dev.pay" : "pay"}.paycrypt.tech/link/${
+          `https://${TESTNET ? "sandbox.pay" : "pay"}.paycrypt.tech/link/${
             linkData.id
           }`;
 
