@@ -58,7 +58,7 @@ export default function LoginPage() {
           <div className=" -m-px p-8 pb-6">
             <div className="text-center">
               <Link
-                href="/"
+                href="https://paycrypt.tech"
                 aria-label="go home"
                 className="mx-auto block w-fit"
               >
@@ -66,7 +66,7 @@ export default function LoginPage() {
               </Link>
 
               <p className="text-lg mt-2">
-                Welcome! Continue to your Google account
+                Welcome! Login to your Paycrypt account
               </p>
             </div>
 
@@ -75,7 +75,7 @@ export default function LoginPage() {
                 onClick={() => {
                   window.location.href = `${process.env.NEXT_PUBLIC_API_URL}/auth/google/`;
                 }}
-                className=" min-w-[330px] mx-auto"
+                className=" min-w-[320px] mx-auto"
                 type="button"
                 variant="outline"
               >
@@ -102,14 +102,22 @@ export default function LoginPage() {
                     d="M130.55 50.479c24.514 0 41.05 10.589 50.479 19.438l36.844-35.974C195.245 12.91 165.798 0 130.55 0C79.49 0 35.393 29.301 13.925 71.947l42.211 32.783c10.59-31.477 39.891-54.251 74.414-54.251"
                   ></path>
                 </svg>
-                <span>Google</span>
+                <span>Continue with Google</span>
               </Button>
             </div>
           </div>
 
-          <div className="p-3 fixed bottom-4 mx-auto left-0 right-0">
+          <div className="p-3 fixed bottom-3 mx-auto left-0 right-0">
             <p className="text-muted-foreground text-center text-xs">
-              By continuing, you agree to our{" "}
+              By using Paycrypt you agree to our{" "}
+              <Link
+                href="https://paycrypt.tech/terms-of-service"
+                target="_blank"
+                className="text-primary hover:underline"
+              >
+                Terms of Service
+              </Link>{" "}
+              and{" "}
               <Link
                 href="https://paycrypt.tech/privacy-policy"
                 target="_blank"
@@ -117,14 +125,6 @@ export default function LoginPage() {
               >
                 Privacy Policy
               </Link>{" "}
-              and{" "}
-              <Link
-                href="https://paycrypt.tech/terms-of-service"
-                target="_blank"
-                className="text-primary hover:underline"
-              >
-                Terms
-              </Link>
             </p>
           </div>
         </form>
