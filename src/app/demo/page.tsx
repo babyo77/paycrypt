@@ -1,7 +1,7 @@
 import { redirect } from "next/navigation";
 
 function page() {
-  redirect(process.env.DEMO_ENDPOINT!);
+  redirect("https://cal.com/tanmay7/15min");
 }
 
 export default page;

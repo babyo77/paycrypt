@@ -1,7 +1,7 @@
 import { redirect } from "next/navigation";
 
 function page() {
-  redirect(process.env.DOCS_ENDPOINT!);
+  redirect("https://paycrypt.tech/coming-soon");
 }
 
 export default page;
