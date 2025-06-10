@@ -49,6 +49,7 @@ export default function WebhooksPage() {
   const [isLoading, setIsLoading] = useState(false);
   const [newWebhookUrl, setNewWebhookUrl] = useState("");
   const [newWebhookDescription, setNewWebhookDescription] = useState("");
+  const [newWebhookSecret, setNewWebhookSecret] = useState("");
   const [isCreatingWebhook, setIsCreatingWebhook] = useState(false);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
 
@@ -94,12 +95,14 @@ export default function WebhooksPage() {
       const response = await api.post("/webhooks/", {
         url: newWebhookUrl.trim(),
         desc: newWebhookDescription.trim(),
+        secret: newWebhookSecret.trim(),
       });
 
       if (response.status === 200) {
         toast.success("Webhook created successfully");
         setNewWebhookUrl("");
         setNewWebhookDescription("");
+        setNewWebhookSecret("");
         fetchWebhooks(); // Refresh the list
         setIsDialogOpen(false);
       }
@@ -214,6 +217,27 @@ export default function WebhooksPage() {
                           placeholder="Webhook description"
                           className="w-full text-sm"
                         />
+                      </div>
+                      <div className="space-y-1.5">
+                        <Label
+                          htmlFor="webhook_secret"
+                          className="text-sm font-medium leading-tight"
+                        >
+                          Secret
+                        </Label>
+                        <Input
+                          id="webhook_secret"
+                          name="webhook_secret"
+                          type="password"
+                          value={newWebhookSecret}
+                          onChange={(e) => setNewWebhookSecret(e.target.value)}
+                          placeholder="Enter webhook secret"
+                          className="w-full text-sm"
+                        />
+                        <p className="text-xs text-gray-500 mt-1">
+                          This secret will be sent in the X-Webhook-Signature
+                          header for verification
+                        </p>
                       </div>
                     </div>
                   </div>
