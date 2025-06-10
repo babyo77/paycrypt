@@ -555,7 +555,7 @@ export function DataTable({
               <SelectItem value="EXPIRED">Expired</SelectItem>
             </SelectContent>
           </Select> */}
-
+          {/* 
           <Select
             value={
               (table.getColumn("mode")?.getFilterValue() as string) || "all"
@@ -574,7 +574,7 @@ export function DataTable({
               <SelectItem value="TESTNET">Testnet</SelectItem>
               <SelectItem value="MAINNET">Mainnet</SelectItem>
             </SelectContent>
-          </Select>
+          </Select> */}
 
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
