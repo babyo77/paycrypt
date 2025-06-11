@@ -288,7 +288,7 @@ const columns: ColumnDef<z.infer<typeof schema>>[] = [
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
           className="flex items-center gap-1"
         >
-          Created At
+          Confirmed At
           {column.getIsSorted() === "asc" ? (
             <IconChevronUp className="h-4 w-4" />
           ) : column.getIsSorted() === "desc" ? (

@@ -37,6 +37,7 @@ interface Webhook {
   description?: string;
   created_at: string;
   is_active: boolean;
+  secret?: string;
 }
 
 interface WebhooksResponse {
@@ -52,6 +53,18 @@ export default function WebhooksPage() {
   const [newWebhookSecret, setNewWebhookSecret] = useState("");
   const [isCreatingWebhook, setIsCreatingWebhook] = useState(false);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [copiedId, setCopiedId] = useState<string | null>(null);
+
+  const generateRandomSecret = () => {
+    const chars =
+      "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()_+-=[]{}|;:,.<>?";
+    const length = 32;
+    let result = "";
+    for (let i = 0; i < length; i++) {
+      result += chars.charAt(Math.floor(Math.random() * chars.length));
+    }
+    setNewWebhookSecret(result);
+  };
 
   // Fetch webhooks on component mount
   useEffect(() => {
@@ -188,17 +201,15 @@ export default function WebhooksPage() {
                         >
                           Endpoint url
                         </Label>
-                        <div className="flex items-center border rounded-md overflow-hidden focus-within:ring-2 focus-within:ring-blue-500">
-                          <Input
-                            id="webhook_url"
-                            name="webhook_url"
-                            type="url"
-                            value={newWebhookUrl}
-                            onChange={(e) => setNewWebhookUrl(e.target.value)}
-                            placeholder="https://example.com/webhook"
-                            className="flex-1 border-0 focus-visible:ring-0 focus-visible:ring-offset-0 text-sm"
-                          />
-                        </div>
+
+                        <Input
+                          id="webhook_url"
+                          name="webhook_url"
+                          type="url"
+                          value={newWebhookUrl}
+                          onChange={(e) => setNewWebhookUrl(e.target.value)}
+                          placeholder="https://example.com/webhook"
+                        />
                       </div>
                       <div className="space-y-1.5">
                         <Label
@@ -225,15 +236,28 @@ export default function WebhooksPage() {
                         >
                           Secret
                         </Label>
-                        <Input
-                          id="webhook_secret"
-                          name="webhook_secret"
-                          type="password"
-                          value={newWebhookSecret}
-                          onChange={(e) => setNewWebhookSecret(e.target.value)}
-                          placeholder="Enter webhook secret"
-                          className="w-full text-sm"
-                        />
+                        <div className="flex gap-2">
+                          <Input
+                            id="webhook_secret"
+                            name="webhook_secret"
+                            type="text"
+                            value={newWebhookSecret}
+                            onChange={(e) =>
+                              setNewWebhookSecret(e.target.value)
+                            }
+                            placeholder="Enter webhook secret"
+                            className="w-full text-sm"
+                          />
+                          <Button
+                            type="button"
+                            variant="outline"
+                            size="sm"
+                            onClick={generateRandomSecret}
+                            className="whitespace-nowrap"
+                          >
+                            Generate
+                          </Button>
+                        </div>
                         <p className="text-xs text-gray-500 mt-1">
                           This secret will be sent in the X-Webhook-Signature
                           header for verification
@@ -276,6 +300,7 @@ export default function WebhooksPage() {
                   <TableHeader>
                     <TableRow className="bg-gray-50 border-b">
                       <TableHead className="py-3">URL</TableHead>
+                      <TableHead>Secret</TableHead>
                       <TableHead>Description</TableHead>
                       <TableHead>Created on</TableHead>
                       <TableHead>Status</TableHead>
@@ -288,11 +313,42 @@ export default function WebhooksPage() {
                         <TableCell className="font-medium w-[400px] max-w-[400px]">
                           <div className="text-sm truncate">{webhook.link}</div>
                         </TableCell>
+                        <TableCell className="font-medium w-[300px] max-w-[300px]">
+                          <div
+                            onClick={() => {
+                              navigator.clipboard.writeText(
+                                webhook.secret || ""
+                              );
+                              setCopiedId(webhook.id);
+                              setTimeout(() => setCopiedId(null), 2000);
+                            }}
+                            className="text-sm truncate group relative"
+                          >
+                            <span className="group-hover:hidden">
+                              {"•".repeat(webhook.secret?.length || 0)}
+                            </span>
+                            <span className="hidden group-hover:inline">
+                              {webhook.secret}
+                            </span>
+                            <Button
+                              variant="ghost"
+                              size="sm"
+                              className="absolute right-0 top-1/2 -translate-y-1/2 opacity-0 group-hover:opacity-100 transition-opacity"
+                            >
+                              {copiedId === webhook.id ? (
+                                <span className="text-xs"> ✓ </span>
+                              ) : (
+                                <CopyIcon className="h-3 w-3" />
+                              )}
+                            </Button>
+                          </div>
+                        </TableCell>
                         <TableCell>
                           <span className="text-sm">
                             {webhook.description || "No description"}
                           </span>
                         </TableCell>
+
                         <TableCell>{formatDate(webhook.created_at)}</TableCell>
                         <TableCell>
                           <span
