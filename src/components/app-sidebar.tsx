@@ -147,7 +147,12 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                 : "https://app.paycrypt.tech"
             }
           >
-            <Button size="sm" variant="default" className="w-full">
+            <Button
+              size="sm"
+              className={`w-full ${
+                TESTNET && "bg-orange-500 hover:bg-orange-600"
+              }`}
+            >
               {TESTNET ? "Switch to Mainnet" : "Switch to Testnet"}
             </Button>
           </Link>
