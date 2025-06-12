@@ -356,7 +356,7 @@ function PayoutPage() {
               <div className="text-xl font-semibold">Your Payouts</div>
             </div>
             {TESTNET && (
-              <div className="flex items-center gap-1 bg-gray-50 border border-gray-200 text-gray-800 rounded-md px-4 py-2 mx-4 lg:mx-6 mt-2 relative">
+              <div className="flex items-center gap-1 bg-primary border border-gray-200 text-gray-800 rounded-md px-4 py-2 mx-4 lg:mx-6 mt-2 relative">
                 <InfoIcon className="size-4" />
                 <span className="flex-1 text-sm">
                   Only native payouts are supported. Use Ethereum testnet or

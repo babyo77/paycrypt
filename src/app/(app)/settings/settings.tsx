@@ -121,7 +121,7 @@ export default function SettingsPage() {
                           item.disabled && "opacity-50 cursor-not-allowed"
                         )}
                       >
-                        <div className="flex-shrink-0 p-1.5 rounded-md bg-muted">
+                        <div className="flex-shrink-0 p-1.5 text-primary rounded-md bg-muted">
                           {item.icon}
                         </div>
                         <div className="ml-3 flex-1">

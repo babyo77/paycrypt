@@ -263,8 +263,42 @@ export function ChartAreaInteractive() {
             <AreaChart data={filteredData}>
               <defs>
                 <linearGradient id="fillOrders" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="5%" stopColor="#3b82f6" stopOpacity={1.0} />
-                  <stop offset="95%" stopColor="#3b82f6" stopOpacity={0.1} />
+                  <stop
+                    offset="0%"
+                    stopColor={
+                      process.env.NEXT_PUBLIC_MODE === "testnet"
+                        ? "#f97316"
+                        : "#3b82f6"
+                    }
+                    stopOpacity={0.0}
+                  />
+                  <stop
+                    offset="5%"
+                    stopColor={
+                      process.env.NEXT_PUBLIC_MODE === "testnet"
+                        ? "#f97316"
+                        : "#3b82f6"
+                    }
+                    stopOpacity={1.0}
+                  />
+                  <stop
+                    offset="95%"
+                    stopColor={
+                      process.env.NEXT_PUBLIC_MODE === "testnet"
+                        ? "#f97316"
+                        : "#3b82f6"
+                    }
+                    stopOpacity={1.0}
+                  />
+                  <stop
+                    offset="100%"
+                    stopColor={
+                      process.env.NEXT_PUBLIC_MODE === "testnet"
+                        ? "#f97316"
+                        : "#3b82f6"
+                    }
+                    stopOpacity={0.0}
+                  />
                 </linearGradient>
               </defs>
               <CartesianGrid vertical={false} />
