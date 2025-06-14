@@ -1,19 +1,14 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Space_Grotesk } from "next/font/google";
 import "./globals.css";
 import { Toaster } from "@/components/ui/sonner";
 import { appMetadata } from "@/lib/utils";
 import { ThemeProvider } from "@/components/ThemeProvider";
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
-});
 
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
+const spaceGrotesk = Space_Grotesk({
   subsets: ["latin"],
+  variable: "--font-space-grotesk",
 });
-
 export const metadata: Metadata = {
   ...appMetadata,
 };
@@ -25,7 +20,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body>
+      <body
+        className={`${spaceGrotesk.className} ${spaceGrotesk.variable} antialiased tracking-tighter`}
+      >
         <ThemeProvider>{children}</ThemeProvider>
         <Toaster richColors />
       </body>
