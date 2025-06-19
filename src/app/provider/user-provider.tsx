@@ -24,6 +24,8 @@ export interface UserData {
   payout_sol_address: string;
   webhook_url: string;
   is_waitlist: boolean;
+  is_kyc_active: boolean;
+  kyc_id: string;
   timeframe: "DAILY" | "WEEKLY" | "MONTHLY" | "YEARLY";
   networkMode: "MAINNET" | "TESTNET";
   avatar: string;

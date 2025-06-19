@@ -126,6 +126,17 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         <NavMain items={data.navMain} />
       </SidebarContent>
 
+      {userData && !userData.is_kyc_active && (
+        <div className="px-3 mb-2">
+          <Button
+            variant="destructive"
+            className="w-full"
+            onClick={() => (window.location.href = "/kyc")}
+          >
+            Complete your KYC
+          </Button>
+        </div>
+      )}
       <div className="px-3 mb-3">
         <div className="bg-gray-50 dark:bg-gray-900/20 border dark:border-gray-800 rounded-lg p-3 text-sm ">
           <div className="flex items-center gap-1 text-gray-700 dark:text-gray-400 font-medium mb-2">
