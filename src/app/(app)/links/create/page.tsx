@@ -38,6 +38,7 @@ export default function LinksPage() {
     allow_promotional_code: false,
     call_to_action_label: "Pay",
     webhook: "",
+    allow_dynamic_amount: false,
     // tags: "",
     // showConfirmationPage: true,
     // successMessage: "",
@@ -91,9 +92,14 @@ export default function LinksPage() {
 
     try {
       // Format data for API request
-
+      const payload = { ...formData };
+      if (formData.allow_dynamic_amount) {
+        payload.allow_dynamic_amount = true;
+      } else {
+        payload.allow_dynamic_amount = false;
+      }
       // Make API call to create payment link
-      const response = await api.post("/payment-links/", formData);
+      const response = await api.post("/payment-links/", payload);
 
       // Handle successful response
       if (response.success) {
@@ -191,9 +197,28 @@ export default function LinksPage() {
                             placeholder="0.00"
                             value={formData.amount}
                             onChange={handleInputChange}
-                            required
+                            required={!formData.allow_dynamic_amount}
+                            disabled={formData.allow_dynamic_amount}
                             className="focus-visible:ring-primary/30"
                           />
+                        </div>
+                        <div className="flex items-center space-x-2 mt-2">
+                          <Checkbox
+                            id="allow_dynamic_amount"
+                            checked={formData.allow_dynamic_amount}
+                            onCheckedChange={(checked) =>
+                              handleCheckboxChange(
+                                "allow_dynamic_amount",
+                                checked as boolean
+                              )
+                            }
+                          />
+                          <Label
+                            htmlFor="allow_dynamic_amount"
+                            className="font-medium cursor-pointer"
+                          >
+                            Allow customer to enter amount (Donation)
+                          </Label>
                         </div>
                       </div>
 
@@ -745,6 +770,7 @@ export default function LinksPage() {
                             allow_promotional_code: false,
                             call_to_action_label: "Pay",
                             webhook: "",
+                            allow_dynamic_amount: false,
                           });
                         }}
                       >
