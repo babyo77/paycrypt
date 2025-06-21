@@ -20,6 +20,10 @@ export interface UserData {
   eth_address: string;
   full_name: string;
   message: string;
+  is_account_set: boolean;
+  last_4?: string;
+  bank_name?: string;
+  is_liquidation_address_set: boolean;
   payout_eth_address: string;
   payout_sol_address: string;
   webhook_url: string;

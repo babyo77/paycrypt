@@ -41,7 +41,7 @@ export function NavMain({
   return (
     <SidebarGroup>
       <SidebarGroupContent>
-        <SidebarMenu className=" space-y-1">
+        <SidebarMenu className=" space-y-0.5">
           {items.map((item) => {
             // Check if this item or any subitems are active
             const isItemActive = pathname === item.url;

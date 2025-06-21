@@ -20,6 +20,7 @@ import { CheckCircle2, LoaderCircle, InfoIcon } from "lucide-react";
 // KYC API response type
 type KycApiResponse = {
   code?: string;
+  status?: "approved";
   email?: string;
   kyc_link?: string;
   message?: string;
@@ -49,7 +50,10 @@ export default function KycPage() {
         const kycRes = await api.get<KycApiResponse>("/merchant/kyc");
         if (kycRes.success && kycRes.data) {
           setKycData(kycRes.data);
-          if (kycRes.data.kyc_status === "approved") {
+          if (
+            kycRes.data.kyc_status === "approved" ||
+            kycRes.data.status == "approved"
+          ) {
             setIsKycApproved(true);
           }
         }
@@ -163,7 +167,7 @@ export default function KycPage() {
 
   if (TESTNET) {
     return (
-      <div className="mx-auto w-full mt-16 bg-white p-8 rounded-lg flex flex-col items-center justify-center">
+      <div className="mx-auto w-full mt-16 bg-white p-8 rounded-lg flex flex-col items-center justify-center min-h-[calc(100vh-300px)]">
         <InfoIcon className="w-12 h-12 text-yellow-500 mb-4" />
         <h1 className="text-2xl font-bold mb-2 text-yellow-700">
           KYC Unavailable on Testnet
@@ -182,14 +186,14 @@ export default function KycPage() {
   return (
     <div className="mx-auto w-full mt-16 bg-white p-8 rounded-lg ">
       {isLoading ? (
-        <div className="flex flex-col items-center justify-center min-h-[300px]">
+        <div className="flex flex-col items-center justify-center min-h-[calc(100vh-300px)]">
           <span className="text-gray-500">Checking KYC status...</span>
         </div>
       ) : isKycApproved ? (
-        <div className="flex flex-col items-center justify-center min-h-[300px]">
-          <CheckCircle2 className="w-16 h-16 text-green-500 mb-4" />
+        <div className="flex flex-col items-center justify-center min-h-[calc(100vh-300px)]">
+          <CheckCircle2 className="w-16 h-16 text-green-500 mb-2" />
           <h1 className="text-2xl font-bold mb-2">KYC Complete</h1>
-          <p className="text-green-700 font-semibold mb-2">
+          <p className="text-green-700 font-semibold mb-1">
             Your KYC is done and approved!
           </p>
           <p className="text-gray-600">

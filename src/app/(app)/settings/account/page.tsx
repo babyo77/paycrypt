@@ -1,12 +1,21 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useUser } from "@/app/provider/user-provider";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { api } from "@/lib/utils";
 import { toast } from "sonner";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { BankAccountFormDialog } from "@/components/bank-account-form-dialog";
+import { Landmark } from "lucide-react";
 
 export default function AccountPage() {
   const { userData, dispatch } = useUser();
@@ -19,6 +28,7 @@ export default function AccountPage() {
   });
 
   const [isLoading, setIsLoading] = useState(false);
+  const [bankLoading, setBankLoading] = useState(false);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -69,7 +79,7 @@ export default function AccountPage() {
       <div className="@container/main flex flex-1 flex-col gap-2">
         <div className="flex flex-col gap-4 py-4 md:gap-6 md:py-6">
           <div className="px-4 md:px-6">
-            <div className="flex justify-between items-center mb-6">
+            <div className="flex justify-between items-center mb-4">
               <h1 className="text-xl font-semibold">Account details</h1>
               <Button
                 type="submit"
@@ -95,6 +105,7 @@ export default function AccountPage() {
                     <Input
                       id="first_name"
                       name="first_name"
+                      disabled={userData?.is_kyc_active}
                       value={formData.first_name}
                       onChange={handleChange}
                       className="w-full"
@@ -108,6 +119,7 @@ export default function AccountPage() {
                     <Input
                       id="last_name"
                       name="last_name"
+                      disabled={userData?.is_kyc_active}
                       value={formData.last_name}
                       onChange={handleChange}
                       className="w-full"
@@ -119,9 +131,14 @@ export default function AccountPage() {
                   <Label htmlFor="email" className="text-sm font-medium">
                     Email Id
                   </Label>
-                  <div className="text-gray-700 py-2 px-3 border border-gray-200 rounded-md bg-gray-50">
-                    {userData?.email}
-                  </div>
+                  <Input
+                    id="email"
+                    name="email"
+                    disabled={true}
+                    value={userData?.email}
+                    onChange={handleChange}
+                    className="w-full"
+                  />
                 </div>
 
                 <div className="space-y-2">
@@ -165,6 +182,59 @@ export default function AccountPage() {
                 </div>
               </form>
             </div>
+
+            {userData?.is_kyc_active && (
+              <>
+                <div className="flex flex-col gap-4 py-8 pb-5">
+                  <h2 className="text-lg font-semibold">
+                    Bank Account Details
+                  </h2>
+                  {userData.bank_name ? (
+                    <div className="w-full">
+                      <div className="flex items-center bg-white dark:bg-black border border-gray-200 dark:border-gray-700 rounded-xl p-4 mb-4 transition-colors w-full">
+                        <div className="flex-shrink-0 bg-gray-100 bg-opacity-5 dark:bg-white dark:bg-opacity-10 rounded-full p-2 flex items-center justify-center mr-4">
+                          <Landmark className="h-8 w-8 text-muted-foreground dark:text-white" />
+                        </div>
+                        <div className="flex flex-col flex-1">
+                          <div className="text-black dark:text-white text-lg font-bold tracking-wide mb-0.5">
+                            {userData.bank_name || "N/A"}
+                          </div>
+                          <div className="text-black dark:text-white text-sm font-mono opacity-80">
+                            **** **** **** {userData.last_4 || "N/A"}
+                          </div>
+                        </div>
+                        <div className="ml-4">
+                          <BankAccountFormDialog
+                            edit
+                            trigger={
+                              <Button type="button" size="sm" variant="outline">
+                                Change Bank Details
+                              </Button>
+                            }
+                          />
+                        </div>
+                      </div>
+                    </div>
+                  ) : userData.is_kyc_active ? (
+                    <BankAccountFormDialog
+                      trigger={
+                        <Button type="button" className=" w-fit" size="sm">
+                          Add Bank Account
+                        </Button>
+                      }
+                    />
+                  ) : (
+                    <Button
+                      type="button"
+                      size="sm"
+                      onClick={() => (window.location.href = "/kyc")}
+                    >
+                      Do KYC
+                    </Button>
+                  )}
+                </div>
+              </>
+            )}
           </div>
         </div>
       </div>

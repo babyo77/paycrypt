@@ -24,6 +24,7 @@ import {
   ExternalLink,
   MoreVertical,
   InfoIcon,
+  Landmark,
 } from "lucide-react";
 import { toast } from "sonner";
 import {
@@ -37,6 +38,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Tabs, TabsContent } from "@/components/ui/tabs";
 import { Badge } from "@/components/ui/badge";
+import { useRouter } from "next/navigation";
 
 // Define type for balance data
 interface BalanceData {
@@ -184,14 +186,19 @@ const calculateTotalBalance = (balanceData: BalanceData | null): number => {
 
 function PayoutPage() {
   const { userData } = useUser();
+  const router = useRouter();
   const [balanceData, setBalanceData] = useState<BalanceData | null>(null);
   const [payoutHistory, setPayoutHistory] = useState<PayoutHistory[]>([]);
 
   const [error, setError] = useState<string | null>(null);
   const [isPaying, setIsPaying] = useState(false);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [isBankDialogOpen, setIsBankDialogOpen] = useState(false);
   const [ethAddress, setEthAddress] = useState("");
   const [solAddress, setSolAddress] = useState("");
+  const [showKycDialog, setShowKycDialog] = useState(false);
+  const [showBankDialog, setShowBankDialog] = useState(false);
+  const [showBankInfoDialog, setShowBankInfoDialog] = useState(false);
   // CDN base URL for cryptocurrency icons
   const iconBaseUrl =
     "https://cdn.jsdelivr.net/gh/atomiclabs/cryptocurrency-icons@1a63530be6e374711a8554f31b17e4cb92c25fa5/128/color";
@@ -199,6 +206,10 @@ function PayoutPage() {
   // Handle dialog open state changes
   const handleDialogOpenChange = (open: boolean) => {
     setIsDialogOpen(open);
+  };
+
+  const handleBankDialogOpenChange = (open: boolean) => {
+    setIsBankDialogOpen(open);
   };
 
   useEffect(() => {
@@ -325,6 +336,20 @@ function PayoutPage() {
     }
   };
 
+  // Updated Bank button logic
+  const handleBankButton = () => {
+    if (!userData?.is_kyc_active) {
+      setShowKycDialog(true);
+    } else if (
+      !userData.is_account_set ||
+      !userData?.is_liquidation_address_set
+    ) {
+      setShowBankDialog(true);
+    } else {
+      setShowBankInfoDialog(true);
+    }
+  };
+
   if (error) {
     return (
       <div className="w-full p-6">
@@ -381,14 +406,19 @@ function PayoutPage() {
                         ${totalBalance.toFixed(2)}
                       </div>
                     </div>
-                    <Button
-                      onClick={() => handleDialogOpenChange(true)}
-                      disabled={isPaying}
-                      variant="default"
-                    >
-                      <Wallet className="mr-1 h-3 w-3" />
-                      {isPaying ? "Processing..." : "Withdraw"}
-                    </Button>
+                    <div className="flex items-center gap-2">
+                      <Button onClick={handleBankButton} disabled={isPaying}>
+                        <Landmark className="mr-1 h-3 w-3" />
+                        Bank
+                      </Button>
+                      <Button
+                        onClick={() => handleDialogOpenChange(true)}
+                        disabled={isPaying}
+                      >
+                        <Wallet className="mr-1 h-3 w-3" />
+                        {isPaying ? "Processing..." : "Crypto Wallet"}
+                      </Button>
+                    </div>
                   </div>
                   <div className="p-3">
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-3 text-sm">
@@ -491,6 +521,141 @@ function PayoutPage() {
                   </div>
                 </div>
               </div>
+
+              {/* Bank Withdrawal Dialog */}
+              <Dialog
+                open={isBankDialogOpen}
+                onOpenChange={handleBankDialogOpenChange}
+              >
+                <DialogContent className="sm:max-w-lg">
+                  <DialogHeader>
+                    <DialogTitle>Bank Payout</DialogTitle>
+                    <DialogDescription>
+                      Enter your bank details to receive your funds. This
+                      feature is coming soon.
+                    </DialogDescription>
+                  </DialogHeader>
+                  <DialogFooter>
+                    <Button
+                      type="button"
+                      variant="outline"
+                      onClick={() => setIsBankDialogOpen(false)}
+                    >
+                      Close
+                    </Button>
+                  </DialogFooter>
+                </DialogContent>
+              </Dialog>
+
+              {/* KYC Required Dialog */}
+              <Dialog open={showKycDialog} onOpenChange={setShowKycDialog}>
+                <DialogContent className="sm:max-w-lg">
+                  <DialogHeader>
+                    <DialogTitle>KYC Required</DialogTitle>
+                    <DialogDescription>
+                      You have not completed KYC. Please complete KYC to enable
+                      bank payouts.
+                    </DialogDescription>
+                  </DialogHeader>
+                  <DialogFooter>
+                    <Button
+                      type="button"
+                      variant="default"
+                      onClick={() => {
+                        setShowKycDialog(false);
+                        router.push("/kyc");
+                      }}
+                    >
+                      Go to KYC
+                    </Button>
+                    <Button
+                      type="button"
+                      variant="outline"
+                      onClick={() => setShowKycDialog(false)}
+                    >
+                      Close
+                    </Button>
+                  </DialogFooter>
+                </DialogContent>
+              </Dialog>
+              {/* Bank Details Required Dialog */}
+              <Dialog open={showBankDialog} onOpenChange={setShowBankDialog}>
+                <DialogContent className="sm:max-w-lg">
+                  <DialogHeader>
+                    <DialogTitle>Bank Account Required</DialogTitle>
+                    <DialogDescription>
+                      You have not added your bank account. Please add your bank
+                      details in settings to enable bank payouts.
+                    </DialogDescription>
+                  </DialogHeader>
+                  <DialogFooter>
+                    <Button
+                      type="button"
+                      variant="default"
+                      onClick={() => {
+                        setShowBankDialog(false);
+                        router.push("/settings/account");
+                      }}
+                    >
+                      Go to Settings
+                    </Button>
+                    <Button
+                      type="button"
+                      variant="outline"
+                      onClick={() => setShowBankDialog(false)}
+                    >
+                      Close
+                    </Button>
+                  </DialogFooter>
+                </DialogContent>
+              </Dialog>
+
+              {/* Bank Info Dialog */}
+              <Dialog
+                open={showBankInfoDialog}
+                onOpenChange={setShowBankInfoDialog}
+              >
+                <DialogContent className="sm:max-w-lg">
+                  <DialogHeader>
+                    <DialogTitle>Bank Account Details</DialogTitle>
+                    <DialogDescription>
+                      Your linked bank account details:
+                    </DialogDescription>
+                  </DialogHeader>
+                  <div className="flex flex-col items-center py-4">
+                    <div className="w-full max-w-md">
+                      <div className="flex items-center bg-white dark:bg-black border border-gray-200 dark:border-gray-700 rounded-2xl p-6 mb-6 transition-colors">
+                        <div className="flex-shrink-0 bg-gray-100 bg-opacity-5 dark:bg-white dark:bg-opacity-10 rounded-full p-4 flex items-center justify-center mr-6">
+                          <Landmark className="h-12 w-12 text-muted-foreground dark:text-white" />
+                        </div>
+                        <div className="flex flex-col flex-1">
+                          <div className="text-black dark:text-white text-xl font-bold tracking-wide mb-1">
+                            {userData?.bank_name || "N/A"}
+                          </div>
+                          <div className="text-black dark:text-white text-base font-mono opacity-80">
+                            **** **** **** {userData?.last_4 || "N/A"}
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div className="flex gap-3 w-full max-w-md justify-center">
+                      <Button className="flex-1" disabled>
+                        Get Payout
+                      </Button>
+                      <Button
+                        className="flex-1"
+                        variant="outline"
+                        onClick={() => {
+                          setShowBankInfoDialog(false);
+                          router.push("/settings/account");
+                        }}
+                      >
+                        Change Details
+                      </Button>
+                    </div>
+                  </div>
+                </DialogContent>
+              </Dialog>
 
               {/* Withdrawal Dialog */}
               <Dialog open={isDialogOpen} onOpenChange={handleDialogOpenChange}>
