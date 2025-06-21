@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -12,7 +12,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { api, TESTNET } from "@/lib/utils";
+import { api, TESTNET, uploadFile } from "@/lib/utils";
 import { Checkbox } from "@/components/ui/checkbox";
 import {
   Collapsible,
@@ -20,6 +20,9 @@ import {
   CollapsibleTrigger,
 } from "@/components/ui/collapsible";
 import { ChevronDown, ChevronRight } from "lucide-react";
+import Image from "next/image";
+import { Dialog, DialogContent } from "@/components/ui/dialog";
+import { toast } from "sonner";
 
 export default function LinksPage() {
   const [formData, setFormData] = useState({
@@ -51,14 +54,27 @@ export default function LinksPage() {
   const [copying, setCopying] = useState(false);
 
   const [customerInfoOpen, setCustomerInfoOpen] = useState(false);
-  const [advancedOptionsOpen, setAdvancedOptionsOpen] = useState(false);
+
+  const [productImages, setProductImages] = useState<
+    {
+      file: File | null;
+      url: string | null;
+      uploading: boolean;
+    }[]
+  >([]);
+
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
+  const [dragActive, setDragActive] = useState(false);
+
+  const [selectedImage, setSelectedImage] = useState<string | null>(null);
+  const [dialogOpen, setDialogOpen] = useState(false);
 
   const handleInputChange = (
     e: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>
   ) => {
     const { name, value } = e.target;
 
-    // Convert amount to a number if the field is "amount"
     if (name === "amount") {
       setFormData((prev) => ({
         ...prev,
@@ -86,24 +102,109 @@ export default function LinksPage() {
     }));
   };
 
+  const handleUploadFile = async (file: File, idx: number) => {
+    setProductImages((prev) => {
+      const copy = [...prev];
+      copy[idx] = { ...copy[idx], uploading: true };
+      return copy;
+    });
+    let url = null;
+    let attempts = 0;
+    while (attempts < 3 && !url) {
+      url = await uploadFile(file);
+      if (!url) {
+        attempts++;
+        if (attempts < 3) await new Promise((res) => setTimeout(res, 1000));
+      }
+    }
+    if (url) {
+      setProductImages((prev) => {
+        const copy = [...prev];
+        copy[idx] = { file, url, uploading: false };
+        return copy;
+      });
+    } else {
+      setProductImages((prev) => prev.filter((_, i) => i !== idx));
+      toast.error("Image upload failed. Please try again.");
+    }
+  };
+
+  const addImages = (files: File[]) => {
+    const availableSlots = 3 - productImages.length;
+    const newFiles = files.slice(0, availableSlots);
+    const newImageObjs = newFiles.map((file) => ({
+      file,
+      url: null,
+      uploading: true,
+    }));
+    const startIdx = productImages.length;
+    setProductImages((prev) => [...prev, ...newImageObjs].slice(0, 3));
+    newFiles.forEach((file, i) => {
+      handleUploadFile(file, startIdx + i);
+    });
+  };
+
+  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (!e.target.files) return;
+    const files = Array.from(e.target.files).filter((f) =>
+      f.type.startsWith("image/")
+    );
+    addImages(files);
+  };
+
+  const handleDrop = (e: React.DragEvent<HTMLDivElement>) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setDragActive(false);
+    if (e.dataTransfer.files && e.dataTransfer.files.length > 0) {
+      const files = Array.from(e.dataTransfer.files).filter((f) =>
+        f.type.startsWith("image/")
+      );
+      addImages(files);
+    }
+  };
+
+  const handleDragOver = (e: React.DragEvent<HTMLDivElement>) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setDragActive(true);
+  };
+
+  const handleDragLeave = (e: React.DragEvent<HTMLDivElement>) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setDragActive(false);
+  };
+
+  const openFileDialog = () => {
+    fileInputRef.current?.click();
+  };
+
   const handleCreateLink = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
 
+    // Only allow submit if all images are uploaded
+    if (productImages.some((img) => img.uploading)) {
+      setIsLoading(false);
+      return;
+    }
+
     try {
-      // Format data for API request
-      const payload = { ...formData };
+      const payload = { ...formData } as any;
       if (formData.allow_dynamic_amount) {
         payload.allow_dynamic_amount = true;
       } else {
         payload.allow_dynamic_amount = false;
       }
-      // Make API call to create payment link
+
+      payload.product_images = productImages
+        .map((img) => img.url)
+        .filter(Boolean);
+
       const response = await api.post("/payment-links/", payload);
 
-      // Handle successful response
       if (response.success) {
-        // Add type assertion for the response data
         const linkData = response.data as { url?: string; id?: string };
         const linkUrl =
           linkData.url ||
@@ -116,7 +217,6 @@ export default function LinksPage() {
       }
     } catch (error) {
       console.error("Error creating payment link:", error);
-      // You could add error handling with a toast notification here
     } finally {
       setIsLoading(false);
     }
@@ -128,6 +228,10 @@ export default function LinksPage() {
     setTimeout(() => {
       setCopying(false);
     }, 1500);
+  };
+
+  const handleRemoveImage = (idx: number) => {
+    setProductImages((prev) => prev.filter((_, i) => i !== idx));
   };
 
   return (
@@ -166,6 +270,116 @@ export default function LinksPage() {
                         Give your payment link a descriptive name
                       </p>
                     </div>
+
+                    {/* Product Images Card UI with Drag & Drop */}
+                    <div className="mb-1">
+                      <Label htmlFor="product_images" className="font-medium">
+                        Product Images{" "}
+                        <span className="bg-muted px-2 py-1 text-xs rounded">
+                          Max 3
+                        </span>
+                      </Label>
+                    </div>
+                    <div
+                      className={`rounded-lg border  bg-muted/30 p-4 transition-colors ${
+                        dragActive ? " border-black " : ""
+                      }`}
+                      onDrop={handleDrop}
+                      onDragOver={handleDragOver}
+                      onDragLeave={handleDragLeave}
+                      onClick={openFileDialog}
+                      style={{
+                        cursor:
+                          productImages.length < 3 ? "pointer" : "not-allowed",
+                      }}
+                    >
+                      <input
+                        ref={fileInputRef}
+                        id="product_images"
+                        name="product_images"
+                        type="file"
+                        accept="image/*"
+                        multiple
+                        onChange={handleImageChange}
+                        disabled={productImages.length >= 3}
+                        className="hidden"
+                      />
+                      <div className="flex flex-row items-start gap-3 w-full">
+                        {productImages.map((img, idx) => {
+                          const url =
+                            img.url ||
+                            (img.file ? URL.createObjectURL(img.file) : "");
+                          return (
+                            <div
+                              key={idx}
+                              className="relative group"
+                              style={{ width: 96, height: 96 }}
+                            >
+                              <Image
+                                src={url}
+                                alt={`Product Image ${idx + 1}`}
+                                width={96}
+                                height={96}
+                                className="rounded-md border object-cover w-24 h-24 cursor-pointer"
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  setSelectedImage(url);
+                                  setDialogOpen(true);
+                                }}
+                              />
+                              {img.uploading && (
+                                <div className="absolute inset-0 flex items-center justify-center bg-white/70 dark:bg-black/50 z-20 rounded-md">
+                                  <svg
+                                    className="animate-spin h-6 w-6 text-primary"
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    fill="none"
+                                    viewBox="0 0 24 24"
+                                  >
+                                    <circle
+                                      className="opacity-25"
+                                      cx="12"
+                                      cy="12"
+                                      r="10"
+                                      stroke="currentColor"
+                                      strokeWidth="4"
+                                    ></circle>
+                                    <path
+                                      className="opacity-75"
+                                      fill="currentColor"
+                                      d="M4 12a8 8 0 018-8v8z"
+                                    ></path>
+                                  </svg>
+                                </div>
+                              )}
+                              <button
+                                type="button"
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  handleRemoveImage(idx);
+                                }}
+                                className="absolute top-1 right-1 bg-red-500 text-white rounded-full cursor-pointer w-5 h-5 flex items-center justify-center text-xs opacity-80 hover:opacity-100 z-30 shadow"
+                                aria-label="Remove image"
+                                style={{ lineHeight: 1 }}
+                                disabled={img.uploading}
+                              >
+                                ×
+                              </button>
+                            </div>
+                          );
+                        })}
+                        {productImages.length < 3 && (
+                          <div className="flex flex-col items-center justify-center w-24 h-24 border-2 border-dashed border-border/60 rounded-md bg-background/50 text-muted-foreground text-xs cursor-pointer hover:bg-muted/40 transition">
+                            <span className="text-2xl">+</span>
+                            <span>Add</span>
+                          </div>
+                        )}
+                      </div>
+                      <span className="text-xs text-muted-foreground text-center">
+                        Drag & drop or click to upload images (JPG, PNG, GIF,
+                        WEBP)
+                      </span>
+                    </div>
+                    {/* End Product Images Card UI */}
 
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                       <div className="p-5 rounded-lg bg-muted/40 border border-border/60 flex flex-col space-y-3">
@@ -784,6 +998,21 @@ export default function LinksPage() {
           </Tabs>
         </div>
       </div>
+
+      {/* Image Preview Dialog */}
+      <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
+        <DialogContent className="flex flex-col items-center justify-center w-fit p-1.5">
+          {selectedImage && (
+            <Image
+              src={selectedImage}
+              alt="Large Product Preview"
+              width={400}
+              height={400}
+              className="rounded-lg object-contain max-h-[70vh] w-auto h-auto"
+            />
+          )}
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
