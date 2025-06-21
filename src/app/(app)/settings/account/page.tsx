@@ -192,8 +192,8 @@ export default function AccountPage() {
                   {userData.bank_name ? (
                     <div className="w-full">
                       <div className="flex items-center bg-white dark:bg-black border border-gray-200 dark:border-gray-700 rounded-xl p-4 mb-4 transition-colors w-full">
-                        <div className="flex-shrink-0 bg-gray-100 bg-opacity-5 dark:bg-white dark:bg-opacity-10 rounded-full p-2 flex items-center justify-center mr-4">
-                          <Landmark className="h-8 w-8 text-muted-foreground dark:text-white" />
+                        <div className="flex-shrink-0 bg-gray-100 bg-opacity-5 dark:bg-white dark:bg-opacity-10 rounded-full p-3 flex items-center justify-center mr-4">
+                          <Landmark className="h-7 w-7 text-muted-foreground dark:text-white" />
                         </div>
                         <div className="flex flex-col flex-1">
                           <div className="text-black dark:text-white text-lg font-bold tracking-wide mb-0.5">
