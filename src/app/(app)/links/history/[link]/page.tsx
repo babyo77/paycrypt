@@ -52,6 +52,8 @@ import {
   CollapsibleTrigger,
 } from "@/components/ui/collapsible";
 import { ChevronDown, ChevronRight } from "lucide-react";
+import { uploadFile } from "@/lib/utils";
+import Image from "next/image";
 
 interface Transaction {
   id: string;
@@ -95,6 +97,7 @@ interface PaymentLink {
   is_active: boolean;
   created_at: string;
   updated_at: string;
+  product_images?: string[];
 }
 
 interface ApiResponse {
@@ -155,6 +158,17 @@ function PaymentLinkHistoryPage() {
   );
   const [customerInfoOpen, setCustomerInfoOpen] = useState(false);
   const [advancedOptionsOpen, setAdvancedOptionsOpen] = useState(false);
+  const [productImages, setProductImages] = useState<
+    {
+      file: File | null;
+      url: string | null;
+      uploading: boolean;
+    }[]
+  >([]);
+  const fileInputRef = React.useRef<HTMLInputElement>(null);
+  const [dragActive, setDragActive] = useState(false);
+  const [selectedImage, setSelectedImage] = useState<string | null>(null);
+  const [dialogOpen, setDialogOpen] = useState(false);
 
   const fetchHistory = async () => {
     try {
@@ -164,6 +178,10 @@ function PaymentLinkHistoryPage() {
       );
       if (response.status === 200 && response.data) {
         setData(response.data);
+        const imgs = response.data.payment_link.product_images || [];
+        setProductImages(
+          imgs.map((url: string) => ({ file: null, url, uploading: false }))
+        );
       }
     } catch (err) {
       setError("Failed to fetch payment link data");
@@ -210,6 +228,10 @@ function PaymentLinkHistoryPage() {
       webhook: data.payment_link.webhook,
     });
 
+    const imgs = data.payment_link.product_images || [];
+    setProductImages(
+      imgs.map((url: string) => ({ file: null, url, uploading: false }))
+    );
     setIsEditModalOpen(true);
   };
 
@@ -244,21 +266,112 @@ function PaymentLinkHistoryPage() {
     }));
   };
 
+  const handleUploadFile = async (file: File, idx: number) => {
+    setProductImages((prev) => {
+      const copy = [...prev];
+      copy[idx] = { ...copy[idx], uploading: true };
+      return copy;
+    });
+    let url = null;
+    let attempts = 0;
+    while (attempts < 3 && !url) {
+      url = await uploadFile(file);
+      if (!url) {
+        attempts++;
+        if (attempts < 3) await new Promise((res) => setTimeout(res, 1000));
+      }
+    }
+    if (url) {
+      setProductImages((prev) => {
+        const copy = [...prev];
+        copy[idx] = { file, url, uploading: false };
+        return copy;
+      });
+    } else {
+      setProductImages((prev) => prev.filter((_, i) => i !== idx));
+      toast.error("Image upload failed. Please try again.");
+    }
+  };
+
+  const addImages = (files: File[]) => {
+    const availableSlots = 3 - productImages.length;
+    const newFiles = files.slice(0, availableSlots);
+    const newImageObjs = newFiles.map((file) => ({
+      file,
+      url: null,
+      uploading: true,
+    }));
+    const startIdx = productImages.length;
+    setProductImages((prev) => [...prev, ...newImageObjs].slice(0, 3));
+    newFiles.forEach((file, i) => {
+      handleUploadFile(file, startIdx + i);
+    });
+  };
+
+  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (!e.target.files) return;
+    const files = Array.from(e.target.files).filter((f) =>
+      f.type.startsWith("image/")
+    );
+    addImages(files);
+  };
+
+  const handleDrop = (e: React.DragEvent<HTMLDivElement>) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setDragActive(false);
+    if (e.dataTransfer.files && e.dataTransfer.files.length > 0) {
+      const files = Array.from(e.dataTransfer.files).filter((f) =>
+        f.type.startsWith("image/")
+      );
+      addImages(files);
+    }
+  };
+
+  const handleDragOver = (e: React.DragEvent<HTMLDivElement>) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setDragActive(true);
+  };
+
+  const handleDragLeave = (e: React.DragEvent<HTMLDivElement>) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setDragActive(false);
+  };
+
+  const openFileDialog = () => {
+    fileInputRef.current?.click();
+  };
+
+  const handleRemoveImage = (idx: number) => {
+    setProductImages((prev) => prev.filter((_, i) => i !== idx));
+  };
+
   const handleEditPaymentLink = async () => {
     if (!data || !editFormData) return;
+
+    if (productImages.some((img) => img.uploading)) {
+      toast.error("Please wait for all images to finish uploading.");
+      return;
+    }
 
     try {
       setUpdating(true);
 
+      const payload = { ...editFormData } as any;
+      payload.product_images = productImages
+        .map((img) => img.url)
+        .filter(Boolean);
+
       const response = await api.patch(
         `/payment-links/${params.link}`,
-        editFormData
+        payload
       );
 
       if (response.status >= 200 && response.status < 300) {
         toast.success("Payment link updated successfully");
         setIsEditModalOpen(false);
-        // Reload the data to show updated information
         fetchHistory();
       } else {
         toast.error("Failed to update payment link");
@@ -316,7 +429,6 @@ function PaymentLinkHistoryPage() {
                   variant="outline"
                   className="flex items-center gap-2"
                 >
-                  {/* <IconEdit className="h-4 w-4" /> */}
                   Edit
                 </Button>
               </div>
@@ -461,7 +573,6 @@ function PaymentLinkHistoryPage() {
         </div>
       </div>
 
-      {/* Edit Modal */}
       <Dialog open={isEditModalOpen} onOpenChange={setIsEditModalOpen}>
         <DialogContent className="max-h-[90vh] overflow-y-auto">
           <DialogHeader>
@@ -594,8 +705,110 @@ function PaymentLinkHistoryPage() {
                 </p>
               </div>
             </div>
-
-            {/* Customer Information Collection */}
+            <div>
+              <Label htmlFor="product_images" className="font-medium">
+                Product Images{" "}
+                <span className="bg-muted px-2 py-1 text-xs rounded">
+                  Max 3
+                </span>
+              </Label>
+            </div>
+            <div
+              className={`rounded-lg border  bg-muted/30 p-4 transition-colors ${
+                dragActive ? " border-black " : ""
+              }`}
+              onDrop={handleDrop}
+              onDragOver={handleDragOver}
+              onDragLeave={handleDragLeave}
+              onClick={openFileDialog}
+              style={{
+                cursor: productImages.length < 3 ? "pointer" : "not-allowed",
+              }}
+            >
+              <input
+                ref={fileInputRef}
+                id="product_images"
+                name="product_images"
+                type="file"
+                accept="image/*"
+                multiple
+                onChange={handleImageChange}
+                disabled={productImages.length >= 3}
+                className="hidden"
+              />
+              <div className="flex flex-row items-start gap-3 w-full">
+                {productImages.map((img, idx) => {
+                  const url =
+                    img.url || (img.file ? URL.createObjectURL(img.file) : "");
+                  return (
+                    <div
+                      key={idx}
+                      className="relative group"
+                      style={{ width: 96, height: 96 }}
+                    >
+                      <Image
+                        src={url}
+                        alt={`Product Image ${idx + 1}`}
+                        width={96}
+                        height={96}
+                        className="rounded-md border object-cover w-24 h-24 cursor-pointer"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          setSelectedImage(url);
+                          setDialogOpen(true);
+                        }}
+                      />
+                      {img.uploading && (
+                        <div className="absolute inset-0 flex items-center justify-center bg-white/70 dark:bg-black/50 z-20 rounded-md">
+                          <svg
+                            className="animate-spin h-6 w-6 text-primary"
+                            xmlns="http://www.w3.org/2000/svg"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                          >
+                            <circle
+                              className="opacity-25"
+                              cx="12"
+                              cy="12"
+                              r="10"
+                              stroke="currentColor"
+                              strokeWidth="4"
+                            ></circle>
+                            <path
+                              className="opacity-75"
+                              fill="currentColor"
+                              d="M4 12a8 8 0 018-8v8z"
+                            ></path>
+                          </svg>
+                        </div>
+                      )}
+                      <button
+                        type="button"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleRemoveImage(idx);
+                        }}
+                        className="absolute top-1 right-1 bg-red-500 text-white rounded-full cursor-pointer w-5 h-5 flex items-center justify-center text-xs opacity-80 hover:opacity-100 z-30 shadow"
+                        aria-label="Remove image"
+                        style={{ lineHeight: 1 }}
+                        disabled={img.uploading}
+                      >
+                        ×
+                      </button>
+                    </div>
+                  );
+                })}
+                {productImages.length < 3 && (
+                  <div className="flex flex-col items-center justify-center w-24 h-24 border-2 border-dashed border-border/60 rounded-md bg-background/50 text-muted-foreground text-xs cursor-pointer hover:bg-muted/40 transition">
+                    <span className="text-2xl">+</span>
+                    <span>Add</span>
+                  </div>
+                )}
+              </div>
+              <span className="text-xs text-muted-foreground text-center">
+                Drag & drop or click to upload images (JPG, PNG, GIF, WEBP)
+              </span>
+            </div>
             <Collapsible
               className="rounded-lg border border-border/60 overflow-hidden"
               open={customerInfoOpen}
@@ -738,104 +951,19 @@ function PaymentLinkHistoryPage() {
               </CollapsibleContent>
             </Collapsible>
 
-            {/* Advanced Options */}
-            {/* <Collapsible
-              className="rounded-lg border border-border/60 overflow-hidden"
-              open={advancedOptionsOpen}
-              onOpenChange={setAdvancedOptionsOpen}
-            >
-              <CollapsibleTrigger className="flex w-full items-center justify-between p-4 bg-muted/30 hover:bg-muted/50 transition">
-                <div className="flex flex-col items-start">
-                  <span className="text-base font-medium">
-                    Advanced options
-                  </span>
-                  <span className="text-xs text-muted-foreground mt-1">
-                    Additional settings for your payment link
-                  </span>
-                </div>
-                {advancedOptionsOpen ? (
-                  <ChevronDown className="h-5 w-5" />
-                ) : (
-                  <ChevronRight className="h-5 w-5" />
+            <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
+              <DialogContent className="flex flex-col items-center justify-center w-fit p-1.5">
+                {selectedImage && (
+                  <Image
+                    src={selectedImage}
+                    alt="Large Product Preview"
+                    width={400}
+                    height={400}
+                    className="rounded-lg object-contain max-h-[70vh] w-auto h-auto"
+                  />
                 )}
-              </CollapsibleTrigger>
-              <CollapsibleContent>
-                <div className="p-5 grid grid-cols-1 md:grid-cols-2 gap-5">
-                  <div className="flex flex-col space-y-3">
-                    <div className="flex flex-col space-y-1.5">
-                      <Label htmlFor="webhook">Webhook URL </Label>
-                      <div className="flex items-center">
-                        <Input
-                          id="webhook"
-                          name="webhook"
-                          placeholder="https://your-website.com/webhook"
-                          value={editFormData?.webhook || ""}
-                          onChange={handleInputChange}
-                          className="w-full"
-                        />
-                        <span className="ml-2 bg-muted px-2 py-2 text-xs rounded">
-                          Optional
-                        </span>
-                      </div>
-                      <p className="text-xs text-muted-foreground">
-                        URL to receive payment notifications
-                      </p>
-                    </div>
-
-                    {/* <div className="flex items-center space-x-2 p-3 rounded-md hover:bg-muted/30 mt-2">
-                      <Checkbox
-                        id="allow_promotional_code"
-                        checked={editFormData?.allow_promotional_code || false}
-                        onCheckedChange={(checked) =>
-                          handleCheckboxChange(
-                            "allow_promotional_code",
-                            checked as boolean
-                          )
-                        }
-                      />
-                      <Label
-                        htmlFor="allow_promotional_code"
-                        className="font-medium cursor-pointer flex-1"
-                      >
-                        <div>
-                          <span>Allow promotional code</span>
-                          <p className="text-xs text-muted-foreground">
-                            Let customers use promo codes for discounts
-                          </p>
-                        </div>
-                      </Label>
-                    </div> */}
-            {/* </div> */}
-
-            {/* <div className="flex flex-col space-y-3">
-                    <div className="flex flex-col space-y-1.5">
-                      <Label htmlFor="callToActionLabel">
-                        Label for call to action
-                      </Label>
-                      <Select
-                        value={editFormData?.call_to_action_label || "Pay"}
-                        onValueChange={(value) =>
-                          handleSelectChange("call_to_action_label", value)
-                        }
-                      >
-                        <SelectTrigger className="w-full">
-                          <SelectValue placeholder="Select label" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="Donate">Donate</SelectItem>
-                          <SelectItem value="Pay">Pay</SelectItem>
-                          <SelectItem value="Buy">Buy</SelectItem>
-                          <SelectItem value="Subscribe">Subscribe</SelectItem>
-                        </SelectContent>
-                      </Select>
-                      <p className="text-xs text-muted-foreground">
-                        Button text displayed on the payment page
-                      </p>
-                    </div>
-                  </div> */}
-            {/* </div> */}
-            {/* </CollapsibleContent> */}
-            {/* </Collapsible>  */}
+              </DialogContent>
+            </Dialog>
           </div>
 
           <DialogFooter>
@@ -849,7 +977,7 @@ function PaymentLinkHistoryPage() {
             >
               {updating ? (
                 <>
-                  <IconLoader className="mr-2 h-4 w-4 animate-spin" />
+                  <IconLoader className="h-4 w-4 animate-spin" />
                   Updating...
                 </>
               ) : (

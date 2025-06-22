@@ -36,7 +36,7 @@ export const api = new ApiClient({
 export async function uploadFile(file: File) {
   const { data, error } = await supabase.storage
     .from("paycrypt")
-    .upload(`uploads/${file.name}`, file, {
+    .upload(`uploads/${file.name + Date.now().toString()}`, file, {
       cacheControl: "3600",
       upsert: false,
     });
