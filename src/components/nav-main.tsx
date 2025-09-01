@@ -62,12 +62,12 @@ export function NavMain({
                     <SidebarMenuButton
                       tooltip={item.title}
                       className={cn(
-                        isItemActive ? "text-primary" : "text-muted-foreground"
+                        isItemActive ? "text-white" : "text-white/80"
                       )}
                       isActive={isItemActive}
                     >
                       {item.icon && <item.icon />}
-                      <span className={isItemActive ? "text-primary" : ""}>
+                      <span className={isItemActive ? "text-white" : "text-white/80"}>
                         {item.title}
                       </span>
                       <ChevronRight className="ml-auto h-4 w-4 transition-transform duration-200 group-data-[state=open]/collapsible:rotate-90" />
@@ -83,8 +83,8 @@ export function NavMain({
                               asChild
                               className={cn(
                                 isSubActive
-                                  ? "text-primary font-medium"
-                                  : "text-muted-foreground"
+                                  ? "text-white bg-primary font-medium"
+                                  : "text-white"
                               )}
                             >
                               <Link prefetch href={subItem.url}>
@@ -112,18 +112,18 @@ export function NavMain({
                   <SidebarMenuButton
                     className={cn(
                       pathname === item.url
-                        ? "text-primary"
-                        : "text-muted-foreground"
+                        ? "text-white"
+                        : "text-white/80"
                     )}
                     isActive={pathname === item.url}
                     tooltip={item.title}
                   >
                     {item.icon && (
                       <item.icon
-                        className={isItemActive ? "text-primary" : ""}
+                        className={isItemActive ? "text-white" : "text-white/80"}
                       />
                     )}
-                    <span className={isItemActive ? "text-primary" : ""}>
+                    <span className={isItemActive ? "text-white" : "text-white/80"}>
                       {item.title}
                     </span>
                   </SidebarMenuButton>
