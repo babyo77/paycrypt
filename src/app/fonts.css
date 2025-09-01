@@ -1,0 +1,8 @@
+@font-face {
+    font-family: "MGF";
+    src: url("/fonts/MilanoGraphicFestival-Regular.ttf") format("truetype");
+}
+
+.mgf {
+    font-family: "MGF";
+}

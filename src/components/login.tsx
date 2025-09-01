@@ -1,5 +1,5 @@
 "use client";
-import { Logo } from "@/components/logo";
+import { Logo, LogoLight } from "@/components/logo";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -9,6 +9,7 @@ import { toast } from "sonner";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { UserData } from "@/app/provider/user-provider";
+import Image from "next/image";
 export default function LoginPage() {
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -49,33 +50,61 @@ export default function LoginPage() {
 
   return (
     <>
-      <div className="absolute inset-0 -z-10 h-full opacity-45 w-full bg-white bg-[linear-gradient(to_right,#f0f0f0_1px,transparent_1px),linear-gradient(to_bottom,#f0f0f0_1px,transparent_1px)] bg-[size:6rem_4rem]"></div>
-      <section className="flex min-h-screen px-4 py-16 md:py-32 dark:bg-transparent">
+      <div className="absolute mgf inset-0 -z-10 h-full  w-full bg-black"></div>
+      <section className="flex min-h-screen h-[100vh] px-4dark:bg-transparent">
         <form
           onSubmit={handleSubmit}
-          className=" m-auto h-fit w-full max-w-lg overflow-hidden rounded-[calc(var(--radius)+.125rem)]  shadow-zinc-950/5 dark:[--color-muted:var(--color-zinc-900)]"
+          className=" h-full flex flex-col relative justify-center w-1/2  overflow-hidden rounded-[calc(var(--radius)+.125rem)] shadow-zinc-950/5 dark:[--color-muted:var(--color-zinc-900)]"
         >
-          <div className=" -m-px p-8 pb-6">
-            <div className="text-center">
+          <div className="max-w-md w-full mx-auto -m-px p-8 pb-6">
+            <div className="text-center w-full">
               <Link
                 href="https://paycrypt.tech"
                 aria-label="go home"
-                className="mx-auto block w-fit"
+                className="mx-auto  w-fit text-4xl mgf text-white items-center flex gap-3"
               >
-                <Logo className=" size-16" textClassName=" hidden" />
+               <span className="text-white/60 text-4xl mgf">Login to </span> <span className="text-white text-4xl mgf">Paycrypt</span>
               </Link>
-
-              <p className="text-lg mt-2">
-                Welcome! Login to your Paycrypt account
-              </p>
             </div>
+
+            <div className="w-full mt-10 flex flex-col text-sm gap-2">
+              <p className=" text-white/50  leading-none mt-4 text-sm">Email</p>
+              <Input
+                type="email"
+                name="email"
+                placeholder="Enter your email"
+                className="w-full focus:ring-0 focus:border-white/70 text-white text-sm placeholder:text-white/50 border-white/30"
+              />
+              <p className="text-white/50 leading-none mt-2">Password</p>
+              <Input
+                type="password"
+                name="password"
+
+                placeholder="Enter your password"
+                className="w-full text-white focus:border-white/70 text-sm placeholder:text-white/50 border-white/30"
+              />
+
+              <div className="w-full mt-2 text-right underline underline-offset-2 text-white/50 hover:text-white/90 cursor-pointer transition-all duration-300">Forgot Password?</div>
+
+              <div className="w-full flex justify-end">
+                <button
+                  type="submit"
+                  className="w-full mt-2 py-2 cursor-pointer hover:bg-white/90 transition-all duration-300 rounded-sm text-lg leading-none text-black mgf bg-white px-4"
+                  disabled={isLoading}
+                >
+                  {isLoading ? "Creating..." : "Log In"}
+                </button>
+              </div>
+            </div>
+
+            <div className="w-full mgf text-white/50 text-center mt-4">or</div>
 
             <div className="grid grid-cols-1 mt-4 gap-3">
               <Button
                 onClick={() => {
                   window.location.href = `${process.env.NEXT_PUBLIC_API_URL}/auth/google/`;
                 }}
-                className=" min-w-[320px] mx-auto"
+                className="w-full hover:bg-white/10 cursor-pointer bg-black border-white/30 mx-auto"
                 type="button"
                 variant="outline"
               >
@@ -102,18 +131,18 @@ export default function LoginPage() {
                     d="M130.55 50.479c24.514 0 41.05 10.589 50.479 19.438l36.844-35.974C195.245 12.91 165.798 0 130.55 0C79.49 0 35.393 29.301 13.925 71.947l42.211 32.783c10.59-31.477 39.891-54.251 74.414-54.251"
                   ></path>
                 </svg>
-                <span>Continue with Google</span>
+                <span className="text-white text-sm">Continue with Google</span>
               </Button>
             </div>
           </div>
 
-          <div className="p-3 fixed bottom-3 mx-auto left-0 right-0">
-            <p className="text-muted-foreground text-center text-xs">
+          <div className="p-3 absolute bottom-3 mx-auto left-0 right-0">
+            <p className="text-white/50 text-center text-sm">
               By using Paycrypt you agree to our{" "}
               <Link
                 href="https://paycrypt.tech/terms-of-service"
                 target="_blank"
-                className="text-primary hover:underline"
+                className="text-white hover:underline"
               >
                 Terms of Service
               </Link>{" "}
@@ -121,13 +150,29 @@ export default function LoginPage() {
               <Link
                 href="https://paycrypt.tech/privacy-policy"
                 target="_blank"
-                className="text-primary hover:underline"
+                className="text-white hover:underline"
               >
                 Privacy Policy
               </Link>{" "}
             </p>
           </div>
         </form>
+
+
+        <div className="w-1/2 h-full p-6">
+          <div className=" w-full h-full bg-white/10 rounded-4xl
+        ">
+          {/* <video
+            autoPlay
+            muted
+            loop
+            className="w-full h-full  rounded-4xl"
+          >
+            <source src="/3.mp4" type="video/mp4" />
+          </video> */}
+          <Image src="/login.jpg" alt="login" width={1000} height={1000} className="w-full h-full object-cover rounded-4xl" />
+        </div>
+        </div>
       </section>
     </>
   );

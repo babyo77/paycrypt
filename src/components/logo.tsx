@@ -1,6 +1,20 @@
 import { cn } from "@/lib/utils";
 import Image from "next/image";
 
+export const LogoLight = ({
+  className,
+  textClassName,
+}: {
+  className?: string;
+  textClassName?: string;
+}) => {
+  return (
+    <div className="flex items-center gap-0.5">
+      <p className="text-4xl text-white mgf">Paycrypt</p>
+    </div>
+  );
+};
+
 export const Logo = ({
   className,
   textClassName,
@@ -10,17 +24,7 @@ export const Logo = ({
 }) => {
   return (
     <div className="flex items-center gap-0.5">
-      <Image
-        src="https://us-east-1.tixte.net/uploads/tanmay111-files.tixte.co/Untitled_design.png"
-        alt="Paycrypt Logo"
-        width={30}
-        height={30}
-        className={cn(
-          "size-7 mix-blend-multiply dark:mix-blend-normal",
-          className
-        )}
-      />
-      <p className={cn(" font-semibold", textClassName)}>Paycrypt</p>
+      <p className="text-4xl text-black mgf">Paycrypt</p>
     </div>
   );
 };
