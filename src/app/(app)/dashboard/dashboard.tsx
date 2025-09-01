@@ -18,7 +18,7 @@ export default function Dashboard() {
           <div className="px-4 md:px-6">
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
               {/* Create Payment Link Card */}
-              <Card className="bg-white border-border/60">
+              <Card className="bg-card border-border/60">
                 <CardHeader className="pb-2 space-y-2">
                   <div className="h-10 w-10 bg-primary/10 rounded-lg flex items-center justify-center">
                     <svg
@@ -101,7 +101,7 @@ export default function Dashboard() {
               </Card>
 
               {/* Create Invoice Card */}
-              <Card className="bg-white border-border/60 opacity-50">
+              <Card className="bg-card border-border/60 opacity-50">
                 <CardHeader className="pb-2 space-y-2">
                   <div className="h-10 w-10 bg-primary/10 rounded-lg flex items-center justify-center">
                     <svg
@@ -186,7 +186,7 @@ export default function Dashboard() {
               </Card>
 
               {/* Integrate Payments Card */}
-              <Card className="bg-white border-border/60 opacity-50">
+              <Card className="bg-card border-border/60 opacity-50">
                 <CardHeader className="pb-2 space-y-2">
                   <div className="h-10 w-10 bg-primary/10 rounded-lg flex items-center justify-center">
                     <svg

@@ -23,7 +23,7 @@ import {
 } from "@/components/ui/sidebar";
 import { Receipt, Settings2, AlertCircle } from "lucide-react";
 import Link from "next/link";
-import { Logo } from "./logo";
+import { Logo, LogoLight } from "./logo";
 import { Button } from "./ui/button";
 import { useUser } from "@/app/provider/user-provider";
 import { UserData } from "@/app/provider/user-provider";
@@ -116,7 +116,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
               className="data-[slot=sidebar-menu-button]:!p-1.5 hover:bg-transparent"
             >
               <Link className=" -ml-0.5" prefetch href="https://paycrypt.tech">
-                <Logo />
+                <LogoLight />
               </Link>
             </SidebarMenuButton>
           </SidebarMenuItem>
@@ -125,7 +125,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       <SidebarContent>
         <NavMain items={data.navMain} />
       </SidebarContent>
-
+    
       {userData && !userData.is_kyc_active && (
         <div className="px-3 mb-2">
           <Button
@@ -138,14 +138,14 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         </div>
       )}
       <div className="px-3 mb-3">
-        <div className="bg-gray-50 dark:bg-gray-900/20 border dark:border-gray-800 rounded-lg p-3 text-sm ">
-          <div className="flex items-center gap-1 text-gray-700 dark:text-gray-400 font-medium mb-2">
+        <div className="bg-gray-900/20 border border-gray-800 rounded-lg p-3 text-sm ">
+          <div className="flex items-center gap-1 text-gray-400 font-medium mb-2">
             <AlertCircle size={16} />
             <span className="uppercase tracking-wide">
               {TESTNET ? "Testnet Mode" : "Mainnet Mode"}
             </span>
           </div>
-          <p className="text-xs text-gray-600 dark:text-gray-300 mb-3">
+          <p className="text-xs text-gray-300 mb-3">
             {TESTNET
               ? "You're using the test environment. All transactions are simulated and no real funds are involved."
               : "You're using the mainnet environment. All transactions are real and involve actual funds."}
@@ -161,7 +161,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
             <Button
               size="sm"
               className={`w-full ${
-                TESTNET && "bg-orange-500 hover:bg-orange-600"
+                TESTNET && "bg-primary hover:bg-primary/90"
               }`}
             >
               {TESTNET ? "Switch to Mainnet" : "Switch to Testnet"}

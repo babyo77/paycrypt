@@ -24,9 +24,9 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="en" className="dark">
       <body
-        className={`${HankenGrotesk.className} ${HankenGrotesk.variable} antialiased`}
+        className={`${HankenGrotesk.className} ${HankenGrotesk.variable} antialiased bg-black text-white`}
       >
         <ThemeProvider>{children}</ThemeProvider>
         <Toaster richColors />

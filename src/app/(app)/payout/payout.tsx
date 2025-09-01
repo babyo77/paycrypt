@@ -92,7 +92,7 @@ const CryptoAmount: React.FC<CryptoAmountProps> = ({
   iconPath,
 }) => {
   return (
-    <div className="flex items-center p-1.5 bg-white rounded-md border border-gray-100">
+    <div className="flex items-center p-1.5 bg-card rounded-md border border-border">
       <div className="flex-shrink-0 mr-1.5">
         <img src={iconPath} alt={coinSymbol} width={16} height={16} />
       </div>
@@ -122,8 +122,8 @@ const NetworkGroup: React.FC<NetworkGroupProps> = ({
   children,
 }) => {
   return (
-    <div className="bg-white rounded-lg border border-gray-200 overflow-hidden w-full">
-      <div className="bg-gray-50 p-4 border-b border-gray-200 flex items-center">
+    <div className="bg-card rounded-lg border border-border overflow-hidden w-full">
+      <div className="bg-muted p-4 border-b border-border flex items-center">
         <img
           src={networkIcon}
           alt={networkName}
@@ -153,7 +153,7 @@ const getStatusBadgeVariant = (status: string) => {
     case "cancelled":
       return { color: "bg-red-100 text-red-700", icon: "✕ " };
     default:
-      return { color: "bg-gray-100 text-gray-700", icon: "• " };
+      return { color: "bg-muted text-muted-foreground", icon: "• " };
   }
 };
 
@@ -381,7 +381,7 @@ function PayoutPage() {
               <div className="text-xl font-semibold">Your Payouts</div>
             </div>
             {TESTNET && (
-              <div className="flex items-center gap-1 bg-orange-500 border border-orange-200 text-white rounded-md px-4 py-2 mx-4 lg:mx-6 mt-2 relative">
+              <div className="flex items-center gap-1 bg-primary border border-border text-primary-foreground rounded-md px-4 py-2 mx-4 lg:mx-6 mt-2 relative">
                 <InfoIcon className="size-4" />
                 <span className="flex-1 text-sm">
                   Only native payouts are supported. Use Ethereum testnet or
@@ -396,10 +396,10 @@ function PayoutPage() {
             >
               {/* Combined balance and networks card */}
               <div className="mb-3">
-                <div className="bg-white rounded-md border border-gray-200 overflow-hidden w-full">
-                  <div className="bg-gray-50 p-3 px-4 border-b border-gray-200 flex justify-between items-center">
+                <div className="bg-card rounded-md border border-border overflow-hidden w-full">
+                  <div className="bg-muted p-3 px-4 border-b border-border flex justify-between items-center">
                     <div className="flex flex-col">
-                      <h2 className=" font-medium text-gray-600">
+                      <h2 className=" font-medium text-muted-foreground">
                         Available Balance
                       </h2>
                       <div className="text-xl font-semibold mt-0.5">
@@ -422,7 +422,7 @@ function PayoutPage() {
                   </div>
                   <div className="p-3">
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-3 text-sm">
-                      <div className="flex items-center p-1.5 bg-white rounded-md border border-gray-100">
+                      <div className="flex items-center p-1.5 bg-card rounded-md border border-border">
                         <div className="flex-shrink-0 mr-1.5">
                           <img
                             src={`${iconBaseUrl}/eth.png`}
@@ -444,7 +444,7 @@ function PayoutPage() {
                         </div>
                       </div>
 
-                      <div className="flex items-center p-1.5 bg-white rounded-md border border-gray-100">
+                      <div className="flex items-center p-1.5 bg-card rounded-md border border-border">
                         <div className="flex-shrink-0 mr-1.5">
                           <img
                             src={`${iconBaseUrl}/sol.png`}
@@ -466,7 +466,7 @@ function PayoutPage() {
                         </div>
                       </div>
 
-                      <div className="flex items-center p-1.5 bg-white rounded-md border border-gray-100">
+                      <div className="flex items-center p-1.5 bg-card rounded-md border border-border">
                         <div className="flex-shrink-0 mr-1.5">
                           <img
                             src={`${iconBaseUrl}/usdc.png`}
@@ -492,7 +492,7 @@ function PayoutPage() {
                         </div>
                       </div>
 
-                      <div className="flex items-center p-1.5 bg-white rounded-md border border-gray-100">
+                      <div className="flex items-center p-1.5 bg-card rounded-md border border-border">
                         <div className="flex-shrink-0 mr-1.5">
                           <img
                             src={`${iconBaseUrl}/usdc.png`}
@@ -728,11 +728,11 @@ function PayoutPage() {
                 </div>
 
                 {payoutHistory.length === 0 ? (
-                  <div className="text-center p-8 bg-white rounded-lg border border-gray-200">
+                  <div className="text-center p-8 bg-card rounded-lg border border-border">
                     <div className="flex flex-col items-center gap-2">
-                      <Wallet className="size-10 text-gray-200" />
+                      <Wallet className="size-10 text-muted-foreground" />
                       <h3 className="font-medium">No payout history</h3>
-                      <p className="text-gray-500 text-sm">
+                      <p className="text-muted-foreground text-sm">
                         Your completed payouts will appear here
                       </p>
                     </div>

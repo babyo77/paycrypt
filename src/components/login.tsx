@@ -51,7 +51,7 @@ export default function LoginPage() {
   return (
     <>
       <div className="absolute mgf inset-0 -z-10 h-full  w-full bg-black"></div>
-      <section className="flex min-h-screen h-[100vh] px-4dark:bg-transparent">
+      <section className="flex min-h-screen h-[100vh] px-4 bg-black">
         <form
           onSubmit={handleSubmit}
           className=" h-full flex flex-col relative justify-center w-1/2  overflow-hidden rounded-[calc(var(--radius)+.125rem)] shadow-zinc-950/5 dark:[--color-muted:var(--color-zinc-900)]"
@@ -159,20 +159,7 @@ export default function LoginPage() {
         </form>
 
 
-        <div className="w-1/2 h-full p-6">
-          <div className=" w-full h-full bg-white/10 rounded-4xl
-        ">
-          {/* <video
-            autoPlay
-            muted
-            loop
-            className="w-full h-full  rounded-4xl"
-          >
-            <source src="/3.mp4" type="video/mp4" />
-          </video> */}
-          <Image src="/login.jpg" alt="login" width={1000} height={1000} className="w-full h-full object-cover rounded-4xl" />
-        </div>
-        </div>
+       
       </section>
     </>
   );

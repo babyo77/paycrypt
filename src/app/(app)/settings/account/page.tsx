@@ -91,7 +91,7 @@ export default function AccountPage() {
               </Button>
             </div>
 
-            <div className="bg-white p-6 border border-border/60 rounded-lg">
+            <div className="bg-card p-6 border border-border/60 rounded-lg">
               <form
                 id="account-form"
                 onSubmit={handleSubmit}
@@ -191,7 +191,7 @@ export default function AccountPage() {
                   </h2>
                   {userData.bank_name ? (
                     <div className="w-full">
-                      <div className="flex items-center bg-white dark:bg-black border border-gray-200 dark:border-gray-700 rounded-xl p-4 mb-4 transition-colors w-full">
+                      <div className="flex items-center bg-card border border-border rounded-xl p-4 mb-4 transition-colors w-full">
                         <div className="flex-shrink-0 bg-gray-100 bg-opacity-5 dark:bg-white dark:bg-opacity-10 rounded-full p-3 flex items-center justify-center mr-4">
                           <Landmark className="h-7 w-7 text-muted-foreground dark:text-white" />
                         </div>
