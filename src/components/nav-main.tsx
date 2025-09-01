@@ -41,7 +41,7 @@ export function NavMain({
   return (
     <SidebarGroup>
       <SidebarGroupContent>
-        <SidebarMenu className=" space-y-0.5">
+        <SidebarMenu className=" space-y-1.5">
           {items.map((item) => {
             // Check if this item or any subitems are active
             const isItemActive = pathname === item.url;
@@ -58,7 +58,9 @@ export function NavMain({
                 className="group/collapsible"
               >
                 <SidebarMenuItem>
-                  <CollapsibleTrigger asChild>
+                  <CollapsibleTrigger asChild
+                  className="cursor-pointer"
+                  >
                     <SidebarMenuButton
                       tooltip={item.title}
                       className={cn(
@@ -74,7 +76,7 @@ export function NavMain({
                     </SidebarMenuButton>
                   </CollapsibleTrigger>
                   <CollapsibleContent>
-                    <SidebarMenuSub>
+                    <SidebarMenuSub className="space-y-1.5"> 
                       {item.items?.map((subItem) => {
                         const isSubActive = pathname === subItem.url;
                         return (
@@ -108,12 +110,12 @@ export function NavMain({
                 href={item.url}
                 className="w-full"
               >
-                <SidebarMenuItem>
+                <SidebarMenuItem className="cursor-pointer">
                   <SidebarMenuButton
                     className={cn(
                       pathname === item.url
-                        ? "text-white"
-                        : "text-white/80"
+                        ? "text-white cursor-pointer"
+                        : "text-white/80 cursor-pointer"
                     )}
                     isActive={pathname === item.url}
                     tooltip={item.title}

@@ -108,7 +108,8 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const { userData, dispatch } = useUser();
   return (
     <Sidebar collapsible="offcanvas" {...props}>
-      <SidebarHeader>
+      <div className="mt-1"></div>
+       <SidebarHeader>
         <SidebarMenu>
           <SidebarMenuItem>
             <SidebarMenuButton
@@ -122,12 +123,16 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
           </SidebarMenuItem>
         </SidebarMenu>
       </SidebarHeader>
+      <SidebarFooter>
+        <NavUser />
+      </SidebarFooter>
+     
       <SidebarContent>
         <NavMain items={data.navMain} />
       </SidebarContent>
     
       {userData && !userData.is_kyc_active && (
-        <div className="px-3 mb-2">
+        <div className="px-6 mb-3">
           <Button
             variant="destructive"
             className="w-full"
@@ -170,9 +175,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         </div>
       </div>
 
-      <SidebarFooter>
-        <NavUser />
-      </SidebarFooter>
+      
     </Sidebar>
   );
 }
