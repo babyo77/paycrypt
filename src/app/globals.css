@@ -53,18 +53,18 @@
   --card-foreground: oklch(0.98 0 0); /* White card text */
   --popover: oklch(0.15 0 0); /* Dark popover */
   --popover-foreground: oklch(0.98 0 0); /* White popover text */
-  --primary: #B13BFF; /* Purple primary */
+  --primary: #3700FF76; /* Purple primary */
   --primary-foreground: oklch(0.98 0 0); /* White text on purple */
   --secondary: oklch(0.2 0 0); /* Dark secondary */
   --secondary-foreground: oklch(0.98 0 0); /* White text on secondary */
   --muted: oklch(0.25 0 0); /* Muted dark */
   --muted-foreground: oklch(0.7 0 0); /* Light gray text */
-  --accent: #B13BFF; /* Purple accent */
+  --accent: #3700FF; /* Purple accent */
   --accent-foreground: oklch(0.98 0 0); /* White accent text */
   --destructive: oklch(0.5 0 0); /* Gray destructive */
   --border: oklch(0.3 0 0); /* Dark border */
   --input: oklch(0.2 0 0); /* Dark input background */
-  --ring: #B13BFF; /* Purple ring for focus states */
+  --ring: #3700FF; /* Purple ring for focus states */
   --chart-1: oklch(0.8 0 0); /* Light gray chart */
   --chart-2: oklch(0.7 0 0); /* Medium gray chart */
   --chart-3: oklch(0.6 0 0); /* Darker gray chart */
@@ -72,12 +72,12 @@
   --chart-5: oklch(0.4 0 0); /* Very dark gray chart */
   --sidebar: oklch(0.05 0 0); /* Very dark sidebar */
   --sidebar-foreground: oklch(0.98 0 0); /* White sidebar text */
-  --sidebar-primary: #B13BFF; /* Purple sidebar primary */
+  --sidebar-primary: #3700FF; /* Purple sidebar primary */
   --sidebar-primary-foreground: oklch(0.98 0 0); /* White text on purple */
-  --sidebar-accent: #B13BFF; /* Purple sidebar accent */
+  --sidebar-accent: #3700FF76; /* Purple sidebar accent */
   --sidebar-accent-foreground: oklch(0.98 0 0); /* White sidebar accent text */
   --sidebar-border: oklch(0.3 0 0); /* Dark sidebar border */
-  --sidebar-ring: #B13BFF; /* Purple sidebar ring */
+  --sidebar-ring: #3700FF76; /* Purple sidebar ring */
 }
 
 /* Dark mode is now the default theme - no separate dark class needed */

@@ -35,6 +35,12 @@ export default async function AppLayout({
         networkMode: "TESTNET",
       }}
     >
+      <div className="w-full h-full"
+         style={{
+          background: "linear-gradient(190deg, #3700FF76 0%, #0d001a 40%, #000000 100%)"
+      
+         }}
+      >
       <SidebarProvider
         style={
           {
@@ -49,6 +55,7 @@ export default async function AppLayout({
           {children}
         </SidebarInset>
       </SidebarProvider>
+      </div>
     </UserProvider>
   );
 }
