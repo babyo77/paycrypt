@@ -137,7 +137,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
             variant="destructive"
             className="w-full"
             onClick={() => (window.location.href = "/kyc")}
-          >
+          > 
             Complete your KYC
           </Button>
         </div>
